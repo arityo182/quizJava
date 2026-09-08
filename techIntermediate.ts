@@ -2,1084 +2,1873 @@ import { Question } from './types';
 
 export const TECH_INTERMEDIATE: Question[] = [
   {
-    id: "JI-001",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Apa output dari kode berikut?",
-    code: `String s1 = new String("Hello");\nString s2 = new String("Hello");\nSystem.out.println(s1 == s2);\nSystem.out.println(s1.equals(s2));`,
-    opts: { A: "true / true", B: "false / false", C: "false / true", D: "true / false" },
-    ans: "C",
-    exp: "Operator == membandingkan referensi memori (false), sedangkan equals() membandingkan nilai string (true)."
+    "id": "JI-001",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari operasi Stream flatMap berikut?\n\n```java\nList<List<String>> list = Arrays.asList(\n    Arrays.asList(\"A\", \"B\"),\n    Arrays.asList(\"C\", \"D\")\n);\nList<String> flat = list.stream()\n    .flatMap(Collection::stream)\n    .map(String::toLowerCase)\n    .collect(Collectors.toList());\nSystem.out.println(flat);\n```",
+    "code": "List<List<String>> list = Arrays.asList(\n    Arrays.asList(\"A\", \"B\"),\n    Arrays.asList(\"C\", \"D\")\n);\nList<String> flat = list.stream()\n    .flatMap(Collection::stream)\n    .map(String::toLowerCase)\n    .collect(Collectors.toList());\nSystem.out.println(flat);",
+    "options": {
+      "A": "[[a, b], [c, d]]",
+      "B": "[a, b, c, d]",
+      "C": "[A, B, C, D]",
+      "D": "Compilation Error"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "flatMap meratakan (flatten) nested stream dari tiap list ke dalam satu flat stream tunggal. Kemudian map(String::toLowerCase) mengubah tiap huruf menjadi huruf kecil: [a, b, c, d].",
+      "A": "Salah. flatMap meratakan struktur list bersarang.",
+      "B": "Benar. flatMap meratakan dua list menjadi satu stream, lalu di-lowercase menjadi [a, b, c, d].",
+      "C": "Salah. map(String::toLowerCase) mengubah huruf menjadi kecil.",
+      "D": "Salah. Kode valid dan menggunakan method reference baku."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-002",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Berapa hasil dari eksekusi stream berikut?",
-    code: `List<Integer> list = Arrays.asList(1, 2, 3, 4);\nint sum = list.stream().filter(n -> n % 2 == 0).mapToInt(Integer::intValue).sum();`,
-    opts: { A: "4", B: "6", C: "10", D: "0" },
-    ans: "B",
-    exp: "Stream memfilter angka genap (2 dan 4), kemudian menjumlahkannya (2 + 4 = 6)."
+    "id": "JI-002",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari Stream reduce berikut?\n\n```java\nList<Integer> nums = Arrays.asList(1, 2, 3, 4);\nint result = nums.stream().reduce(10, (a, b) -> a * b);\nSystem.out.println(result);\n```",
+    "code": "List<Integer> nums = Arrays.asList(1, 2, 3, 4);\nint result = nums.stream().reduce(10, (a, b) -> a * b);\nSystem.out.println(result);",
+    "options": {
+      "A": "24",
+      "B": "240",
+      "C": "10",
+      "D": "0"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "reduce menggunakan nilai identitas awal 10: (((10 * 1) * 2) * 3) * 4 = 10 * 24 = 240.",
+      "A": "Salah. 24 adalah hasil perkalian 1*2*3*4 tanpa nilai identitas awal 10.",
+      "B": "Benar. Nilai identitas 10 dikalikan secara berurutan dengan 1, 2, 3, 4 menghasilkan 240.",
+      "C": "Salah. Seluruh elemen list diproses perkaliannya.",
+      "D": "Salah. Tidak ada perkalian dengan 0."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-003",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Apa hasil dari operasi stream berikut?",
-    code: `List<Integer> nums = Arrays.asList(1, 2, 3, 4);\nint result = nums.stream().filter(n -> n % 2 == 0).map(n -> n * 2).mapToInt(n -> n).sum();`,
-    opts: { A: "10", B: "12", C: "6", D: "20" },
-    ans: "B",
-    exp: "Angka genap (2, 4) dikalikan 2 menjadi (4, 8), kemudian dijumlahkan menjadi 12."
+    "id": "JI-003",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari operasi Collectors.groupingBy berikut?\n\n```java\nList<String> words = Arrays.asList(\"cat\", \"dog\", \"bear\", \"elephant\");\nMap<Integer, Long> map = words.stream()\n    .collect(Collectors.groupingBy(String::length, Collectors.counting()));\nSystem.out.println(map.get(3));\n```",
+    "code": "List<String> words = Arrays.asList(\"cat\", \"dog\", \"bear\", \"elephant\");\nMap<Integer, Long> map = words.stream()\n    .collect(Collectors.groupingBy(String::length, Collectors.counting()));\nSystem.out.println(map.get(3));",
+    "options": {
+      "A": "1",
+      "B": "2",
+      "C": "[cat, dog]",
+      "D": "null"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "groupingBy mengelompokkan kata berdasarkan panjangnya (length). Kata dengan panjang 3 adalah 'cat' dan 'dog' (2 kata). Collectors.counting() menghitung jumlahnya, sehingga map.get(3) menghasilkan 2.",
+      "A": "Salah. Ada 2 kata yang berpanjang 3 karakter ('cat' dan 'dog').",
+      "B": "Benar. 'cat' dan 'dog' memiliki panjang 3, sehingga nilai counting adalah 2L.",
+      "C": "Salah. Nilai pada map bertipe Long karena menggunakan downstream collector counting().",
+      "D": "Salah. Key 3 ada di dalam map."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-004",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Struktur data mana di Java yang paling efisien untuk pencarian key-value dengan kompleksitas waktu O(1)?",
-    opts: { A: "TreeMap", B: "HashMap", C: "ArrayList", D: "LinkedList" },
-    ans: "B",
-    exp: "HashMap menggunakan hashing untuk operasi get/put dengan kompleksitas rata-rata O(1)."
+    "id": "JI-004",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari Stream distinct dan sorted dengan Comparator kustom?\n\n```java\nList<Integer> nums = Arrays.asList(5, 3, 5, 1, 2);\nList<Integer> sorted = nums.stream()\n    .distinct()\n    .sorted(Comparator.reverseOrder())\n    .collect(Collectors.toList());\nSystem.out.println(sorted);\n```",
+    "code": "List<Integer> nums = Arrays.asList(5, 3, 5, 1, 2);\nList<Integer> sorted = nums.stream()\n    .distinct()\n    .sorted(Comparator.reverseOrder())\n    .collect(Collectors.toList());\nSystem.out.println(sorted);",
+    "options": {
+      "A": "[5, 5, 3, 2, 1]",
+      "B": "[5, 3, 2, 1]",
+      "C": "[1, 2, 3, 5]",
+      "D": "[5, 3, 1, 2]"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "distinct() membuang duplikat angka 5 (menyisakan 5, 3, 1, 2). sorted(Comparator.reverseOrder()) mengurutkan dari besar ke kecil (descending): [5, 3, 2, 1].",
+      "A": "Salah. distinct() telah menghapus angka 5 yang duplikat.",
+      "B": "Benar. Elemen unik diurutkan secara descending menjadi [5, 3, 2, 1].",
+      "C": "Salah. reverseOrder() mengurutkan dari terbesar ke terkecil, bukan ascending.",
+      "D": "Salah. Urutannya belum terurut descending sepenuhnya."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-005",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Apa perbedaan utama antara HashMap dan Hashtable di Java?",
-    opts: { A: "HashMap aman untuk multithreading", B: "Hashtable mengizinkan null key", C: "HashMap tidak synchronized dan mengizinkan null, Hashtable synchronized dan menolak null", D: "Tidak ada perbedaan" },
-    ans: "C",
-    exp: "Hashtable bersifat legacy, thread-safe, dan menolak null. HashMap non-synchronized dan mengizinkan null."
+    "id": "JI-005",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output penggunaan Optional.map dan orElse berikut?\n\n```java\nString name = null;\nString res = Optional.ofNullable(name)\n    .map(String::toUpperCase)\n    .orElse(\"DEFAULT\");\nSystem.out.println(res);\n```",
+    "code": "String name = null;\nString res = Optional.ofNullable(name)\n    .map(String::toUpperCase)\n    .orElse(\"DEFAULT\");\nSystem.out.println(res);",
+    "options": {
+      "A": "null",
+      "B": "DEFAULT",
+      "C": "NullPointerException",
+      "D": "\"\" (String kosong)"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "Optional.ofNullable(null) menghasilkan Optional.empty(). Pemanggilan .map() diabaikan pada Optional yang kosong, lalu .orElse(\"DEFAULT\") mengembalikan nilai fallback 'DEFAULT'.",
+      "A": "Salah. orElse akan mengembalikan fallback jika Optional kosong.",
+      "B": "Benar. Karena name null, Optional bernilai empty dan orElse(\"DEFAULT\") mengembalikan 'DEFAULT'.",
+      "C": "Salah. Optional.ofNullable aman dari NullPointerException.",
+      "D": "Salah. Nilai yang dikembalikan adalah string 'DEFAULT', bukan string kosong."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-006",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Untuk membuat custom Checked Exception, class harus meng-extend class apa?",
-    opts: { A: "RuntimeException", B: "Exception", C: "Throwable", D: "Error" },
-    ans: "B",
-    exp: "Checked exception harus meng-extend class Exception (atau subclassnya selain RuntimeException)."
+    "id": "JI-006",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari TreeMap dengan comparator kustom berikut?\n\n```java\nMap<String, Integer> map = new TreeMap<>(Comparator.reverseOrder());\nmap.put(\"A\", 1);\nmap.put(\"C\", 3);\nmap.put(\"B\", 2);\nSystem.out.println(map.keySet());\n```",
+    "code": "Map<String, Integer> map = new TreeMap<>(Comparator.reverseOrder());\nmap.put(\"A\", 1);\nmap.put(\"C\", 3);\nmap.put(\"B\", 2);\nSystem.out.println(map.keySet());",
+    "options": {
+      "A": "[A, B, C]",
+      "B": "[C, B, A]",
+      "C": "[A, C, B]",
+      "D": "Compilation Error"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "TreeMap mengurutkan key secara alami. Karena diberikan Comparator.reverseOrder(), key diurutkan secara menurun (descending): [C, B, A].",
+      "A": "Salah. [A, B, C] adalah urutan natural ascending standar.",
+      "B": "Benar. Comparator.reverseOrder() membalikkan urutan key alfabetis menjadi [C, B, A].",
+      "C": "Salah. TreeMap selalu menjaga urutan terurut, bukan urutan penyisipan.",
+      "D": "Salah. Sintaks sepenuhnya valid."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-007",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Apa tujuan utama dari penggunaan Optional<T> (Java 8)?",
-    opts: { A: "Meningkatkan performa", B: "Menghindari NullPointerException", C: "Menggantikan tipe primitif", D: "Membuat thread" },
-    ans: "B",
-    exp: "Optional bertindak sebagai wadah untuk nilai yang mungkin null untuk penanganan yang lebih aman."
+    "id": "JI-007",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari operasi PriorityQueue berikut?\n\n```java\nPriorityQueue<Integer> pq = new PriorityQueue<>();\npq.offer(30);\npq.offer(10);\npq.offer(20);\nSystem.out.println(pq.poll() + \" \" + pq.poll());\n```",
+    "code": "PriorityQueue<Integer> pq = new PriorityQueue<>();\npq.offer(30);\npq.offer(10);\npq.offer(20);\nSystem.out.println(pq.poll() + \" \" + pq.poll());",
+    "options": {
+      "A": "30 20",
+      "B": "10 20",
+      "C": "30 10",
+      "D": "10 30"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "PriorityQueue di Java secara default adalah Min-Heap (elemen terkecil memiliki prioritas tertinggi). poll() pertama mengambil 10, poll() kedua mengambil 20.",
+      "A": "Salah. PriorityQueue default adalah min-heap, bukan max-heap.",
+      "B": "Benar. Min-heap mengeluarkan elemen terkecil pertama (10) lalu berikutnya (20).",
+      "C": "Salah. Urutan prioritas terendah ke tertinggi.",
+      "D": "Salah. Elemen 20 lebih kecil dari 30 sehingga keluar lebih dulu."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-008",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Manakah pernyataan yang BENAR mengenai Interface vs Abstract Class?",
-    opts: { A: "Bisa extend banyak abstract class", B: "Abstract class dapat memiliki state (instance variable), interface (sebelum Java 8) tidak", C: "Interface tidak bisa punya implementasi method sama sekali", D: "Abstract class tidak boleh punya constructor" },
-    ans: "B",
-    exp: "Abstract class bisa memiliki instance variable/state, sedangkan interface murni (sebelum default method Java 8) tidak."
+    "id": "JI-008",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari AtomicInteger pada thread tunggal berikut?\n\n```java\nAtomicInteger ai = new AtomicInteger(10);\nint a = ai.getAndIncrement();\nint b = ai.incrementAndGet();\nSystem.out.println(a + \" \" + b + \" \" + ai.get());\n```",
+    "code": "AtomicInteger ai = new AtomicInteger(10);\nint a = ai.getAndIncrement();\nint b = ai.incrementAndGet();\nSystem.out.println(a + \" \" + b + \" \" + ai.get());",
+    "options": {
+      "A": "10 12 12",
+      "B": "11 12 12",
+      "C": "10 11 11",
+      "D": "11 11 12"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "getAndIncrement() mengembalikan nilai lama (10) lalu menaikkan nilai ke 11. incrementAndGet() menaikkan nilai ke 12 lalu mengembalikan nilai baru (12). ai.get() bernilai 12.",
+      "A": "Benar. a = 10 (nilai sebelum increment), b = 12 (nilai setelah increment kedua), ai.get() = 12.",
+      "B": "Salah. getAndIncrement mengembalikan nilai sebelum di-increment.",
+      "C": "Salah. Terjadi dua kali penambahan nilai.",
+      "D": "Salah. Nilai a adalah 10."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-009",
-    level: "intermediate",
-    cat: "Spring Boot",
-    q: "Apa perbedaan @RequestParam dan @PathVariable?",
-    opts: { A: "Sama saja", B: "@PathVariable mengambil nilai dari URI path, @RequestParam dari query parameter", C: "@RequestParam untuk POST", D: "@PathVariable mengambil dari request body" },
-    ans: "B",
-    exp: "@PathVariable mengambil dari segmen path URL (/users/{id}), @RequestParam dari query string (?id=1)."
+    "id": "JI-009",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari List.copyOf atau Collections.unmodifiableList berikut?\n\n```java\nList<String> orig = new ArrayList<>(Arrays.asList(\"X\", \"Y\"));\nList<String> unmod = Collections.unmodifiableList(orig);\norig.add(\"Z\");\nSystem.out.println(unmod.size());\n```",
+    "code": "List<String> orig = new ArrayList<>(Arrays.asList(\"X\", \"Y\"));\nList<String> unmod = Collections.unmodifiableList(orig);\norig.add(\"Z\");\nSystem.out.println(unmod.size());",
+    "options": {
+      "A": "2",
+      "B": "3",
+      "C": "UnsupportedOperationException",
+      "D": "Compilation Error"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "Collections.unmodifiableList hanyalah wrapper view di atas list asli 'orig'. Modifikasi pada list asli tetap tercermin pada unmodifiable view. Maka unmod.size() bernilai 3. Exception hanya dilempar jika modifikasi dilakukan langsung via unmod.add().",
+      "A": "Salah. unmodifiableList adalah view langsung ke list asli, perubahannya tercermin.",
+      "B": "Benar. Modifikasi pada list underlying (orig) terlihat melalui view unmodifiableList.",
+      "C": "Salah. Exception hanya dilempar jika memanggil method mutasi pada reference unmod.",
+      "D": "Salah. Kode valid."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-010",
-    level: "intermediate",
-    cat: "Spring Boot",
-    q: "Apa kegunaan utama dari @Autowired?",
-    opts: { A: "Koneksi database", B: "Melakukan Dependency Injection secara otomatis", C: "Konfigurasi server", D: "Membuat bean" },
-    ans: "B",
-    exp: "@Autowired otomatis menyuntikkan (inject) bean yang dikelola oleh Spring container."
+    "id": "JI-010",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari Stream takeWhile (Java 9+) berikut?\n\n```java\nList<Integer> list = Stream.of(2, 4, 6, 7, 8, 10)\n    .takeWhile(n -> n % 2 == 0)\n    .collect(Collectors.toList());\nSystem.out.println(list);\n```",
+    "code": "List<Integer> list = Stream.of(2, 4, 6, 7, 8, 10)\n    .takeWhile(n -> n % 2 == 0)\n    .collect(Collectors.toList());\nSystem.out.println(list);",
+    "options": {
+      "A": "[2, 4, 6, 8, 10]",
+      "B": "[2, 4, 6]",
+      "C": "[7]",
+      "D": "[8, 10]"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "takeWhile mengambil elemen selama predikat bernilai true. Begitu menemui angka 7 (ganjil/false), stream langsung berhenti memproses elemen selanjutnya meskipun ada angka genap lagi (8, 10). Hasilnya [2, 4, 6].",
+      "A": "Salah. takeWhile berhenti pada elemen pertama yang tidak memenuhi predikat, berbeda dengan filter().",
+      "B": "Benar. takeWhile mengambil elemen sampai kondisi pertama kali false (angka 7), menghasilkan [2, 4, 6].",
+      "C": "Salah. Angka 7 tidak memenuhi kondisi.",
+      "D": "Salah. Elemen setelah 7 tidak diproses."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-011",
-    level: "intermediate",
-    cat: "Spring Boot",
-    q: "Apa fungsi dari @Transactional?",
-    opts: { A: "Method asinkron", B: "Membungkus method dalam database transaction (rollback jika ada RuntimeException)", C: "Mengatur timeout HTTP", D: "Cache response" },
-    ans: "B",
-    exp: "@Transactional memastikan atomicity. Jika terjadi exception (terutama unchecked), transaksi otomatis di-rollback."
+    "id": "JI-011",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari pemanggilan Collectors.joining berikut?\n\n```java\nList<String> items = Arrays.asList(\"Java\", \"Spring\", \"JPA\");\nString res = items.stream().collect(Collectors.joining(\", \", \"[\", \"]\"));\nSystem.out.println(res);\n```",
+    "code": "List<String> items = Arrays.asList(\"Java\", \"Spring\", \"JPA\");\nString res = items.stream().collect(Collectors.joining(\", \", \"[\", \"]\"));\nSystem.out.println(res);",
+    "options": {
+      "A": "Java, Spring, JPA",
+      "B": "[Java, Spring, JPA]",
+      "C": "[Java], [Spring], [JPA]",
+      "D": "[Java-Spring-JPA]"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "Collectors.joining(delimiter, prefix, suffix) menggabungkan elemen dengan pembatas ', ', diawali '[' dan diakhiri ']'. Hasilnya adalah '[Java, Spring, JPA]'.",
+      "A": "Salah. Tidak ada prefix dan suffix.",
+      "B": "Benar. Parameter delimiter, prefix, suffix menghasilkan '[Java, Spring, JPA]'.",
+      "C": "Salah. Prefix dan suffix hanya diletakkan di awal dan akhir seluruh string gabungan.",
+      "D": "Salah. Delimiter yang digunakan adalah koma dan spasi."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-012",
-    level: "intermediate",
-    cat: "Spring Boot",
-    q: "Pernyataan yang tepat tentang @Component, @Service, dan @Repository?",
-    opts: { A: "Hanya @Component yang bisa di-inject", B: "@Repository bukan bean", C: "@Service dan @Repository adalah spesialisasi dari @Component", D: "Hanya bisa di Controller" },
-    ans: "C",
-    exp: "@Service dan @Repository secara internal di-anotasi dengan @Component dengan semantik peran yang lebih jelas."
+    "id": "JI-012",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari String.join berikut?\n\n```java\nString joined = String.join(\"-\", \"2026\", \"09\", \"08\");\nSystem.out.println(joined);\n```",
+    "code": "String joined = String.join(\"-\", \"2026\", \"09\", \"08\");\nSystem.out.println(joined);",
+    "options": {
+      "A": "20260908",
+      "B": "2026-09-08",
+      "C": "-2026-09-08-",
+      "D": "Error"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "String.join(delimiter, elements) menggabungkan varargs string dengan pemisah tanda hubung '-'. Hasilnya '2026-09-08'.",
+      "A": "Salah. Delimiter '-' disisipkan di antara elemen.",
+      "B": "Benar. String.join menyisipkan tanda hubung di antara setiap elemen, menghasilkan '2026-09-08'.",
+      "C": "Salah. Delimiter tidak ditambahkan di awal atau akhir string.",
+      "D": "Salah. Method static String.join valid sejak Java 8."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-013",
-    level: "intermediate",
-    cat: "Spring Boot",
-    q: "Apa kegunaan @RequestBody?",
-    opts: { A: "Membaca header", B: "Deserialisasi JSON HTTP Request Body menjadi Java Object", C: "Mengubah object ke JSON", D: "Mendapat URL" },
-    ans: "B",
-    exp: "@RequestBody mengikat body dari HTTP request ke domain object Java menggunakan HttpMessageConverter."
+    "id": "JI-013",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari Stream findFirst pada list kosong?\n\n```java\nOptional<String> opt = Collections.<String>emptyList().stream().findFirst();\nSystem.out.println(opt.isPresent() + \" \" + opt.orElse(\"Empty\"));\n```",
+    "code": "Optional<String> opt = Collections.<String>emptyList().stream().findFirst();\nSystem.out.println(opt.isPresent() + \" \" + opt.orElse(\"Empty\"));",
+    "options": {
+      "A": "true Empty",
+      "B": "false Empty",
+      "C": "false null",
+      "D": "NoSuchElementException"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "findFirst() pada stream kosong mengembalikan Optional.empty(). opt.isPresent() bernilai false, dan opt.orElse(\"Empty\") mengembalikan 'Empty'.",
+      "A": "Salah. isPresent() bernilai false untuk stream kosong.",
+      "B": "Benar. opt.isPresent() adalah false, dan orElse mengembalikan fallback string 'Empty'.",
+      "C": "Salah. orElse mengembalikan 'Empty', bukan null.",
+      "D": "Salah. orElse tidak melempar NoSuchElementException."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-014",
-    level: "intermediate",
-    cat: "REST API",
-    q: "HTTP method manakah yang paling tepat untuk PARTIAL update resource?",
-    opts: { A: "PUT", B: "POST", C: "PATCH", D: "UPDATE" },
-    ans: "C",
-    exp: "PATCH dirancang untuk pembaruan sebagian, sedangkan PUT menimpa (replace) representasi resource sepenuhnya."
+    "id": "JI-014",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari casting Generics dengan wildcard berikut?\n\n```java\nList<Integer> ints = Arrays.asList(1, 2, 3);\nList<? extends Number> nums = ints;\nNumber n = nums.get(0);\nSystem.out.println(n.intValue() + nums.size());\n```",
+    "code": "List<Integer> ints = Arrays.asList(1, 2, 3);\nList<? extends Number> nums = ints;\nNumber n = nums.get(0);\nSystem.out.println(n.intValue() + nums.size());",
+    "options": {
+      "A": "4",
+      "B": "3",
+      "C": "Compilation Error pada nums.get(0)",
+      "D": "ClassCastException"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "nums.get(0) mengembalikan tipe Number (nilai 1). nums.size() bernilai 3. Penjumlahan 1 + 3 menghasilkan 4.",
+      "A": "Benar. n.intValue() = 1 dan nums.size() = 3, sehingga 1 + 3 = 4.",
+      "B": "Salah. 1 + 3 menghasilkan 4.",
+      "C": "Salah. Membaca dari wildcard covariant (? extends T) diperbolehkan.",
+      "D": "Salah. Integer adalah turunan Number yang sah."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-015",
-    level: "intermediate",
-    cat: "REST API",
-    q: "Kelompok HTTP method mana yang bersifat IDEMPOTENT?",
-    opts: { A: "POST, GET", B: "GET, PUT, DELETE", C: "POST, PATCH", D: "GET, POST, PATCH" },
-    ans: "B",
-    exp: "Idempotent berarti eksekusi berulang kali memberikan state/efek yang sama. GET, PUT, dan DELETE mematuhi ini."
+    "id": "JI-015",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari method Math.max dan Stream max berikut?\n\n```java\nList<Integer> list = Arrays.asList(10, 40, 20);\nint max = list.stream().max(Integer::compareTo).get();\nSystem.out.println(max);\n```",
+    "code": "List<Integer> list = Arrays.asList(10, 40, 20);\nint max = list.stream().max(Integer::compareTo).get();\nSystem.out.println(max);",
+    "options": {
+      "A": "10",
+      "B": "40",
+      "C": "20",
+      "D": "Optional[40]"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "max(Integer::compareTo) mencari elemen maksimum berdasarkan natural ordering (mengembalikan Optional<Integer> berisi 40). Memanggil .get() menghasilkan nilai int primitif 40.",
+      "A": "Salah. 10 adalah nilai minimum.",
+      "B": "Benar. Nilai maksimum dari list adalah 40.",
+      "C": "Salah. 20 bukan nilai tertinggi.",
+      "D": "Salah. Method .get() meng-unwrap nilai dari objek Optional."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-016",
-    level: "intermediate",
-    cat: "Clean Code",
-    q: "Apa maksud Single Responsibility Principle (SRP)?",
-    opts: { A: "Satu method saja", B: "Satu developer", C: "Sebuah class harus memiliki satu dan hanya satu alasan untuk berubah", D: "Satu interface" },
-    ans: "C",
-    exp: "SRP menyatakan bahwa setiap komponen software hanya boleh fokus pada satu tanggung jawab atau tugas."
+    "id": "JI-016",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari pemanggilan Stream anyMatch vs allMatch berikut?\n\n```java\nList<Integer> nums = Arrays.asList(2, 4, 6, 9);\nboolean b1 = nums.stream().anyMatch(n -> n % 2 != 0);\nboolean b2 = nums.stream().allMatch(n -> n % 2 == 0);\nSystem.out.println(b1 + \" \" + b2);\n```",
+    "code": "List<Integer> nums = Arrays.asList(2, 4, 6, 9);\nboolean b1 = nums.stream().anyMatch(n -> n % 2 != 0);\nboolean b2 = nums.stream().allMatch(n -> n % 2 == 0);\nSystem.out.println(b1 + \" \" + b2);",
+    "options": {
+      "A": "true true",
+      "B": "true false",
+      "C": "false true",
+      "D": "false false"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "b1 mengecek apakah ada angka ganjil (angka 9 ganjil -> true). b2 mengecek apakah semua angka genap (karena ada 9 -> false). Maka hasilnya 'true false'.",
+      "A": "Salah. allMatch bernilai false karena ada angka 9.",
+      "B": "Benar. anyMatch true (ada 9), allMatch false (tidak semua genap).",
+      "C": "Salah. anyMatch bernilai true.",
+      "D": "Salah. anyMatch bernilai true karena 9 ganjil."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-017",
-    level: "intermediate",
-    cat: "Clean Code",
-    q: "Anotasi Spring Boot untuk Global Exception Handling?",
-    opts: { A: "@GlobalExceptionHandler", B: "@ControllerAdvice", C: "@ExceptionHandlerGlobal", D: "@ExceptionAdvice" },
-    ans: "B",
-    exp: "@ControllerAdvice digunakan untuk mencegat exception secara global pada seluruh controller."
+    "id": "JI-017",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari ConcurrentHashMap computeIfAbsent berikut?\n\n```java\nMap<String, Integer> map = new ConcurrentHashMap<>();\nmap.put(\"A\", 10);\nmap.computeIfAbsent(\"A\", k -> 20);\nmap.computeIfAbsent(\"B\", k -> 30);\nSystem.out.println(map.get(\"A\") + \" \" + map.get(\"B\"));\n```",
+    "code": "Map<String, Integer> map = new ConcurrentHashMap<>();\nmap.put(\"A\", 10);\nmap.computeIfAbsent(\"A\", k -> 20);\nmap.computeIfAbsent(\"B\", k -> 30);\nSystem.out.println(map.get(\"A\") + \" \" + map.get(\"B\"));",
+    "options": {
+      "A": "10 30",
+      "B": "20 30",
+      "C": "10 null",
+      "D": "20 null"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "computeIfAbsent hanya menghitung dan memasukkan nilai jika key belum ada. Key 'A' sudah ada dengan nilai 10, sehingga mapping function diabaikan. Key 'B' belum ada, sehingga diisi 30. Hasilnya 10 dan 30.",
+      "A": "Benar. Key 'A' tidak ditimpa karena sudah ada, key 'B' baru diisi 30.",
+      "B": "Salah. Nilai key 'A' tidak diubah oleh computeIfAbsent.",
+      "C": "Salah. Key 'B' berhasil dimasukkan.",
+      "D": "Salah. Key 'A' tetap 10."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-018",
-    level: "intermediate",
-    cat: "Database/SQL",
-    q: "Jenis JOIN apa yang hanya mengembalikan baris jika ada kecocokan di KEDUA tabel?",
-    opts: { A: "LEFT JOIN", B: "RIGHT JOIN", C: "INNER JOIN", D: "OUTER JOIN" },
-    ans: "C",
-    exp: "INNER JOIN akan mengeliminasi baris dari salah satu tabel jika tidak memiliki pasangan data yang sesuai pada tabel lain."
+    "id": "JI-018",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari ArrayDeque sebagai Stack (LIFO) berikut?\n\n```java\nDeque<String> stack = new ArrayDeque<>();\nstack.push(\"First\");\nstack.push(\"Second\");\nSystem.out.println(stack.pop() + \" \" + stack.peek());\n```",
+    "code": "Deque<String> stack = new ArrayDeque<>();\nstack.push(\"First\");\nstack.push(\"Second\");\nSystem.out.println(stack.pop() + \" \" + stack.peek());",
+    "options": {
+      "A": "First Second",
+      "B": "Second First",
+      "C": "First First",
+      "D": "Second Second"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "ArrayDeque dengan push() dan pop() berperilaku sebagai Stack (LIFO). 'Second' berada di puncak. pop() mengeluarkan 'Second'. peek() melihat elemen puncak saat ini yaitu 'First'.",
+      "A": "Salah. pop() mengambil elemen yang terakhir di-push ('Second').",
+      "B": "Benar. pop() mengambil 'Second', lalu peek() membaca elemen yang tersisa ('First').",
+      "C": "Salah. Urutan LIFO.",
+      "D": "Salah. 'Second' sudah dikeluarkan oleh pop()."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-019",
-    level: "intermediate",
-    cat: "Database/SQL",
-    q: "Apa fungsi dari klausa HAVING?",
-    opts: { A: "Pengganti WHERE", B: "Memfilter hasil SETELAH operasi agregasi (GROUP BY)", C: "Sorting", D: "Mempercepat JOIN" },
-    ans: "B",
-    exp: "HAVING dipakai mirip WHERE, tetapi diterapkan untuk kondisi yang menggunakan fungsi agregasi atau sesudah data di-group."
+    "id": "JI-019",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari Stream dropWhile (Java 9+) berikut?\n\n```java\nList<Integer> res = Stream.of(1, 2, 3, 4, 5)\n    .dropWhile(n -> n < 3)\n    .collect(Collectors.toList());\nSystem.out.println(res);\n```",
+    "code": "List<Integer> res = Stream.of(1, 2, 3, 4, 5)\n    .dropWhile(n -> n < 3)\n    .collect(Collectors.toList());\nSystem.out.println(res);",
+    "options": {
+      "A": "[1, 2]",
+      "B": "[3, 4, 5]",
+      "C": "[4, 5]",
+      "D": "[]"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "dropWhile membuang elemen selama predikat n < 3 bernilai true (elemen 1 dan 2 dibuang). Begitu mencapai 3, pembuangan berhenti dan semua elemen sisanya diambil: [3, 4, 5].",
+      "A": "Salah. [1, 2] adalah elemen yang dibuang.",
+      "B": "Benar. dropWhile membuang elemen 1 dan 2, lalu mengembalikan sisanya [3, 4, 5].",
+      "C": "Salah. Angka 3 tidak kurang dari 3 sehingga tidak dibuang.",
+      "D": "Salah. Stream menghasilkan elemen."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-020",
-    level: "intermediate",
-    cat: "Database/SQL",
-    q: "Urutan query SQL yang benar untuk menghitung pesanan per user berstatus ACTIVE?",
-    code: `SELECT user_id, COUNT(order_id)\nFROM orders\n[?]`,
-    opts: { A: "GROUP BY user_id WHERE status = 'ACTIVE'", B: "WHERE status = 'ACTIVE' GROUP BY user_id", C: "HAVING status = 'ACTIVE' GROUP BY user_id", D: "GROUP BY status = 'ACTIVE' WHERE user_id" },
-    ans: "B",
-    exp: "WHERE digunakan untuk filter baris sebelum proses agregasi GROUP BY dilakukan."
+    "id": "JI-020",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari method chaining Optional flatMap berikut?\n\n```java\nOptional<String> opt = Optional.of(\"spring\")\n    .flatMap(s -> Optional.of(s + \"boot\"))\n    .filter(s -> s.length() > 5);\nSystem.out.println(opt.orElse(\"none\"));\n```",
+    "code": "Optional<String> opt = Optional.of(\"spring\")\n    .flatMap(s -> Optional.of(s + \"boot\"))\n    .filter(s -> s.length() > 5);\nSystem.out.println(opt.orElse(\"none\"));",
+    "options": {
+      "A": "spring",
+      "B": "springboot",
+      "C": "none",
+      "D": "Optional[springboot]"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "flatMap mengembalikan Optional berisi 'springboot' (panjang 10). filter(length > 5) bernilai true. orElse mengembalikan nilai 'springboot'.",
+      "A": "Salah. String sudah digabung dengan 'boot'.",
+      "B": "Benar. Hasil flatMap adalah 'springboot' dengan panjang 10 yang lolos filter.",
+      "C": "Salah. Filter terpenuhi sehingga tidak mengembalikan fallback 'none'.",
+      "D": "Salah. orElse mengembalikan nilai isi String langsung."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-021",
-    level: "intermediate",
-    cat: "JPA/Database",
-    q: "Apa yang dimaksud N+1 Problem di JPA?",
-    opts: { A: "Koneksi gagal", B: "1 query memuat entitas parent diikuti N query mengambil relasi child", C: "Max connection error", D: "Gagal insert N data" },
-    ans: "B",
-    exp: "Masalah performa dimana JPA memicu query terpisah untuk masing-masing baris hasil query utama saat mengakses relasinya."
+    "id": "JI-021",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari Collections.binarySearch pada list yang terurut?\n\n```java\nList<Integer> list = Arrays.asList(10, 20, 30, 40, 50);\nint idx = Collections.binarySearch(list, 30);\nSystem.out.println(idx);\n```",
+    "code": "List<Integer> list = Arrays.asList(10, 20, 30, 40, 50);\nint idx = Collections.binarySearch(list, 30);\nSystem.out.println(idx);",
+    "options": {
+      "A": "2",
+      "B": "3",
+      "C": "30",
+      "D": "-3"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "binarySearch mengembalikan indeks elemen yang dicari pada list terurut (0-based indexing). Elemen 30 berada pada indeks ke-2.",
+      "A": "Benar. Indeks dari 30 adalah 2.",
+      "B": "Salah. Indeks 3 adalah elemen 40.",
+      "C": "Salah. binarySearch mengembalikan indeks, bukan nilai elemen.",
+      "D": "Salah. Nilai negatif hanya dikembalikan jika elemen tidak ditemukan."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-022",
-    level: "intermediate",
-    cat: "Testing",
-    q: "Apa tujuan anotasi @SpringBootTest?",
-    opts: { A: "Mocking bean", B: "Memuat seluruh context aplikasi Spring untuk Integration Test", C: "Unit test murni", D: "Generate data" },
-    ans: "B",
-    exp: "@SpringBootTest memuat keseluruhan ApplicationContext secara penuh untuk pengujian integrasi aplikasi."
+    "id": "JI-022",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari String split dengan regex karakter titik '.'?\n\n```java\nString ip = \"192.168.1.1\";\nString[] parts = ip.split(\"\\\\.\");\nSystem.out.println(parts.length);\n```",
+    "code": "String ip = \"192.168.1.1\";\nString[] parts = ip.split(\"\\\\.\");\nSystem.out.println(parts.length);",
+    "options": {
+      "A": "1",
+      "B": "4",
+      "C": "0",
+      "D": "PatternSyntaxException"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "Titik '.' adalah metakarakter regex yang berarti sembarang karakter. Untuk memisahkannya berdasarkan titik literal, harus di-escape dengan '\\\\.'. String dibagi menjadi 4 oktet: length = 4.",
+      "A": "Salah. Jika ditulis split(\".\"), hasilnya kosong, namun dengan '\\\\.' berhasil membagi 4 bagian.",
+      "B": "Benar. Regex '\\\\.' membagi string IP menjadi 4 bagian oktet.",
+      "C": "Salah. Array memiliki 4 elemen.",
+      "D": "Salah. Escape valid dan tidak melempar exception."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-023",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Apa tujuan utama dari Generics di Java?",
-    opts: { A: "Cepat kompilasi", B: "Compile-time type safety dan menghilangkan casting manual", C: "Kurangi memory", D: "Multiple inheritance" },
-    ans: "B",
-    exp: "Generics mencegah ClassCastException saat runtime dengan memastikan tipe objek divalidasi pada saat kompilasi."
+    "id": "JI-023",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari Stream partitioningBy berikut?\n\n```java\nList<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);\nMap<Boolean, List<Integer>> map = nums.stream()\n    .collect(Collectors.partitioningBy(n -> n % 2 == 0));\nSystem.out.println(map.get(true));\n```",
+    "code": "List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);\nMap<Boolean, List<Integer>> map = nums.stream()\n    .collect(Collectors.partitioningBy(n -> n % 2 == 0));\nSystem.out.println(map.get(true));",
+    "options": {
+      "A": "[1, 3, 5]",
+      "B": "[2, 4]",
+      "C": "2",
+      "D": "null"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "partitioningBy membagi elemen menjadi map dengan key boolean true dan false. Key 'true' menampung elemen yang memenuhi predikat n % 2 == 0 (angka genap), yaitu [2, 4].",
+      "A": "Salah. [1, 3, 5] adalah nilai untuk key false.",
+      "B": "Benar. Key true menyimpan list angka genap [2, 4].",
+      "C": "Salah. Nilai kembalian adalah List<Integer>, bukan nilai tunggal.",
+      "D": "Salah. Key true selalu ada dalam partitioningBy."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-024",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Syarat agar interface dapat diimplementasikan dengan Lambda expression?",
-    opts: { A: "Anotasi @Lambda", B: "Berupa Functional Interface (hanya punya 1 abstract method)", C: "Tidak punya default method", D: "Extend Runnable" },
-    ans: "B",
-    exp: "Lambda hanya berlaku pada tipe antarmuka fungsional yang mewajibkan tepat satu metode abstrak."
+    "id": "JI-024",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari Enum.valueOf dan Enum.ordinal berikut?\n\n```java\nenum Status { PENDING, ACTIVE, INACTIVE }\nStatus s = Status.valueOf(\"ACTIVE\");\nSystem.out.println(s.ordinal() + \" \" + s.name());\n```",
+    "code": "enum Status { PENDING, ACTIVE, INACTIVE }\nStatus s = Status.valueOf(\"ACTIVE\");\nSystem.out.println(s.ordinal() + \" \" + s.name());",
+    "options": {
+      "A": "0 PENDING",
+      "B": "1 ACTIVE",
+      "C": "2 INACTIVE",
+      "D": "1 active"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "Status.valueOf(\"ACTIVE\") mengambil konstanta ACTIVE. Posisi ordinal-nya (0-based) adalah 1 (PENDING=0, ACTIVE=1). name() mengembalikan string 'ACTIVE'.",
+      "A": "Salah. ACTIVE berada pada ordinal 1.",
+      "B": "Benar. Ordinal ACTIVE adalah 1 dan namanya adalah 'ACTIVE'.",
+      "C": "Salah. Ordinal 2 adalah INACTIVE.",
+      "D": "Salah. name() mengembalikan casing persis seperti definisinya (kapital)."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-025",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Class Java 8 untuk merangkai operasi asinkron non-blocking?",
-    opts: { A: "Thread", B: "Runnable", C: "CompletableFuture", D: "FutureTask" },
-    ans: "C",
-    exp: "CompletableFuture memberikan API fungsional (chainable) untuk mengeksekusi proses asinkron."
+    "id": "JI-025",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari operasi Bitwise Shift '>>' vs '>>>' berikut?\n\n```java\nint x = -8;\nSystem.out.println((x >> 1) < 0);\n```",
+    "code": "int x = -8;\nSystem.out.println((x >> 1) < 0);",
+    "options": {
+      "A": "true",
+      "B": "false",
+      "C": "0",
+      "D": "Compilation Error"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "Operator '>>' adalah signed right shift yang mempertahankan tanda (sign-bit). -8 >> 1 bernilai -4. Karena -4 < 0, maka perbandingannya bernilai true.",
+      "A": "Benar. Signed right shift mempertahankan tanda negatif sehingga -8 >> 1 = -4 (< 0 adalah true).",
+      "B": "Salah. Hasilnya tetap negatif sehingga perbandingan < 0 bernilai true.",
+      "C": "Salah. Hasil evaluasi perbandingan adalah boolean.",
+      "D": "Salah. Sintaks valid."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-026",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Pernyataan SALAH mengenai Enum?",
-    opts: { A: "Bisa punya constructor", B: "Bisa punya method", C: "Bisa meng-extend class lain", D: "Secara implisit extend java.lang.Enum" },
-    ans: "C",
-    exp: "Enum Java sudah mewarisi class java.lang.Enum secara internal sehingga tak dapat extend class lain (single inheritance)."
+    "id": "JI-026",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari Stream mapToInt dan sum berikut?\n\n```java\nint total = Stream.of(\"10\", \"20\", \"30\")\n    .mapToInt(Integer::parseInt)\n    .sum();\nSystem.out.println(total);\n```",
+    "code": "int total = Stream.of(\"10\", \"20\", \"30\")\n    .mapToInt(Integer::parseInt)\n    .sum();\nSystem.out.println(total);",
+    "options": {
+      "A": "60",
+      "B": "102030",
+      "C": "0",
+      "D": "NumberFormatException"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "mapToInt(Integer::parseInt) mengkonversi setiap string ke IntStream numerik primitif. sum() menjumlahkan 10 + 20 + 30 = 60.",
+      "A": "Benar. IntStream.sum() menjumlahkan 10 + 20 + 30 menghasilkan 60.",
+      "B": "Salah. Bukan operasi konkatenasi string.",
+      "C": "Salah. Penjumlahan elemen menghasilkan 60.",
+      "D": "Salah. Semua string adalah angka valid."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-027",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Syarat custom object agar dapat diurutkan menggunakan Collections.sort(list) (tanpa comparator tambahan)?",
-    opts: { A: "Extend AbstractList", B: "Implement interface Comparable", C: "Anotasi @Sortable", D: "Implement Serializable" },
-    ans: "B",
-    exp: "Objek harus mengimplementasikan Comparable<T> dan mendefinisikan method compareTo untuk pengurutan natural."
+    "id": "JI-027",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "output",
+    "question": "Apa output dari polymorphism static method hiding berikut?\n\n```java\nclass Base {\n    static void print() { System.out.print(\"Base \"); }\n}\nclass Sub extends Base {\n    static void print() { System.out.print(\"Sub \"); }\n}\nBase b = new Sub();\nb.print();\n```",
+    "code": "class Base {\n    static void print() { System.out.print(\"Base \"); }\n}\nclass Sub extends Base {\n    static void print() { System.out.print(\"Sub \"); }\n}\nBase b = new Sub();\nb.print();",
+    "options": {
+      "A": "Sub",
+      "B": "Base",
+      "C": "Base Sub",
+      "D": "Compilation Error"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "Static method tidak di-override melainkan di-hide (method hiding). Pemanggilan static method ditentukan pada compile-time berdasarkan tipe referensi (Base b), bukan tipe objek saat runtime. Maka mencetak 'Base '.",
+      "A": "Salah. Static method tidak tunduk pada runtime dynamic polymorphism.",
+      "B": "Benar. Static method di-resolve saat compile time berdasarkan deklarasi tipe referensi (Base).",
+      "C": "Salah. Hanya satu method yang dieksekusi.",
+      "D": "Salah. Method hiding diizinkan di Java."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-028",
-    level: "intermediate",
-    cat: "Java Core",
-    q: "Perbedaan Comparable vs Comparator?",
-    opts: { A: "Beda package", B: "Comparable (natural ordering) di class itu sendiri, Comparator (custom ordering) di luar class", C: "Keduanya sama", D: "Hanya beda nama" },
-    ans: "B",
-    exp: "Comparable memakai compareTo() dalam domain class, Comparator dipisahkan menjadi class eksternal lewat compare()."
+    "id": "JI-028",
+    "level": "intermediate",
+    "topic": "Spring Boot",
+    "questionType": "debug",
+    "question": "Anotasi @Transactional pada method private berikut tidak berfungsi (transaksi tidak aktif). Mengapa?\n\n```java\n@Service\npublic class PaymentService {\n    @Transactional\n    private void executePayment() {\n        // update saldo\n    }\n}\n```",
+    "code": "@Service\npublic class PaymentService {\n    @Transactional\n    private void executePayment() {\n        // update saldo\n    }\n}",
+    "options": {
+      "A": "@Transactional harus bertipe static",
+      "B": "Spring AOP Proxy secara default hanya meng-intercept method yang bertipe public; anotasi pada private method diabaikan",
+      "C": "Nama method tidak boleh berawalan execute",
+      "D": "Service harus meng-extend TransactionManagementService"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "Spring AOP berbasis proxy dinamis (CGLIB/JDK Dynamic Proxy). Proxy membungkus pemanggilan method eksternal yang 'public'. Method private tidak dapat di-intercept oleh proxy Spring sehingga transaksi tidak pernah dibuat.",
+      "A": "Salah. @Transactional tidak boleh digunakan pada static method.",
+      "B": "Benar. Spring AOP proxy hanya dapat mencegat method public; @Transactional pada private method diabaikan oleh Spring.",
+      "C": "Salah. Penamaan method bebas.",
+      "D": "Salah. Tidak perlu inheritance kelas transaksi."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-029",
-    level: "intermediate",
-    cat: "Spring Boot",
-    q: "Cara mengaktifkan profile 'dev' di Spring Boot?",
-    opts: { A: "@ProfileDev", B: "spring.profiles.active=dev di properti", C: "File dev.properties", D: "--dev argument" },
-    ans: "B",
-    exp: "Profil spring aktif didefinisikan lewat parameter spring.profiles.active di application.properties/yml."
+    "id": "JI-029",
+    "level": "intermediate",
+    "topic": "Spring Boot",
+    "questionType": "debug",
+    "question": "Transaksi berikut tidak di-rollback saat SQLException dilempar. Apa penyebabnya?\n\n```java\n@Service\npublic class UserService {\n    @Transactional\n    public void registerUser() throws SQLException {\n        userRepo.save(new User());\n        throw new SQLException(\"DB Error\");\n    }\n}\n```",
+    "code": "@Service\npublic class UserService {\n    @Transactional\n    public void registerUser() throws SQLException {\n        userRepo.save(new User());\n        throw new SQLException(\"DB Error\");\n    }\n}",
+    "options": {
+      "A": "SQLException bukan exception yang valid di Java",
+      "B": "Secara default @Transactional hanya me-rollback Unchecked Exception (RuntimeException & Error); untuk Checked Exception (seperti SQLException) harus menambahkan rollbackFor = Exception.class",
+      "C": "Harus memanggil userRepo.flush() secara manual",
+      "D": "Method harus mengembalikan boolean"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "Secara default, Spring hanya me-rollback transaksi pada RuntimeException dan Error. Checked Exception (turunan Exception seperti SQLException atau IOException) dianggap skenario yang sudah diantisipasi dan tidak memicu rollback kecuali dikonfigurasi @Transactional(rollbackFor = Exception.class).",
+      "A": "Salah. SQLException adalah checked exception standar Java.",
+      "B": "Benar. Default Spring transaction rollback hanya untuk Unchecked Exception; wajib menambahkan rollbackFor untuk checked exception.",
+      "C": "Salah. Masalahnya ada pada konfigurasi rollback exception.",
+      "D": "Salah. Return type tidak mempengaruhi aturan rollback."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-030",
-    level: "intermediate",
-    cat: "Spring Boot",
-    q: "Anotasi untuk menghindari ambiguitas saat @Autowired banyak bean sejenis?",
-    opts: { A: "@PrimaryOnly", B: "@SelectBean", C: "@Qualifier", D: "@BeanName" },
-    ans: "C",
-    exp: "@Qualifier(\"namaBean\") memaksa container untuk menyuntikkan (inject) bean spesifik sesuai ID yang disebutkan."
+    "id": "JI-030",
+    "level": "intermediate",
+    "topic": "JPA & Hibernate",
+    "questionType": "debug",
+    "question": "Kode berikut melempar LazyInitializationException saat client membaca data orders. Apa penyebabnya?\n\n```java\n@Entity\npublic class Customer {\n    @OneToMany(fetch = FetchType.LAZY)\n    private List<Order> orders;\n}\n// Di luar transaksi:\ncustomer.getOrders().size();\n```",
+    "code": "@Entity\npublic class Customer {\n    @OneToMany(fetch = FetchType.LAZY)\n    private List<Order> orders;\n}\n// Di luar transaksi:\ncustomer.getOrders().size();",
+    "options": {
+      "A": "FetchType.LAZY dilarang di JPA",
+      "B": "Koleksi LAZY diakses setelah Hibernate Session / persistence context ditutup (no Session available)",
+      "C": "orders harus diubah menjadi array",
+      "D": "Customer harus memiliki constructor berparameter"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "Dengan FetchType.LAZY, data asosiasi hanya dimuat saat diakses pertama kali dan membutuhkan Hibernate Session yang aktif. Jika diakses setelah Session ditutup (misalnya di luar service layer / di view), Hibernate melempar LazyInitializationException. Solusinya adalah menggunakan JOIN FETCH, @EntityGraph, atau DTO projection.",
+      "A": "Salah. FetchType.LAZY adalah rekomendasi standar untuk koleksi @OneToMany.",
+      "B": "Benar. Mengakses proxy lazy collection saat Hibernate Session sudah ditutup memicu LazyInitializationException.",
+      "C": "Salah. List adalah interface standar untuk relasi to-many.",
+      "D": "Salah. Entity memerlukan no-args constructor, bukan param constructor."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-031",
-    level: "intermediate",
-    cat: "Spring Boot",
-    q: "Apa bean scope default di Spring?",
-    opts: { A: "Prototype", B: "Request", C: "Session", D: "Singleton" },
-    ans: "D",
-    exp: "Spring Container akan membuat satu objek instance (Singleton) dari sebuah bean secara default di memori."
+    "id": "JI-031",
+    "level": "intermediate",
+    "topic": "Spring Boot",
+    "questionType": "debug",
+    "question": "Method bertanda @Async berikut berjalan secara synchronous (memblokir thread pemanggil). Apa penyebabnya?\n\n```java\n@Service\npublic class ReportService {\n    public void generateAll() {\n        this.processAsync(); // self-invocation\n    }\n    @Async\n    public void processAsync() {}\n}\n```",
+    "code": "@Service\npublic class ReportService {\n    public void generateAll() {\n        this.processAsync(); // self-invocation\n    }\n    @Async\n    public void processAsync() {}\n}",
+    "options": {
+      "A": "Method @Async tidak boleh bertipe void",
+      "B": "Pemanggilan 'this.processAsync()' (self-invocation) dalam kelas yang sama melewati Spring Proxy sehingga aspek async tidak terpicu",
+      "C": "ReportService harus mengimplementasikan Runnable",
+      "D": "Anotasi @Async harus diganti @Thread"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "Mekanisme AOP Spring bekerja dengan memotong pemanggilan dari luar melalui proxy. Pemanggilan internal via 'this' langsung memanggil method objek lokal tanpa melalui proxy, sehingga anotasi @Async diabaikan dan berjalan synchronous.",
+      "A": "Salah. Method @Async boleh mengembalikan void atau CompletableFuture.",
+      "B": "Benar. Self-invocation melewati AOP proxy Spring sehingga fungsionalitas asinkron tidak berjalan.",
+      "C": "Salah. Spring mengelola thread pool sendiri via TaskExecutor.",
+      "D": "Salah. Anotasi resmi adalah @Async."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-032",
-    level: "intermediate",
-    cat: "Spring Boot",
-    q: "Interface inti Spring Security yang menyimpan detail data user login?",
-    opts: { A: "UserPrincipal", B: "UserDetails", C: "SecurityUser", D: "AuthDetails" },
-    ans: "B",
-    exp: "UserDetails menyimpan informasi akun seperti kredensial username/password beserta peran (authorities/roles)."
+    "id": "JI-032",
+    "level": "intermediate",
+    "topic": "Spring Boot",
+    "questionType": "debug",
+    "question": "Dua service berikut gagal di-bootstrap oleh Spring karena Circular Dependency. Bagaimana solusinya?\n\n```java\n@Service\npublic class ServiceA {\n    private final ServiceB b;\n    public ServiceA(ServiceB b) { this.b = b; }\n}\n@Service\npublic class ServiceB {\n    private final ServiceA a;\n    public ServiceB(ServiceA a) { this.a = a; }\n}\n```",
+    "code": "@Service\npublic class ServiceA {\n    private final ServiceB b;\n    public ServiceA(ServiceB b) { this.b = b; }\n}\n@Service\npublic class ServiceB {\n    private final ServiceA a;\n    public ServiceB(ServiceA a) { this.a = a; }\n}",
+    "options": {
+      "A": "Circular dependency terjadi karena ServiceA dan ServiceB saling membutuhkan via constructor; solusinya refaktor desain (misal buat ServiceC) atau gunakan @Lazy pada salah satu constructor",
+      "B": "Ganti kedua kelas menjadi @Repository",
+      "C": "Hapus constructor dan gunakan static variable",
+      "D": "Spring Boot tidak mendukung constructor injection"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "IoC Container tidak dapat menentukan bean mana yang harus dibuat pertama kali karena ServiceA butuh ServiceB dan sebaliknya. Solusi terbaik adalah memecah tanggung jawab ke service perantara atau menggunakan anotasi @Lazy pada salah satu dependensi.",
+      "A": "Benar. Desain circular dependency harus direfaktor atau dipecah dengan anotasi @Lazy.",
+      "B": "Salah. Mengubah stereotype tidak menyelesaikan masalah siklus dependensi.",
+      "C": "Salah. Static variable merusak manajemen lifecycle Spring.",
+      "D": "Salah. Constructor injection adalah standar utama Spring Boot."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-033",
-    level: "intermediate",
-    cat: "Spring Boot",
-    q: "Anotasi untuk memicu validasi constraints pada DTO di controller?",
-    opts: { A: "@Validate", B: "@Check", C: "@Valid", D: "@Verify" },
-    ans: "C",
-    exp: "Biasa disandingkan dengan @RequestBody, @Valid akan mengeksekusi aturan validasi (seperti @NotNull) di DTO."
+    "id": "JI-033",
+    "level": "intermediate",
+    "topic": "JPA & Hibernate",
+    "questionType": "debug",
+    "question": "Query relasi berikut memicu masalah performa 'N+1 Query Problem'. Apa penyebabnya?\n\n```java\nList<Author> authors = authorRepo.findAll();\nfor (Author a : authors) {\n    System.out.println(a.getBooks().size());\n}\n```",
+    "code": "List<Author> authors = authorRepo.findAll();\nfor (Author a : authors) {\n    System.out.println(a.getBooks().size());\n}",
+    "options": {
+      "A": "Hibernate menjalankan 1 query untuk mengambil semua Author, lalu menjalankan N query tambahan untuk memuat relasi books masing-masing Author",
+      "B": "findAll() tidak boleh dipanggil di dalam for-loop",
+      "C": "books harus disimpan di Redis",
+      "D": "Author harus dideklarasikan sebagai abstract class"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "N+1 problem terjadi ketika 1 query utama mengeksekusi findAll() (N entitas), lalu saat iterasi setiap baris memicu query SELECT terpisah ke database untuk mengambil data child (N query tambahan). Solusinya adalah JOIN FETCH atau @EntityGraph.",
+      "A": "Benar. 1 query untuk parent ditambah N query untuk masing-masing relasi child (N+1 query problem).",
+      "B": "Salah. findAll dipanggil di luar loop.",
+      "C": "Salah. Solusi ORM tidak harus menggunakan Redis.",
+      "D": "Salah. Entitas JPA tidak boleh abstract jika di-instansiasi langsung."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-034",
-    level: "intermediate",
-    cat: "Spring Boot",
-    q: "Kegunaan mengembalikan tipe ResponseEntity?",
-    opts: { A: "Format XML", B: "Kontrol HTTP status code, header, dan body respons penuh", C: "Cegah injeksi SQL", D: "Error handling" },
-    ans: "B",
-    exp: "ResponseEntity mewakili keseluruhan respon HTTP, sehingga memberi kebebasan mengatur status dan header secara spesifik."
+    "id": "JI-034",
+    "level": "intermediate",
+    "topic": "Spring Boot",
+    "questionType": "debug",
+    "question": "Request POST pada endpoint berikut selalu mengembalikan HTTP 403 Forbidden padahal kredensial user benar. Apa kemungkinan penyebabnya?\n\n```java\n@PostMapping(\"/api/data\")\npublic ResponseEntity<String> save() {\n    return ResponseEntity.ok(\"Saved\");\n}\n```",
+    "code": "@PostMapping(\"/api/data\")\npublic ResponseEntity<String> save() {\n    return ResponseEntity.ok(\"Saved\");\n}",
+    "options": {
+      "A": "Spring Security mengaktifkan proteksi CSRF secara default untuk method POST; jika request tidak menyertakan CSRF token atau CSRF belum di-disable untuk stateless API, request ditolak 403",
+      "B": "HTTP POST dilarang oleh Spring Security",
+      "C": "Return type ResponseEntity harus bertipe Object",
+      "D": "Port server harus diubah ke 8080"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "Spring Security secara default mengaktifkan CSRF protection. Untuk REST API stateless (misalnya yang menggunakan JWT Token), CSRF harus dinonaktifkan di SecurityFilterChain (http.csrf(csrf -> csrf.disable())) agar request POST/PUT/DELETE tidak ditolak 403.",
+      "A": "Benar. Proteksi CSRF Spring Security yang aktif menolak request POST tanpa token CSRF yang valid.",
+      "B": "Salah. HTTP POST sepenuhnya didukung oleh Spring Security.",
+      "C": "Salah. ResponseEntity<String> sepenuhnya valid.",
+      "D": "Salah. Port server tidak berhubungan dengan otorisasi 403."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-035",
-    level: "intermediate",
-    cat: "REST API",
-    q: "Parameter URL mana yang lazim untuk mengatur paginasi?",
-    opts: { A: "?limit=10&offset=20", B: "?start=20&end=30", C: "?show=10&p2=true", D: "?data=10&s=20" },
-    ans: "A",
-    exp: "Offset dan Limit (atau page dan size) merupakan konvensi standar untuk menentukan data ke-berapa yang mau di-load."
+    "id": "JI-035",
+    "level": "intermediate",
+    "topic": "Spring Boot",
+    "questionType": "debug",
+    "question": "Field bertanda @Value pada kode berikut selalu bernilai null. Apa penyebabnya?\n\n```java\n@Service\npublic class MailService {\n    @Value(\"${mail.host}\")\n    private static String mailHost;\n}\n```",
+    "code": "@Service\npublic class MailService {\n    @Value(\"${mail.host}\")\n    private static String mailHost;\n}",
+    "options": {
+      "A": "Nama properti harus menggunakan garis bawah: mail_host",
+      "B": "Spring tidak dapat menginjeksi nilai @Value ke dalam field bertipe static secara langsung",
+      "C": "Anotasi @Value hanya berlaku di controller",
+      "D": "mailHost harus bertipe Integer"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "Dependency Injection Spring bekerja pada level instance objek, bukan kelas. Field static bukan milik instance tertentu sehingga Spring mengabaikannya saat inisialisasi bean. Solusinya adalah setter injection non-static atau constructor parameter injection.",
+      "A": "Salah. Spring mendukung penamaan kebab-case pada @Value.",
+      "B": "Benar. Field static tidak dapat di-inject langsung dengan @Value oleh Spring IoC Container.",
+      "C": "Salah. @Value dapat digunakan di sembarang Spring Bean (@Component, @Service, dll).",
+      "D": "Salah. Hostname mail bertipe String."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-036",
-    level: "intermediate",
-    cat: "REST API",
-    q: "Cara umum melakukan API versioning, KECUALI:",
-    opts: { A: "Melalui URI Path (/v1/)", B: "Melalui Custom Header", C: "Melalui HTTP Method khusus versi", D: "Melalui Query parameter" },
-    ans: "C",
-    exp: "HTTP Method bersifat standar (GET, POST, PUT, DELETE) dan tidak ditambahkan khusus untuk mengelola versi."
+    "id": "JI-036",
+    "level": "intermediate",
+    "topic": "Spring Boot",
+    "questionType": "debug",
+    "question": "Validasi anotasi seperti @NotBlank dan @Size pada DTO berikut tidak berjalan. Apa yang kurang pada controller?\n\n```java\n@PostMapping(\"/users\")\npublic ResponseEntity<Void> createUser(@RequestBody UserDto dto) {\n    userService.save(dto);\n    return ResponseEntity.ok().build();\n}\n```",
+    "code": "@PostMapping(\"/users\")\npublic ResponseEntity<Void> createUser(@RequestBody UserDto dto) {\n    userService.save(dto);\n    return ResponseEntity.ok().build();\n}",
+    "options": {
+      "A": "Kurang anotasi @Valid atau @Validated sebelum parameter @RequestBody UserDto dto",
+      "B": "UserDto harus meng-extend ValidationObject",
+      "C": "Method harus mengembalikan String",
+      "D": "@RequestBody harus diganti @ModelAttribute"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "Anotasi validasi bean (seperti @NotNull, @Size) pada DTO hanya akan dievaluasi jika parameter method di controller ditandai dengan @Valid (dari jakarta.validation) atau @Validated (dari Spring).",
+      "A": "Benar. Tanpa anotasi @Valid, validator Spring tidak akan memeriksa batasan (constraints) pada DTO.",
+      "B": "Salah. DTO tidak perlu inheritance kelas khusus.",
+      "C": "Salah. Return type tidak mempengaruhi validasi input.",
+      "D": "Salah. @RequestBody sudah tepat untuk JSON payload."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-037",
-    level: "intermediate",
-    cat: "REST API",
-    q: "Apa arti dari CORS dalam REST API?",
-    opts: { A: "Keamanan database", B: "Mekanisme header browser untuk akses origin (domain) berbeda", C: "Kompresi data", D: "Proteksi DDoS" },
-    ans: "B",
-    exp: "CORS adalah spesifikasi keamanan browser yang membatasi akses AJAX HTTP ke domain/origin lain."
+    "id": "JI-037",
+    "level": "intermediate",
+    "topic": "JPA & Hibernate",
+    "questionType": "debug",
+    "question": "Operasi penyimpanan berikut melempar PersistentObjectException (detached entity passed to persist). Apa penyebabnya?\n\n```java\nUser user = new User();\nuser.setId(10L); // set ID manual pada entity dengan auto-generated ID\nem.persist(user);\n```",
+    "code": "User user = new User();\nuser.setId(10L); // set ID manual pada entity dengan auto-generated ID\nem.persist(user);",
+    "options": {
+      "A": "Method persist() tidak boleh dipanggil pada objek User",
+      "B": "Memanggil persist() pada entitas yang sudah memiliki nilai ID non-null dianggap sebagai entity detached, bukan new entity; harus menggunakan merge()",
+      "C": "ID harus bertipe String",
+      "D": "Harus memanggil em.remove() terlebih dahulu"
+    },
+    "answer": "B",
+    "explanation": {
+      "correct": "EntityManager.persist() hanya digunakan untuk entitas baru (transient, ID bernilai null). Jika ID sudah diisi, Hibernate menganggapnya entitas yang sudah pernah ada di database (detached). Untuk entitas detached, harus menggunakan em.merge().",
+      "A": "Salah. persist() adalah method standar JPA.",
+      "B": "Benar. Entity yang sudah memiliki ID non-null dianggap detached saat dipanggil persist(), harus menggunakan merge().",
+      "C": "Salah. ID bertipe Long adalah standar umum.",
+      "D": "Salah. em.remove() untuk menghapus data."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-038",
-    level: "intermediate",
-    cat: "Database/SQL",
-    q: "Manakah contoh Subquery di WHERE klausa?",
-    opts: { A: "SELECT * FROM users WHERE age > 18", B: "SELECT * FROM (SELECT * FROM users)", C: "SELECT * FROM users WHERE id IN (SELECT user_id FROM orders)", D: "SELECT a.* FROM users a JOIN orders b" },
-    ans: "C",
-    exp: "Subquery disisipkan (nested) ke dalam query luar, dalam contoh di atas memberikan filter ID dinamis dari tabel order."
+    "id": "JI-038",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "debug",
+    "question": "Dua objek Person dengan nama dan umur yang sama menghasilkan false saat dicari di HashSet. Apa penyebabnya?\n\n```java\nclass Person {\n    String name; int age;\n    public Person(String n, int a) { name = n; age = a; }\n    @Override public boolean equals(Object o) { ... return true; }\n}\n```",
+    "code": "class Person {\n    String name; int age;\n    public Person(String n, int a) { name = n; age = a; }\n    @Override public boolean equals(Object o) { ... return true; }\n}",
+    "options": {
+      "A": "Kelas Person lupa meng-override method hashCode() yang konsisten dengan equals()",
+      "B": "HashSet tidak mendukung custom class",
+      "C": "equals() harus mengembalikan tipe int",
+      "D": "Field harus dideklarasikan static"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "Kontrak Java mewajibkan: jika dua objek sama menurut equals(), maka hashCode() keduanya harus menghasilkan nilai integer yang sama. Tanpa override hashCode(), objek disimpan di hash bucket yang berbeda sehingga HashSet tidak dapat menemukannya.",
+      "A": "Benar. Wajib meng-override hashCode() bersamaan dengan equals() agar collection berbasis hash (HashSet, HashMap) bekerja benar.",
+      "B": "Salah. HashSet mendukung objek kelas kustom apapun.",
+      "C": "Salah. Method equals wajib mengembalikan boolean.",
+      "D": "Salah. Field instance tidak boleh static untuk merepresentasikan data individu."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-039",
-    level: "intermediate",
-    cat: "Database/SQL",
-    q: "Kelemahan utama memiliki terlalu banyak Index?",
-    opts: { A: "Memperlambat pembacaan", B: "Memperlambat modifikasi (INSERT/UPDATE/DELETE)", C: "Ubah tipe data", D: "Deadlock" },
-    ans: "B",
-    exp: "Walaupun SELECT jadi kencang, operasi DML memakan waktu lebih lama karena harus terus menulis ulang index tree."
+    "id": "JI-039",
+    "level": "intermediate",
+    "topic": "Spring Boot",
+    "questionType": "debug",
+    "question": "Method terjadwal berikut tidak pernah dieksekusi secara periodik. Apa yang kurang pada kelas konfigurasi aplikasi?\n\n```java\n@Component\npublic class DailyTask {\n    @Scheduled(fixedRate = 5000)\n    public void runTask() {\n        System.out.println(\"Running...\");\n    }\n}\n```",
+    "code": "@Component\npublic class DailyTask {\n    @Scheduled(fixedRate = 5000)\n    public void runTask() {\n        System.out.println(\"Running...\");\n    }\n}",
+    "options": {
+      "A": "Lupa menambahkan anotasi @EnableScheduling pada kelas konfigurasi utama Spring Boot",
+      "B": "Nilai fixedRate harus lebih besar dari 10000",
+      "C": "Method runTask harus memiliki parameter String",
+      "D": "Kelas harus meng-extend TimerTask"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "Spring Boot memerlukan anotasi @EnableScheduling (biasanya pada kelas utama @SpringBootApplication) untuk mengaktifkan pemindaian dan eksekutor background task bertanda @Scheduled.",
+      "A": "Benar. @EnableScheduling wajib disertakan untuk mengaktifkan pemrosesan background scheduling di Spring.",
+      "B": "Salah. fixedRate 5000 (5 detik) sepenuhnya valid.",
+      "C": "Salah. Method @Scheduled tidak boleh menerima parameter.",
+      "D": "Salah. TimerTask adalah API lama Java, bukan Spring Scheduler."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-040",
-    level: "intermediate",
-    cat: "Database/SQL",
-    q: "Perbedaan utama LEFT JOIN dan RIGHT JOIN?",
-    opts: { A: "Beda nama", B: "LEFT JOIN pertahankan semua data tabel kiri meskipun kanan tidak cocok", C: "Keduanya identik", D: "Kiri lebih cepat" },
-    ans: "B",
-    exp: "Tabel di sebelah kiri klausa JOIN akan selalu di-return, dan kolom tabel di kanannya akan bernilai null jika tak ada match."
+    "id": "JI-040",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "debug",
+    "question": "Kode berikut melempar ClassCastException saat runtime. Apa penyebabnya?\n\n```java\nObject obj = \"Hello World\";\nInteger num = (Integer) obj;\n```",
+    "code": "Object obj = \"Hello World\";\nInteger num = (Integer) obj;",
+    "options": {
+      "A": "String tidak dapat di-cast ke Integer karena bukan merupakan subclass dari Integer",
+      "B": "Objek harus diinisialisasi dengan kata kunci new",
+      "C": "Integer adalah tipe data primitif",
+      "D": "Harus menggunakan operator instanceOf sebelum assignment"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "Meskipun tipe referensi awalnya Object, objek nyata saat runtime adalah String. String dan Integer berada di hierarki kelas yang berbeda dan tidak saling mewarisi, sehingga casting eksplisit melempar ClassCastException.",
+      "A": "Benar. Objek runtime String tidak dapat di-cast ke Integer karena tidak berada dalam garis keturunan inheritance yang sama.",
+      "B": "Salah. String literal di pool adalah objek valid.",
+      "C": "Salah. Integer adalah wrapper class objek, sedangkan primitifnya adalah int.",
+      "D": "Salah. Operator yang benar adalah instanceof, namun inti masalahnya adalah ketidakcocokan tipe."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-041",
-    level: "intermediate",
-    cat: "JPA/Database",
-    q: "Jika tabel 'Order' punya 'user_id' (Foreign Key) ke 'User', anotasi di entitas Order adalah?",
-    opts: { A: "@OneToMany", B: "@ManyToMany", C: "@ManyToOne", D: "@OneToOne" },
-    ans: "C",
-    exp: "Sebuah order dimiliki oleh satu user, tapi satu user memiliki banyak order. Entitas pemegang Foreign Key adalah ManyToOne."
+    "id": "JI-041",
+    "level": "intermediate",
+    "topic": "JPA & Hibernate",
+    "questionType": "debug",
+    "question": "Query JPQL update berikut melempar TransactionRequiredException. Apa yang kurang?\n\n```java\n@Repository\npublic interface ItemRepository extends JpaRepository<Item, Long> {\n    @Modifying\n    @Query(\"UPDATE Item i SET i.stock = 0 WHERE i.active = false\")\n    void resetInactiveStock();\n}\n```",
+    "code": "@Repository\npublic interface ItemRepository extends JpaRepository<Item, Long> {\n    @Modifying\n    @Query(\"UPDATE Item i SET i.stock = 0 WHERE i.active = false\")\n    void resetInactiveStock();\n}",
+    "options": {
+      "A": "Method modifikasi data massal (bulk update/delete) di Spring Data JPA wajib dijalankan di dalam transaksi (@Transactional)",
+      "B": "Query UPDATE dilarang di JPQL",
+      "C": "Return type harus selalu void",
+      "D": "@Modifying harus dihapus"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "Anotasi @Modifying menandai query DML (UPDATE atau DELETE). Eksekusi query modifikasi database di JPA mewajibkan adanya transaksi aktif (@Transactional) pada service pemanggil atau pada method repository.",
+      "A": "Benar. Query modifikasi data memerlukan konteks transaksi aktif (@Transactional), jika tidak JPA melempar TransactionRequiredException.",
+      "B": "Salah. JPQL mendukung klausa UPDATE dan DELETE.",
+      "C": "Salah. Return type bisa void atau int (jumlah baris terpengaruh).",
+      "D": "Salah. @Modifying wajib ada untuk query non-SELECT."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-042",
-    level: "intermediate",
-    cat: "JPA/Database",
-    q: "Perbedaan FetchType.LAZY vs EAGER?",
-    opts: { A: "LAZY memuat data dari database on-demand, EAGER memuat semuanya langsung", B: "EAGER lebih irit RAM", C: "LAZY eksklusif Hibernate", D: "EAGER mencegah problem N+1" },
-    ans: "A",
-    exp: "Lazy loading digunakan untuk menunda eksekusi query sampai entitas relasi benar-benar diakses di kode."
+    "id": "JI-042",
+    "level": "intermediate",
+    "topic": "Spring Boot",
+    "questionType": "debug",
+    "question": "Deserialisasi JSON ke objek Java berikut gagal saat mapping nilai tanggal (DateTimeParseException). Apa solusinya?\n\n```java\npublic class EventDto {\n    private LocalDateTime eventTime;\n}\n```",
+    "code": "public class EventDto {\n    private LocalDateTime eventTime;\n}",
+    "options": {
+      "A": "Menambahkan anotasi @JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\") pada field LocalDateTime",
+      "B": "Mengubah tipe data menjadi String saja dan tidak pernah memakai LocalDateTime",
+      "C": "Menggunakan package java.util.Date lama",
+      "D": "Menghapus field eventTime dari DTO"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "Jackson membutuhkan format pola yang jelas untuk mem-parse format tanggal lokal ke kelas java.time.LocalDateTime. Menggunakan anotasi @JsonFormat(pattern = \"...\") mengatur pola parsing secara tepat.",
+      "A": "Benar. @JsonFormat mengatur pola string format tanggal yang diterima dan dihasilkan Jackson.",
+      "B": "Salah. Mengubah ke String menghilangkan validasi tipe tanggal yang aman.",
+      "C": "Salah. java.util.Date adalah API lama yang sudah digantikan oleh java.time.",
+      "D": "Salah. Solusinya bukan menghapus data."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-043",
-    level: "intermediate",
-    cat: "Testing",
-    q: "Apa fungsi utama Mockito di Unit Test Java?",
-    opts: { A: "Uji UI web", B: "Membuat object tiruan (mock) untuk isolasi dari dependency external", C: "Load testing database", D: "Tulis test BDD" },
-    ans: "B",
-    exp: "Mockito mensimulasikan perilaku ketergantungan (dependencies) sehingga unit test fokus pada alur method internal yang diuji."
+    "id": "JI-043",
+    "level": "intermediate",
+    "topic": "Java Core",
+    "questionType": "debug",
+    "question": "Kode multi-threading berikut menghasilkan nilai counter yang tidak konsisten (race condition). Apa solusinya?\n\n```java\npublic class Counter {\n    private int count = 0;\n    public void increment() { count++; }\n}\n```",
+    "code": "public class Counter {\n    private int count = 0;\n    public void increment() { count++; }\n}",
+    "options": {
+      "A": "Menambahkan keyword 'synchronized' pada method increment() atau menggunakan AtomicInteger",
+      "B": "Menjadikan method increment() static",
+      "C": "Mengubah int menjadi double",
+      "D": "Menghapus method increment()"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "Operasi count++ terdiri dari tiga langkah: read, modify, write (tidak atomic). Jika diakses banyak thread secara paralel, terjadi race condition. Menggunakan synchronized atau kelas java.util.concurrent.atomic.AtomicInteger menjamin atomisitas eksekusi.",
+      "A": "Benar. Sinkronisasi (synchronized) atau AtomicInteger mencegah data race condition antar thread.",
+      "B": "Salah. Static method tanpa sinkronisasi tetap rentan race condition.",
+      "C": "Salah. Tipe double juga tidak thread-safe.",
+      "D": "Salah. Method dibutuhkan untuk bisnis proses."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-044",
-    level: "intermediate",
-    cat: "Testing",
-    q: "Beda @Mock dan @InjectMocks?",
-    opts: { A: "@Mock buat asli", B: "@Mock buat tiruan, @InjectMocks buat objek uji (SUT) dan menyuntikkan mock padanya", C: "Sama saja", D: "@Mock Spring" },
-    ans: "B",
-    exp: "@InjectMocks menginisialisasi objek class asli lalu meletakkan komponen-komponen anotasi @Mock ke dalam propertinya."
+    "id": "JI-044",
+    "level": "intermediate",
+    "topic": "Spring Boot",
+    "questionType": "debug",
+    "question": "Controller gagal mengembalikan response dan mengalami infinite recursion saat diserialisasi ke JSON. Apa penyebabnya?\n\n```java\n@Entity\npublic class Department {\n    @OneToMany(mappedBy = \"dept\")\n    private List<Employee> employees;\n}\n@Entity\npublic class Employee {\n    @ManyToOne\n    private Department dept;\n}\n```",
+    "code": "@Entity\npublic class Department {\n    @OneToMany(mappedBy = \"dept\")\n    private List<Employee> employees;\n}\n@Entity\npublic class Employee {\n    @ManyToOne\n    private Department dept;\n}",
+    "options": {
+      "A": "Relasi dua arah (bidirectional) menyebabkan serialisasi Jackson bolak-balik tanpa henti; solusinya gunakan @JsonManagedReference dan @JsonBackReference atau DTO",
+      "B": "Spring Boot tidak mendukung relasi ManyToOne",
+      "C": "Department harus bertipe Record",
+      "D": "Employee harus meng-extend Department"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "Bidirectional relationship menyebabkan Department merujuk Employee, dan Employee merujuk Department kembali, menghasilkan infinite loop saat Jackson membuat JSON hingga terjadi StackOverflowError. Menggunakan DTO atau anotasi Jackson (@JsonIgnore / @JsonManagedReference) memutus siklus ini.",
+      "A": "Benar. Serialisasi relasi bidirectional memicu siklus rekursif tak berujung, harus diputus dengan DTO atau anotasi Jackson.",
+      "B": "Salah. JPA sangat mendukung relasi ManyToOne.",
+      "C": "Salah. Entity JPA tidak disarankan sebagai Record.",
+      "D": "Salah. Relasi ini asosiasi, bukan inheritance."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-045",
-    level: "intermediate",
-    cat: "Testing",
-    q: "Fungsi method verify() di Mockito?",
-    opts: { A: "Cek return value", B: "Cek behavior (berapa kali dan argument apa) suatu method dipanggil pada mock", C: "Cek struktur tabel", D: "Cek exception" },
-    ans: "B",
-    exp: "verify(mockObj, times(1)).method() mengevaluasi apakah proses interaksi antara SUT ke mock terjadi sesuai ekspektasi."
+    "id": "JI-045",
+    "level": "intermediate",
+    "topic": "JPA & Hibernate",
+    "questionType": "debug",
+    "question": "Kode berikut melempar OptimisticLockException saat dua user mengupdate data yang sama secara bersamaan. Mengapa?\n\n```java\n@Entity\npublic class Account {\n    @Id private Long id;\n    @Version private Long version;\n    private BigDecimal balance;\n}\n```",
+    "code": "@Entity\npublic class Account {\n    @Id private Long id;\n    @Version private Long version;\n    private BigDecimal balance;\n}",
+    "options": {
+      "A": "Anotasi @Version mendeteksi konflik update paralel (optimistic locking) ketika data sudah diubah oleh transaksi lain",
+      "B": "Field version harus bertipe String",
+      "C": "Anotasi @Version dilarang digunakan di JPA",
+      "D": "Database tidak mendukung transaksi"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "@Version mengimplementasikan Optimistic Locking: setiap update memeriksa apakah versi di database sama dengan versi di memori. Jika transaksi lain sudah menaikkan nomor versi terlebih dahulu, Hibernate mendeteksi collision dan melempar OptimisticLockException.",
+      "A": "Benar. OptimisticLockException terjadi saat Hibernate mendeteksi versi data di database telah berubah oleh transaksi lain.",
+      "B": "Salah. Tipe versi standar adalah Long, Integer, atau Timestamp.",
+      "C": "Salah. @Version adalah fitur resmi standar JPA.",
+      "D": "Salah. Optimistic locking bekerja di level aplikasi/ORM di atas database transaksional."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-046",
-    level: "intermediate",
-    cat: "Testing",
-    q: "Cara mendefinisikan return value mock object pada Mockito?",
-    code: `// Mockito.when(mockRepo.findById(1)).[?]`,
-    opts: { A: "thenReturn()", B: "returnValue()", C: "mockReturn()", D: "returnThis()" },
-    ans: "A",
-    exp: "Pola stubbing dasar Mockito yakni when(x).thenReturn(y) memberi tahu mock apa yang harus dikembalikan."
+    "id": "JI-046",
+    "level": "intermediate",
+    "topic": "JPA & Hibernate",
+    "questionType": "completion",
+    "question": "Lengkapi anotasi pada method repository untuk memuat relasi eager secara dinamis guna mencegah N+1 problem:\n\n```java\n@___(attributePaths = {\"orders\", \"orders.items\"})\nOptional<Customer> findWithOrdersById(Long id);\n```",
+    "code": "@___(attributePaths = {\"orders\", \"orders.items\"})\nOptional<Customer> findWithOrdersById(Long id);",
+    "options": {
+      "A": "@EntityGraph",
+      "B": "@FetchGraph",
+      "C": "@JoinGraph",
+      "D": "@DynamicFetch"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "@EntityGraph di Spring Data JPA memungkinkan pendefinisian atribut yang harus dimuat secara EAGER dalam satu query JOIN FETCH untuk method query tertentu.",
+      "A": "Benar. @EntityGraph mengatasi N+1 problem dengan melakukan eager fetching sesuai path yang didefinisikan.",
+      "B": "Salah. FetchGraph adalah properti/tipe di JPA, bukan anotasi method Spring Data.",
+      "C": "Salah. JoinGraph bukan anotasi resmi.",
+      "D": "Salah. DynamicFetch bukan anotasi JPA."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-047",
-    level: "intermediate",
-    cat: "Clean Code",
-    q: "Open/Closed Principle (OCP) berarti?",
-    opts: { A: "Open modify, closed extend", B: "Terbuka ditambahkan fitur (extensi), tertutup modifikasi kode existing (modifikasi)", C: "Koneksi buka/tutup", D: "Sistem Open Source" },
-    ans: "B",
-    exp: "Menambahkan spesifikasi baru dengan cara membuat class inheritance/interface baru ketimbang mengedit blok kode yang sudah jadi."
+    "id": "JI-047",
+    "level": "intermediate",
+    "topic": "Spring Boot",
+    "questionType": "completion",
+    "question": "Lengkapi konfigurasi Spring Security untuk mengizinkan akses publik tanpa autentikasi pada endpoint '/api/auth/**':\n\n```java\nhttp.authorizeHttpRequests(auth -> auth\n    .requestMatchers(\"/api/auth/**\").___\n    .anyRequest().authenticated()\n);\n```",
+    "code": "http.authorizeHttpRequests(auth -> auth\n    .requestMatchers(\"/api/auth/**\").___\n    .anyRequest().authenticated()\n);",
+    "options": {
+      "A": "permitAll()",
+      "B": "allowAll()",
+      "C": "openAccess()",
+      "D": "noAuth()"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "Method permitAll() pada SecurityFilterChain menyatakan bahwa semua request yang cocok dengan matcher URL tersebut diizinkan masuk tanpa memerlukan token atau login.",
+      "A": "Benar. permitAll() memberikan akses bebas tanpa autentikasi pada URL matcher tersebut.",
+      "B": "Salah. allowAll bukan method Spring Security.",
+      "C": "Salah. openAccess bukan method resmi.",
+      "D": "Salah. noAuth tidak ada di DSL Spring Security."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-048",
-    level: "intermediate",
-    cat: "Clean Code",
-    q: "Pattern untuk membuat objek kompleks dengan atribut opsional banyak?",
-    opts: { A: "Singleton", B: "Observer", C: "Builder", D: "Adapter" },
-    ans: "C",
-    exp: "Menghindari telescoping constructor (konstruktor yang bertumpuk sangat panjang dan ambigu parameternya)."
+    "id": "JI-048",
+    "level": "intermediate",
+    "topic": "JPA & Hibernate",
+    "questionType": "completion",
+    "question": "Lengkapi relasi satu departemen memiliki banyak karyawan dengan pengaturan orphan removal:\n\n```java\n@OneToMany(mappedBy = \"department\", cascade = CascadeType.ALL, orphanRemoval = ___)\nprivate List<Employee> employees;\n```",
+    "code": "@OneToMany(mappedBy = \"department\", cascade = CascadeType.ALL, orphanRemoval = ___)\nprivate List<Employee> employees;",
+    "options": {
+      "A": "true",
+      "B": "false",
+      "C": "CascadeType.REMOVE",
+      "D": "null"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "orphanRemoval = true memastikan bahwa jika sebuah Employee dihapus dari list employees di objek Department, baris Employee tersebut otomatis di-DELETE dari tabel database.",
+      "A": "Benar. orphanRemoval = true otomatis menghapus entity anak saat referensinya dilepas dari koleksi induk.",
+      "B": "Salah. false tidak mengaktifkan fitur orphan removal.",
+      "C": "Salah. orphanRemoval menerima tipe boolean, bukan enum CascadeType.",
+      "D": "Salah. Nilai harus boolean true/false."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-049",
-    level: "intermediate",
-    cat: "Clean Code",
-    q: "Pattern menyembunyikan logika pembuatan instansiasi dengan menyediakan static method / interface?",
-    opts: { A: "Factory Pattern", B: "Decorator Pattern", C: "Proxy Pattern", D: "Facade Pattern" },
-    ans: "A",
-    exp: "Factory Method menyerahkan keputusan pembuatan spesifik implementasi sub-class ke dalam sebuah class 'Pabrik'."
+    "id": "JI-049",
+    "level": "intermediate",
+    "topic": "Spring Boot",
+    "questionType": "completion",
+    "question": "Lengkapi method repository Spring Data untuk melakukan pagination dan sorting:\n\n```java\nPage<Product> findByCategory(String category, ___ pageable);\n```",
+    "code": "Page<Product> findByCategory(String category, ___ pageable);",
+    "options": {
+      "A": "Pageable",
+      "B": "Pagination",
+      "C": "PageRequest",
+      "D": "Paging"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "Parameter bertipe interface org.springframework.data.domain.Pageable digunakan oleh Spring Data JPA untuk menerapkan limit, offset, dan ORDER BY secara otomatis pada query database.",
+      "A": "Benar. Interface Pageable adalah standar Spring Data untuk paginasi.",
+      "B": "Salah. Pagination bukan tipe parameter Spring Data.",
+      "C": "Salah. PageRequest adalah implementasi konkret, parameter method sebaiknya interface Pageable.",
+      "D": "Salah. Paging bukan tipe yang valid."
+    },
+    "jobId": "junior-java"
   },
   {
-    id: "JI-050",
-    level: "intermediate",
-    cat: "Security",
-    q: "Pernyataan yang tepat tentang JSON Web Token (JWT)?",
-    opts: { A: "Otomatis dienkripsi rahasia", B: "Stateful database", C: "Payload tidak rahasia (bisa di-decode Base64), tapi token tidak bisa dimanipulasi tanpa Secret Key", D: "Hanya Java" },
-    ans: "C",
-    exp: "Bagian tengah JWT (Payload) hanyalah data JSON biasa yang di encode Base64, sehingga data sensitif dilarang disimpan disitu."
+    "id": "JI-050",
+    "level": "intermediate",
+    "topic": "Spring Boot",
+    "questionType": "completion",
+    "question": "Lengkapi anotasi caching untuk menyimpan hasil method ke dalam cache 'products':\n\n```java\n@Service\npublic class ProductService {\n    @___(value = \"products\", key = \"#id\")\n    public Product getById(Long id) {\n        return repo.findById(id).orElse(null);\n    }\n}\n```",
+    "code": "@Service\npublic class ProductService {\n    @___(value = \"products\", key = \"#id\")\n    public Product getById(Long id) {\n        return repo.findById(id).orElse(null);\n    }\n}",
+    "options": {
+      "A": "@Cacheable",
+      "B": "@CachePut",
+      "C": "@CacheEvict",
+      "D": "@EnableCache"
+    },
+    "answer": "A",
+    "explanation": {
+      "correct": "@Cacheable memeriksa apakah data dengan key tersebut sudah ada di cache; jika ada, data cache langsung dikembalikan tanpa mengeksekusi body method database.",
+      "A": "Benar. @Cacheable menyimpan hasil return method ke cache dan membaca kembali pada pemanggilan berikutnya.",
+      "B": "Salah. @CachePut selalu mengeksekusi method untuk memperbarui cache.",
+      "C": "Salah. @CacheEvict digunakan untuk menghapus data dari cache.",
+      "D": "Salah. @EnableCaching diletakkan di kelas konfigurasi."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-051",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Bagaimana HashMap di Java 8+ menangani collision ketika jumlah elemen dalam satu bucket melebihi batas ambang (TREEIFY_THRESHOLD = 8)?",
+    "topic": "Spring Boot",
+    "questionType": "completion",
+    "question": "Lengkapi anotasi untuk membersihkan data cache saat sebuah produk dihapus:\n\n```java\n@___(value = \"products\", key = \"#id\")\npublic void deleteProduct(Long id) {\n    repo.deleteById(id);\n}\n```",
+    "code": "@___(value = \"products\", key = \"#id\")\npublic void deleteProduct(Long id) {\n    repo.deleteById(id);\n}",
     "options": {
-      "A": "Mengubah struktur linked list di dalam bucket menjadi Red-Black Tree (TreeNode) untuk menurunkan kompleksitas pencarian menjadi O(log n)",
-      "B": "Secara otomatis membuang elemen terlama (FIFO) agar kapasitas bucket tetap 8",
-      "C": "Melemparkan exception HashCollisionException ke pemanggil",
-      "D": "Memperbesar ukuran bucket menjadi dua kali lipat tanpa mengubah struktur list"
+      "A": "@CacheEvict",
+      "B": "@CacheRemove",
+      "C": "@CacheClear",
+      "D": "@CacheDrop"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Di Java 8+, ketika sebuah bucket HashMap memiliki lebih dari 8 node (TREEIFY_THRESHOLD) dan kapasitas total tabel minimal 64, linked list pada bucket tersebut akan diubah menjadi Red-Black Tree seimbang, sehingga performa lookup membaik dari O(n) menjadi O(log n).",
-      "A": "Opsi A benar karena menjelaskan mekanisme treeification Red-Black Tree di Java 8.",
-      "B": "Opsi B salah karena HashMap bukan LRU cache (LinkedHashMap memiliki mekanisme penggusuran, tetapi bukan dengan membuang elemen secara sembarangan).",
-      "C": "Opsi C salah karena hash collision adalah fenomena normal dan tidak melempar exception.",
-      "D": "Opsi D salah karena ekspansi array (rehashing) terjadi berdasarkan load factor keseluruhan, bukan hanya per bucket."
-    }
+      "correct": "@CacheEvict bertugas menghapus satu atau seluruh entri dari cache yang ditentukan, menjaga agar data cache tidak usang (stale data) setelah operasi delete atau update.",
+      "A": "Benar. @CacheEvict menghapus entri cache spesifik berdasarkan key #id.",
+      "B": "Salah. CacheRemove bukan anotasi Spring Cache (itu standar JSR-107).",
+      "C": "Salah. CacheClear bukan anotasi bawaan Spring.",
+      "D": "Salah. CacheDrop bukan anotasi yang valid."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-052",
     "level": "intermediate",
     "topic": "Java Core",
-    "question": "Mengapa ConcurrentHashMap jauh lebih scalable dan berkinerja tinggi dalam lingkungan multi-threading dibandingkan Collections.synchronizedMap()?",
+    "questionType": "completion",
+    "question": "Lengkapi pemanggilan CompletableFuture untuk menjalankan task secara asinkron:\n\n```java\nCompletableFuture<String> future = CompletableFuture.___( () -> {\n    return fetchExternalData();\n});\n```",
+    "code": "CompletableFuture<String> future = CompletableFuture.___( () -> {\n    return fetchExternalData();\n});",
     "options": {
-      "A": "ConcurrentHashMap menggunakan segment locking atau CAS (Compare-And-Swap) dan synchronized hanya pada level node/bucket individual, sedangkan synchronizedMap mengunci seluruh tabel map untuk setiap operasi",
-      "B": "ConcurrentHashMap menyimpan semua datanya di CPU cache L1 tanpa menyentuh RAM",
-      "C": "ConcurrentHashMap tidak mengizinkan operasi read secara bersamaan",
-      "D": "ConcurrentHashMap menonaktifkan mekanisme garbage collection untuk entry-nya"
+      "A": "supplyAsync",
+      "B": "runAsync",
+      "C": "callAsync",
+      "D": "startAsync"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Collections.synchronizedMap menggunakan mutex lock tunggal untuk seluruh instance map (setiap operasi write/read bersaing memperebutkan lock yang sama). ConcurrentHashMap menggunakan fine-grained lock per bucket node dan operasi non-blocking CAS untuk pembacaan bersamaan (concurrent reads).",
-      "A": "Opsi A benar karena lock striping/bucket-level locking dan CAS memungkinkan throughput konkurensi tinggi.",
-      "B": "Opsi B salah karena memori Java heap selalu berada di RAM.",
-      "C": "Opsi C salah karena ConcurrentHashMap justru mendukung pembacaan paralel non-blocking tanpa lock.",
-      "D": "Opsi D salah karena entry ConcurrentHashMap tetap dikelola oleh Garbage Collector secara normal."
-    }
+      "correct": "CompletableFuture.supplyAsync menerima Supplier<U> yang mengembalikan nilai hasil secara asinkron. (Sedangkan runAsync menerima Runnable yang tidak mengembalikan nilai / void).",
+      "A": "Benar. supplyAsync digunakan untuk task asinkron yang mengembalikan nilai.",
+      "B": "Salah. runAsync hanya untuk task bertipe void (tanpa return value).",
+      "C": "Salah. callAsync bukan method CompletableFuture.",
+      "D": "Salah. startAsync tidak tersedia di CompletableFuture."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-053",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Diberikan operasi Stream berikut: list.stream().flatMap(List::stream). Apakah fungsi utama dari flatMap() di sini?",
+    "topic": "JPA & Hibernate",
+    "questionType": "completion",
+    "question": "Lengkapi query JPQL dengan klausa JOIN FETCH untuk memuat relasi secara bersamaan:\n\n```java\n@Query(\"SELECT c FROM Customer c ___ c.orders WHERE c.id = :id\")\nOptional<Customer> findDetailById(@Param(\"id\") Long id);\n```",
+    "code": "@Query(\"SELECT c FROM Customer c ___ c.orders WHERE c.id = :id\")\nOptional<Customer> findDetailById(@Param(\"id\") Long id);",
     "options": {
-      "A": "Meratakan (flatten) nested collection atau Stream<List<T>> menjadi satu Stream<T> datar",
-      "B": "Menghapus elemen duplikat di dalam nested list",
-      "C": "Menyortir list secara descending sebelum diproses",
-      "D": "Mengonversi list menjadi Map key-value pair"
+      "A": "JOIN FETCH",
+      "B": "INNER JOIN",
+      "C": "LEFT JOIN",
+      "D": "MERGE JOIN"
     },
     "answer": "A",
     "explanation": {
-      "correct": "flatMap() menerima fungsi yang memetakan setiap elemen menjadi sebuah Stream terpisah, lalu menggabungkan semua stream parsial tersebut menjadi satu stream tunggal yang rata (flattening).",
-      "A": "Opsi A benar karena flatMap menggabungkan nested stream menjadi single flattened stream.",
-      "B": "Opsi B salah karena penghapusan duplikasi dilakukan oleh operasi .distinct().",
-      "C": "Opsi C salah karena pengurutan dilakukan oleh .sorted().",
-      "D": "Opsi D salah karena konversi ke Map dilakukan oleh Collectors.toMap()."
-    }
+      "correct": "Klausa 'JOIN FETCH' dalam JPQL memberitahu Hibernate untuk melakukan SQL JOIN dan langsung menginisialisasi koleksi asosiasi ke dalam memori, mengatasi masalah N+1 query.",
+      "A": "Benar. JOIN FETCH menginstruksikan JPA memuat entitas relasi secara eager dalam satu query SQL.",
+      "B": "Salah. INNER JOIN biasa hanya memfilter data tanpa menginisialisasi proxy koleksi anak.",
+      "C": "Salah. LEFT JOIN biasa tidak otomatis me-populate field entitas anak di JPA.",
+      "D": "Salah. MERGE JOIN adalah algoritma query execution engine database, bukan sintaks JPQL."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-054",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Perhatikan kode: List<? extends Number> numbers = new ArrayList<Integer>();. Manakah pernyataan yang benar mengenai batas wildcard (bounded wildcard) ini?",
+    "topic": "Spring Boot",
+    "questionType": "completion",
+    "question": "Lengkapi anotasi keamanan berbasis peran (Role-Based Access Control) di tingkat method service:\n\n```java\n@___(\"hasRole('ADMIN')\")\npublic void deleteUser(Long id) {\n    userRepo.deleteById(id);\n}\n```",
+    "code": "@___(\"hasRole('ADMIN')\")\npublic void deleteUser(Long id) {\n    userRepo.deleteById(id);\n}",
     "options": {
-      "A": "numbers aman untuk dibaca (read) sebagai Number, tetapi tidak dapat ditambahkan elemen baru (kecuali null) karena compiler tidak tahu tipe konkret elemennya",
-      "B": "numbers bebas ditambahkan elemen bertipe Integer maupun Double secara bersamaan",
-      "C": "Kode di atas menghasilkan compile error karena Integer bukan subclass dari Number",
-      "D": "numbers hanya dapat dibaca sebagai tipe Object murni"
+      "A": "@PreAuthorize",
+      "B": "@Secured",
+      "C": "@RolesAllowed",
+      "D": "@CheckRole"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Menurut prinsip PECS (Producer Extends, Consumer Super), wildcard '? extends T' bertindak sebagai Producer (hanya bisa dibaca). Compiler melarang penambahan elemen (kecuali null) karena tipe konkret yang tersimpan bisa berupa Long, Double, atau subclass Number lain yang tidak kompatibel.",
-      "A": "Opsi A benar sesuai aturan covariance dan pembatasan penulisan pada '? extends'.",
-      "B": "Opsi B salah karena penambahan elemen tipe konkret dilarang oleh compiler untuk mencegah runtime type violation.",
-      "C": "Opsi C salah karena Integer adalah subclass langsung dari java.lang.Number.",
-      "D": "Opsi D salah karena elemen yang dibaca aman di-cast dan diperlakukan sebagai Number."
-    }
+      "correct": "@PreAuthorize menerima ekspresi Spring EL (SpEL) seperti hasRole('ADMIN') yang dievaluasi sebelum method dijalankan.",
+      "A": "Benar. @PreAuthorize mendukung SpEL ekspresi hasRole('ADMIN') secara fleksibel.",
+      "B": "Salah. @Secured tidak mendukung ekspresi SpEL (hanya string literal role).",
+      "C": "Salah. @RolesAllowed adalah anotasi JSR-250.",
+      "D": "Salah. @CheckRole bukan anotasi Spring Security."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-055",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Apakah perbedaan prinsip PECS antara 'List<? super Integer>' dan 'List<? extends Number>'?",
+    "topic": "Spring Boot",
+    "questionType": "completion",
+    "question": "Lengkapi anotasi penanganan CORS pada Spring Controller:\n\n```java\n@RestController\n@___(origins = \"http://localhost:3000\")\npublic class ApiController {}\n```",
+    "code": "@RestController\n@___(origins = \"http://localhost:3000\")\npublic class ApiController {}",
     "options": {
-      "A": "'? super Integer' adalah Consumer (dapat menerima penambahan Integer), sedangkan '? extends Number' adalah Producer (hanya dapat dibaca sebagai Number)",
-      "B": "'? super' hanya bisa membaca data, sedangkan '? extends' hanya bisa menulis data",
-      "C": "Keduanya identik dan hanya perbedaan gaya penulisan",
-      "D": "'? super' membatasi tipe ke level superclass paling atas (Object saja)"
+      "A": "@CrossOrigin",
+      "B": "@AllowOrigins",
+      "C": "@CorsMapping",
+      "D": "@CorsPolicy"
     },
     "answer": "A",
     "explanation": {
-      "correct": "PECS (Producer Extends, Consumer Super) menjelaskan: jika struktur data menghasilkan data (Producer), gunakan extends. Jika struktur data mengonsumsi data (Consumer/menulis), gunakan super (kita aman menambahkan instance Integer ke dalam List<? super Integer>).",
-      "A": "Opsi A benar karena merangkum prinsip utama PECS.",
-      "B": "Opsi B salah karena membalik konsep Producer dan Consumer.",
-      "C": "Opsi C salah karena extends dan super memiliki aturan variance yang berlawanan (covariance vs contravariance).",
-      "D": "Opsi D salah karena '? super Integer' dapat memegang List<Integer>, List<Number>, atau List<Object>."
-    }
+      "correct": "Anotasi @CrossOrigin pada tingkat controller atau handler method mengonfigurasi header HTTP Access-Control-Allow-Origin untuk mengizinkan request dari origin tertentu.",
+      "A": "Benar. @CrossOrigin adalah anotasi resmi Spring MVC untuk penanganan CORS.",
+      "B": "Salah. AllowOrigins bukan anotasi Spring.",
+      "C": "Salah. CorsMapping bukan anotasi yang valid.",
+      "D": "Salah. CorsPolicy bukan anotasi Spring MVC."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-056",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Apa fungsi utama dari keyword 'volatile' pada variabel yang diakses oleh banyak thread di Java?",
+    "topic": "JPA & Hibernate",
+    "questionType": "completion",
+    "question": "Lengkapi definisi field versi untuk mengaktifkan Optimistic Locking di JPA:\n\n```java\n@Entity\npublic class Product {\n    @Id private Long id;\n    @___\n    private Long version;\n}\n```",
+    "code": "@Entity\npublic class Product {\n    @Id private Long id;\n    @___\n    private Long version;\n}",
     "options": {
-      "A": "Menjamin 'visibility' dengan memaksa pembacaan dan penulisan variabel langsung ke main memory (bukan CPU cache thread), serta mencegah instruction reordering",
-      "B": "Menjadikan operasi increment (seperti i++) bersifat atomic",
-      "C": "Mengunci variabel sehingga hanya satu thread yang bisa membacanya pada satu waktu",
-      "D": "Menyimpan variabel di memori disk agar persisten setelah JVM mati"
+      "A": "@Version",
+      "B": "@Optimistic",
+      "C": "@LockVersion",
+      "D": "@Revision"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Keyword volatile memastikan nilai terbaru yang ditulis oleh satu thread langsung terlihat (visible) oleh semua thread lain karena menonaktifkan caching variabel pada register CPU lokal thread dan mencegah reordering compiler/CPU.",
-      "A": "Opsi A benar karena volatile menjamin visibility dan ordering tanpa locking.",
-      "B": "Opsi B salah karena volatile TIDAK menjamin atomicity operasi majemuk seperti read-modify-write (i++).",
-      "C": "Opsi C salah karena volatile tidak melakukan blocking atau mutual exclusion locking.",
-      "D": "Opsi D salah karena volatile tidak berhubungan dengan persistensi disk."
-    }
+      "correct": "Anotasi @Version (jakarta.persistence.Version) menandai field yang digunakan JPA untuk mendeteksi concurrent modifications menggunakan mekanisme optimistic locking.",
+      "A": "Benar. @Version adalah anotasi standar JPA untuk optimistic concurrency control.",
+      "B": "Salah. @Optimistic bukan anotasi JPA.",
+      "C": "Salah. @LockVersion tidak ada di spesifikasi JPA.",
+      "D": "Salah. @Revision biasanya digunakan oleh Hibernate Envers untuk auditing."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-057",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Mengapa operasi 'count++' tidak thread-safe meskipun variabel 'count' telah dideklarasikan sebagai 'volatile'?",
+    "topic": "Spring Boot",
+    "questionType": "completion",
+    "question": "Lengkapi deklarasi Global Exception Handler di Spring Boot:\n\n```java\n@___\npublic class GlobalExceptionHandler {\n    @ExceptionHandler(ResourceNotFoundException.class)\n    public ResponseEntity<ErrorDto> handleNotFound(ResourceNotFoundException e) {\n        return ResponseEntity.status(404).body(new ErrorDto(e.getMessage()));\n    }\n}\n```",
+    "code": "@___\npublic class GlobalExceptionHandler {\n    @ExceptionHandler(ResourceNotFoundException.class)\n    public ResponseEntity<ErrorDto> handleNotFound(ResourceNotFoundException e) {\n        return ResponseEntity.status(404).body(new ErrorDto(e.getMessage()));\n    }\n}",
     "options": {
-      "A": "Karena operasi 'count++' terdiri dari tiga langkah instruksi terpisah: read, modify, dan write yang tidak bersifat atomic",
-      "B": "Karena tipe data primitif tidak mendukung multi-threading",
-      "C": "Karena volatile hanya bekerja pada objek class, bukan integer primitif",
-      "D": "Karena compiler Java otomatis menghapus volatile pada operasi matematika"
+      "A": "@RestControllerAdvice",
+      "B": "@ServiceAdvice",
+      "C": "@ControllerHelper",
+      "D": "@ExceptionInterceptor"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Operasi 'count++' adalah kombinasi: (1) membaca nilai count, (2) menambah 1, (3) menulis kembali ke memori. Di antara ketiga langkah ini, thread lain dapat menginterupsi, menimbulkan race condition (lost update). Untuk atomicitas gunakan AtomicInteger.",
-      "A": "Opsi A benar karena mengidentifikasi non-atomic read-modify-write cycle.",
-      "B": "Opsi B salah karena tipe primitif didukung di multithreading dengan atomic classes atau sinkronisasi.",
-      "C": "Opsi C salah karena volatile dapat diterapkan pada tipe data primitif.",
-      "D": "Opsi D salah karena compiler mempertahankan semantics volatile."
-    }
+      "correct": "@RestControllerAdvice menggabungkan @ControllerAdvice dan @ResponseBody, memungkinkan penanganan exception secara global yang otomatis mengembalikan response body JSON.",
+      "A": "Benar. @RestControllerAdvice menangani exception di seluruh controller aplikasi dan mereturn JSON.",
+      "B": "Salah. ServiceAdvice bukan anotasi Spring.",
+      "C": "Salah. ControllerHelper tidak ada di Spring MVC.",
+      "D": "Salah. ExceptionInterceptor bukan anotasi Spring."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-058",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Dalam interface CompletableFuture di Java 8+, method manakah yang digunakan untuk merangkai tugas asynchronous lanjutan yang menerima hasil dari tugas sebelumnya dan mengembalikan CompletableFuture baru?",
+    "topic": "Spring Boot",
+    "questionType": "completion",
+    "question": "Lengkapi method injection di Spring untuk memilih salah satu implementasi interface jika terdapat beberapa bean:\n\n```java\n@Service\npublic class PaymentProcessor {\n    private final PaymentService paymentService;\n    public PaymentProcessor(@___(\"creditCardService\") PaymentService paymentService) {\n        this.paymentService = paymentService;\n    }\n}\n```",
+    "code": "@Service\npublic class PaymentProcessor {\n    private final PaymentService paymentService;\n    public PaymentProcessor(@___(\"creditCardService\") PaymentService paymentService) {\n        this.paymentService = paymentService;\n    }\n}",
     "options": {
-      "A": "thenCompose()",
-      "B": "thenApply()",
-      "C": "thenAccept()",
-      "D": "join()"
+      "A": "@Qualifier",
+      "B": "@NamedBean",
+      "C": "@PrimaryBean",
+      "D": "@Specific"
     },
     "answer": "A",
     "explanation": {
-      "correct": "thenCompose() digunakan untuk monadic composition (serupa flatMap), di mana fungsi callback mengembalikan CompletableFuture lain, menghindari bersarangnya Future (CompletableFuture<CompletableFuture<T>>).",
-      "A": "Opsi A benar karena thenCompose meratakan asynchronous pipeline.",
-      "B": "Opsi B salah karena thenApply (seperti map) untuk fungsi transformasi synchronous biasa yang mengembalikan nilai langsung.",
-      "C": "Opsi C salah karena thenAccept hanya mengonsumsi hasil (Consumer) tanpa mengembalikan nilai (mengembalikan CompletableFuture<Void>).",
-      "D": "Opsi D salah karena join() adalah operasi blocking untuk menunggu dan mengambil hasil."
-    }
+      "correct": "Jika terdapat lebih dari satu bean yang mengimplementasikan interface yang sama, anotasi @Qualifier(\"namaBean\") digunakan untuk menentukan bean spesifik mana yang harus diinjeksi.",
+      "A": "Benar. @Qualifier membedakan bean kandidat yang ambigu pada saat dependency injection.",
+      "B": "Salah. NamedBean bukan anotasi Spring.",
+      "C": "Salah. @Primary diletakkan di definisi kelas bean, bukan pada parameter constructor.",
+      "D": "Salah. Specific bukan anotasi Spring."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-059",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Apa keuntungan utama menggunakan ReentrantLock dibandingkan blok 'synchronized' bawaan Java?",
+    "topic": "JPA & Hibernate",
+    "questionType": "completion",
+    "question": "Lengkapi method Derived Query Spring Data JPA untuk mencari user berdasarkan email dan status aktif:\n\n```java\npublic interface UserRepository extends JpaRepository<User, Long> {\n    Optional<User> findByEmail___Status(String email, String status);\n}\n```",
+    "code": "public interface UserRepository extends JpaRepository<User, Long> {\n    Optional<User> findByEmail___Status(String email, String status);\n}",
     "options": {
-      "A": "Mendukung fitur tryLock() dengan batas timeout, interruptible lock acquisition, dan keadilan penjadwalan (fairness policy)",
-      "B": "Tidak perlu dipanggil di dalam blok finally untuk melepaskan kuncinya",
-      "C": "Bisa mengunci objek di JVM yang berbeda melalui network",
-      "D": "Memiliki konsumsi memori nol dan tidak memerlukan objek instance"
+      "A": "And",
+      "B": "With",
+      "C": "Plus",
+      "D": "Together"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ReentrantLock dari package java.util.concurrent.locks menawarkan fleksibilitas tingkat lanjut yang tidak dimiliki blok synchronized, seperti tryLock() dengan timeout, lockInterruptibly(), fair lock policy, dan multiple Condition per lock.",
-      "A": "Opsi A benar karena merangkum fitur unggulan ReentrantLock.",
-      "B": "Opsi B salah karena ReentrantLock justru WAJIB dilepaskan secara manual di dalam blok finally (lock.unlock()).",
-      "C": "Opsi C salah karena ReentrantLock hanya bekerja lokal pada satu proses JVM (untuk distributed lock gunakan Redis/Redisson atau Zookeeper).",
-      "D": "Opsi D salah karena ReentrantLock adalah objek biasa di heap."
-    }
+      "correct": "Spring Data JPA menggunakan kata kunci 'And' di antara nama field untuk menggabungkan beberapa kriteria pencarian dalam derived query method (menjadi WHERE email = ? AND status = ?).",
+      "A": "Benar. Kata kunci 'And' adalah operator logika konjungsi pada Spring Data derived queries.",
+      "B": "Salah. With bukan kata kunci query creation Spring Data.",
+      "C": "Salah. Plus tidak didukung oleh parser query Spring Data.",
+      "D": "Salah. Together bukan kata kunci yang valid."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-060",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Apa yang terjadi ketika dua objek memiliki nilai 'hashCode()' yang sama, tetapi 'equals()' mengembalikan false saat dimasukkan ke dalam HashMap?",
+    "topic": "Spring Boot",
+    "questionType": "completion",
+    "question": "Lengkapi implementasi response tanpa body dengan status HTTP 204 No Content untuk operasi DELETE:\n\n```java\n@DeleteMapping(\"/users/{id}\")\npublic ResponseEntity<Void> deleteUser(@PathVariable Long id) {\n    userService.delete(id);\n    return ResponseEntity.___.build();\n}\n```",
+    "code": "@DeleteMapping(\"/users/{id}\")\npublic ResponseEntity<Void> deleteUser(@PathVariable Long id) {\n    userService.delete(id);\n    return ResponseEntity.___.build();\n}",
     "options": {
-      "A": "Keduanya akan disimpan di bucket yang sama sebagai node berantai (collision list atau tree node)",
-      "B": "Objek kedua akan menimpa (overwrite) objek pertama",
-      "C": "HashMap akan melempar exception DuplicateKeyException",
-      "D": "Objek kedua akan dibuang tanpa peringatan"
+      "A": "noContent()",
+      "B": "empty()",
+      "C": "deleted()",
+      "D": "ok()"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Kondisi ini disebut hash collision. HashMap akan menempatkan entry baru ke dalam bucket yang sama dengan entry lama, membentuk linked list (atau tree jika sudah melebihi ambang batas) tanpa menimpa entry lama karena equals() bernilai false.",
-      "A": "Opsi A benar karena mendeskripsikan mekanisme resolusi hash collision pada separate chaining.",
-      "B": "Opsi B salah karena penimpaan hanya terjadi jika equals() bernilai true.",
-      "C": "Opsi C salah karena HashMap mengizinkan collision dan tidak melempar exception.",
-      "D": "Opsi D salah karena kedua entry tetap tersimpan dengan selamat di map."
-    }
+      "correct": "ResponseEntity.noContent().build() menghasilkan HTTP Response dengan status 204 No Content tanpa payload body, sesuai standar REST API untuk operasi DELETE yang sukses.",
+      "A": "Benar. noContent() membuat ResponseEntity dengan status HTTP 204.",
+      "B": "Salah. empty bukan static builder method di ResponseEntity.",
+      "C": "Salah. deleted bukan kode status HTTP resmi.",
+      "D": "Salah. ok() menghasilkan status 200, sedangkan standar operasi tanpa body adalah 204."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-061",
     "level": "intermediate",
     "topic": "Java Core",
-    "question": "Dalam Stream API, collector apakah yang digunakan untuk mengelompokkan koleksi objek berdasarkan atribut tertentu menjadi Map<K, List<V>>?",
+    "questionType": "completion",
+    "question": "Lengkapi method reference untuk mengkonversi objek Stream menjadi string representasinya:\n\n```java\nList<String> list = items.stream()\n    .map(Object::___)\n    .collect(Collectors.toList());\n```",
+    "code": "List<String> list = items.stream()\n    .map(Object::___)\n    .collect(Collectors.toList());",
     "options": {
-      "A": "Collectors.groupingBy()",
-      "B": "Collectors.partitioningBy()",
-      "C": "Collectors.toMap()",
-      "D": "Collectors.summarizingInt()"
+      "A": "toString",
+      "B": "asString",
+      "C": "getString",
+      "D": "convertString"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Collectors.groupingBy() mengelompokkan elemen stream berdasarkan fungsi klasifikasi dan menghasilkan Map dengan kunci berupa hasil klasifikasi dan nilai berupa List elemen yang cocok.",
-      "A": "Opsi A benar karena groupingBy adalah collector standar untuk SQL-like GROUP BY.",
-      "B": "Opsi B salah karena partitioningBy mengelompokkan khusus menjadi dua grup berdasarkan kondisi boolean (Map<Boolean, List<V>>).",
-      "C": "Opsi C salah karena toMap memetakan elemen 1:1 dan akan melempar IllegalStateException jika ada duplikasi key.",
-      "D": "Opsi D salah karena summarizingInt menghasilkan ringkasan statistik (count, sum, min, max, average)."
-    }
+      "correct": "Method reference Object::toString memanggil method toString() pada setiap elemen objek stream.",
+      "A": "Benar. Object::toString adalah method reference standar untuk memanggil toString().",
+      "B": "Salah. asString bukan method kelas Object.",
+      "C": "Salah. getString bukan method di kelas dasar Object.",
+      "D": "Salah. convertString tidak tersedia di kelas Object."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-062",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Apa tujuan utama dari fitur Record (diperkenalkan sebagai fitur standar di Java 16)?",
+    "topic": "Spring Boot",
+    "questionType": "completion",
+    "question": "Lengkapi anotasi Transactional dengan mode read-only untuk optimasi performa query:\n\n```java\n@Transactional(___ = true)\npublic List<UserDto> findAllUsers() {\n    return userRepo.findAll().stream().map(this::toDto).collect(Collectors.toList());\n}\n```",
+    "code": "@Transactional(___ = true)\npublic List<UserDto> findAllUsers() {\n    return userRepo.findAll().stream().map(this::toDto).collect(Collectors.toList());\n}",
     "options": {
-      "A": "Menyediakan cara ringkas untuk mendefinisikan kelas pembawa data immutable dengan getter, equals(), hashCode(), dan toString() otomatis",
-      "B": "Menggantikan seluruh fungsionalitas database relasional di memori Java",
-      "C": "Membuat kelas yang dapat mewarisi (extend) banyak superclass",
-      "D": "Mengotomatisasi mapping REST API ke controller"
+      "A": "readOnly",
+      "B": "immutable",
+      "C": "noWrite",
+      "D": "queryOnly"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Java Record (record Point(int x, int y) {}) adalah kelas pembawa data transparan dan immutable, di mana compiler secara otomatis menghasilkan private final field, canonical constructor, accessor method, equals, hashCode, dan toString.",
-      "A": "Opsi A benar karena merangkum esensi dan keuntungan Java Records.",
-      "B": "Opsi B salah karena Record bukan sistem database.",
-      "C": "Opsi C salah karena Record secara implisit meng-extend java.lang.Record dan tidak boleh meng-extend class lain.",
-      "D": "Opsi D salah karena Record adalah fitur bahasa inti, bukan framework web."
-    }
+      "correct": "@Transactional(readOnly = true) memberi sinyal ke Hibernate dan driver database bahwa transaksi tidak melakukan perubahan data, sehingga Hibernate menonaktifkan dirty checking dan menghemat alokasi memori.",
+      "A": "Benar. readOnly = true mengoptimalkan performa transaksi query di JPA/Hibernate.",
+      "B": "Salah. immutable bukan atribut @Transactional.",
+      "C": "Salah. noWrite bukan parameter anotasi transaksi.",
+      "D": "Salah. queryOnly bukan atribut yang valid."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-063",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Perhatikan method: list.parallelStream().forEach(System.out::println);. Masalah apa yang paling mungkin terjadi dibandingkan stream serial?",
+    "topic": "JPA & Hibernate",
+    "questionType": "completion",
+    "question": "Lengkapi relasi banyak-ke-banyak (Many-to-Many) pada Entity JPA:\n\n```java\n@Entity\npublic class Student {\n    @Id private Long id;\n    @___\n    @JoinTable(name = \"student_course\",\n        joinColumns = @JoinColumn(name = \"student_id\"),\n        inverseJoinColumns = @JoinColumn(name = \"course_id\"))\n    private Set<Course> courses;\n}\n```",
+    "code": "@Entity\npublic class Student {\n    @Id private Long id;\n    @___\n    @JoinTable(name = \"student_course\",\n        joinColumns = @JoinColumn(name = \"student_id\"),\n        inverseJoinColumns = @JoinColumn(name = \"course_id\"))\n    private Set<Course> courses;\n}",
     "options": {
-      "A": "Urutan pencetakan elemen tidak terjamin dan dapat berantakan",
-      "B": "Stream otomatis gagal dengan UnsupportedOperationException",
-      "C": "Semua elemen akan dicetak dua kali",
-      "D": "JVM akan kehabisan memori seketika"
+      "A": "@ManyToMany",
+      "B": "@OneToMany",
+      "C": "@ManyToOne",
+      "D": "@MultipleMapping"
     },
     "answer": "A",
     "explanation": {
-      "correct": "parallelStream() membagi pekerjaan ke thread pool ForkJoinPool.commonPool(). Karena thread mengeksekusi elemen secara paralel dan tanpa sinkronisasi urutan, forEach() akan mencetak elemen tanpa urutan yang pasti. Jika urutan penting, gunakan forEachOrdered().",
-      "A": "Opsi A benar karena paralelisme tidak menjamin traversal order.",
-      "B": "Opsi B salah karena parallelStream didukung penuh.",
-      "C": "Opsi C salah karena elemen diproses tepat sekali.",
-      "D": "Opsi D salah karena ForkJoinPool menggunakan thread yang proporsional dengan jumlah core CPU."
-    }
+      "correct": "Relasi di mana banyak Student dapat mengambil banyak Course dimodelkan dengan anotasi @ManyToMany bersama anotasi @JoinTable untuk mendefinisikan tabel junction.",
+      "A": "Benar. @ManyToMany digunakan untuk relasi banyak-ke-banyak antara Student dan Course.",
+      "B": "Salah. @OneToMany untuk satu-ke-banyak.",
+      "C": "Salah. @ManyToOne untuk banyak-ke-satu.",
+      "D": "Salah. MultipleMapping bukan anotasi JPA."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-064",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Struktur data koleksi apakah yang mengimplementasikan antrean prioritas berbasis binary heap di Java?",
+    "topic": "JPA & Hibernate",
+    "questionType": "best-practice",
+    "question": "Mana strategi paling efektif untuk menghindari N+1 Query Problem saat mengambil entitas bersarang di Spring Data JPA?\n\n```java\n// Pengambilan data Order beserta daftar OrderItem-nya\n```",
+    "code": "// Pengambilan data Order beserta daftar OrderItem-nya",
     "options": {
-      "A": "PriorityQueue",
-      "B": "ArrayDeque",
-      "C": "LinkedList",
-      "D": "TreeSet"
+      "A": "Mengubah relasi menjadi FetchType.EAGER di entity mapping",
+      "B": "Menggunakan JOIN FETCH pada query JPQL atau @EntityGraph pada repository method",
+      "C": "Menjalankan query loop manual di for-each",
+      "D": "Menonaktifkan caching Hibernate"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "PriorityQueue adalah implementasi Queue berbasis min-heap tak terbatas, di mana elemen dengan prioritas tertinggi (atau nilai terendah menurut natural ordering / Comparator) selalu berada di kepala antrean (head) dan diambil dengan poll() dalam O(log n).",
-      "A": "Opsi A benar karena PriorityQueue mengimplementasikan heap-based priority queue.",
-      "B": "Opsi B salah karena ArrayDeque adalah double-ended queue berbasis resizable circular array tanpa prioritas.",
-      "C": "Opsi C salah karena LinkedList adalah linear FIFO queue biasa.",
-      "D": "Opsi D salah karena TreeSet adalah Set berbasis Red-Black Tree, bukan antrean Queue."
-    }
+      "correct": "Mengubah ke FetchType.EAGER secara global adalah anti-pattern yang dapat memperlambat seluruh aplikasi. Menggunakan JOIN FETCH atau @EntityGraph secara selektif pada query yang membutuhkannya adalah solusi terbaik dan paling efisien.",
+      "A": "Salah. Global FetchType.EAGER berbahaya karena selalu memuat seluruh data anak bahkan saat tidak dibutuhkan.",
+      "B": "Benar. @EntityGraph atau JOIN FETCH memuat relasi spesifik dalam satu SQL query saat dibutuhkan tanpa efek samping global.",
+      "C": "Salah. Loop manual justru memicu N+1 query.",
+      "D": "Salah. Caching tidak otomatis menyelesaikan N+1 problem pada query awal."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-065",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Apakah perbedaan utama antara thread-safe collection CopyOnWriteArrayList dan Collections.synchronizedList()?",
+    "topic": "Spring Boot",
+    "questionType": "best-practice",
+    "question": "Mana cara terbaik mendesain REST API Response DTO yang konsisten dan informatif?\n\n```java\n// Format response API standar\n```",
+    "code": "// Format response API standar",
     "options": {
-      "A": "CopyOnWriteArrayList membuat salinan array baru setiap kali terjadi operasi mutasi (add/set/remove), sehingga sangat cepat untuk pembacaan bersamaan tanpa lock",
-      "B": "CopyOnWriteArrayList mengunci list saat proses pembacaan iterator",
-      "C": "synchronizedList tidak memerlukan sinkronisasi saat iterasi dengan for-each",
-      "D": "CopyOnWriteArrayList melempar ConcurrentModificationException saat diiterasi sambil dimodifikasi"
+      "A": "Mengembalikan String pesan saja: return \"Success\";",
+      "B": "Menggunakan generic response wrapper class: ResponseEntity<ApiResponse<T>> yang memuat status, message, data, dan timestamp",
+      "C": "Mengembalikan Map<String, Object> mentah tanpa tipe data",
+      "D": "Mengembalikan HttpServletResponse dan menulis langsung dengan PrintWriter"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "CopyOnWriteArrayList menyalin seluruh array underlying saat ada penulisan data. Iterator-nya bekerja pada snapshot array saat iterator dibuat, sehingga iterator tidak pernah melempar ConcurrentModificationException dan operasi read berjalan bebas lock.",
-      "A": "Opsi A benar karena snapshot array memungkinkan concurrent reading dengan throughput maksimal.",
-      "B": "Opsi B salah karena operasi read pada CopyOnWriteArrayList sama sekali tidak membutuhkan lock.",
-      "C": "Opsi C salah karena iterasi pada synchronizedList WAJIB disinkronkan secara manual di dalam blok synchronized(list).",
-      "D": "Opsi D salah karena iterator CopyOnWriteArrayList tidak pernah melempar ConcurrentModificationException."
-    }
+      "correct": "Generic wrapper DTO (ApiResponse<T>) menyediakan struktur JSON yang seragam di seluruh endpoint (misal: code, message, data, timestamp), mempermudah integrasi frontend/mobile client dan type-safety.",
+      "A": "Salah. String sederhana tidak cukup informatif untuk aplikasi frontend modern.",
+      "B": "Benar. Wrapper terstruktur dengan generic tipe data menjamin konsistensi kontrak API dan mempermudah konsumsi data.",
+      "C": "Salah. Map<String, Object> menghilangkan type-safety dan dokumentasi Swagger/OpenAPI.",
+      "D": "Salah. Menulis manual ke PrintWriter mengabaikan fitur konversi otomatis Spring MVC."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-066",
     "level": "intermediate",
     "topic": "Java Core",
-    "question": "Apa kegunaan dari class AtomicInteger dibandingkan variabel integer biasa di Java?",
+    "questionType": "best-practice",
+    "question": "Mana cara terbaik membuat immutable data carrier class di Java modern (Java 16+)?\n\n```java\n// DTO untuk membawa data user (id, name, email)\n```",
+    "code": "// DTO untuk membawa data user (id, name, email)",
     "options": {
-      "A": "Menyediakan operasi atomik seperti incrementAndGet() dan compareAndSet() berbasis hardware CPU CAS (Compare-And-Swap) tanpa overhead lock",
-      "B": "Menyimpan angka bilangan bulat dengan kapasitas tak terbatas melampaui 64-bit",
-      "C": "Menjamin angka selalu positif",
-      "D": "Mengonversi angka menjadi string JSON secara otomatis"
+      "A": "public class UserDto { public Long id; public String name; }",
+      "B": "public record UserDto(Long id, String name, String email) {}",
+      "C": "public class UserDto { private Long id; // tanpa constructor }",
+      "D": "public abstract class UserDto {}"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "AtomicInteger memanfaatkan instruksi tingkat CPU Compare-And-Swap (CAS) untuk melakukan modifikasi nilai secara thread-safe tanpa menggunakan blocking lock (lock-free thread-safety).",
-      "A": "Opsi A benar karena atomic operations didasarkan pada mekanisme CAS non-blocking.",
-      "B": "Opsi B salah karena kapasitas tak terbatas adalah fungsi dari BigInteger.",
-      "C": "Opsi C salah karena AtomicInteger dapat menampung nilai negatif layaknya integer biasa.",
-      "D": "Opsi D salah karena konversi JSON dilakukan oleh library seperti Jackson."
-    }
+      "correct": "Java Records menyediakan cara ringkas dan aman untuk mendefinisikan kelas immutable data carrier. Compiler otomatis membuatkan private final fields, constructor kanonikal, getter accessor, equals(), hashCode(), dan toString().",
+      "A": "Salah. Kelas publik biasa dengan field mutable rawan dimodifikasi.",
+      "B": "Benar. Java Record adalah fitur bawaan resmi untuk kelas pembawa data yang ringkas dan immutable.",
+      "C": "Salah. Kelas tanpa constructor tidak dapat diinisialisasi dengan data.",
+      "D": "Salah. Kelas abstract tidak bisa di-instansiasi."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-067",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Di Java, mengapa method wait(), notify(), dan notifyAll() didefinisikan di class java.lang.Object dan bukan di class Thread?",
+    "topic": "Spring Boot",
+    "questionType": "best-practice",
+    "question": "Mana cara logging yang paling tepat dan efisien menggunakan SLF4J di kelas Service?\n\n```java\n// Logging aktivitas login user\n```",
+    "code": "// Logging aktivitas login user",
     "options": {
-      "A": "Karena mekanisme wait dan notify terikat pada monitor lock yang dimiliki oleh setiap objek di Java, bukan pada thread itu sendiri",
-      "B": "Karena class Thread tidak memiliki akses ke memori heap",
-      "C": "Hanya karena alasan historis tanpa dasar arsitektural",
-      "D": "Agar method tersebut dapat di-override di interface"
+      "A": "System.out.println(\"User login: \" + username);",
+      "B": "log.info(\"User {} berhasil login pada IP {}\", username, ipAddress);",
+      "C": "log.info(\"User \" + username + \" berhasil login pada IP \" + ipAddress);",
+      "D": "log.error(\"User login\"); // gunakan error untuk semua log"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "Di Java, setiap objek memiliki monitor/intrinsic lock. Thread melepaskan atau menunggu giliran pada monitor lock objek tertentu (shared resource), sehingga method sinkronisasi ini melekat pada objek yang dipantau (Object monitor).",
-      "A": "Opsi A benar karena intrinsic lock berada pada level instance Object.",
-      "B": "Opsi B salah karena instance Thread adalah objek Java normal di heap.",
-      "C": "Opsi C salah karena ini adalah keputusan desain fundamental arsitektur monitor Java.",
-      "D": "Opsi D salah karena method ini final dan tidak boleh di-override."
-    }
+      "correct": "Menggunakan parameter placeholder '{}' menghindari biaya konkatenasi string di memori jika level log tersebut tidak aktif (misal log.debug saat level info), dan kodenya lebih bersih.",
+      "A": "Salah. System.out.println tidak memiliki konfigurasi log level, formatting terpusat, atau asinkronus file appender.",
+      "B": "Benar. SLF4J parameterized logging ({}) efisien memori dan menghindari alokasi string yang tidak perlu.",
+      "C": "Salah. String concatenation (+) tetap mengevaluasi string meskipun log level dinonaktifkan.",
+      "D": "Salah. Level ERROR hanya untuk exception atau kegagalan fatal."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-068",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Apa fungsi dari ThreadLocal di Java?",
+    "topic": "Spring Boot",
+    "questionType": "best-practice",
+    "question": "Mana praktik terbaik penanganan transaksi yang melibatkan pemanggilan API pihak ketiga (eksternal)?\n\n```java\n// Proses checkout yang memanggil payment gateway eksternal dan menyimpan ke database\n```",
+    "code": "// Proses checkout yang memanggil payment gateway eksternal dan menyimpan ke database",
     "options": {
-      "A": "Menyediakan variabel yang nilainya terisolasi dan mandiri untuk setiap thread yang mengaksesnya",
-      "B": "Mengirim variabel antar JVM melalui jaringan lokal",
-      "C": "Mengubah thread biasa menjadi Daemon thread",
-      "D": "Membatasi eksekusi thread hanya pada satu core CPU lokal"
+      "A": "Membungkus seluruh method termasuk HTTP call payment gateway di dalam @Transactional",
+      "B": "Memanggil API eksternal di luar batas @Transactional, lalu hanya membungkus operasi update database di dalam transaksi singkat",
+      "C": "Tidak perlu menggunakan database transaksi sama sekali",
+      "D": "Mengatur timeout database menjadi tak terhingga"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "ThreadLocal mengikat nilai variabel ke thread saat ini (Current Thread). Setiap thread memiliki salinan independennya sendiri dari variabel tersebut, sangat berguna untuk menyimpan context seperti UserContext atau TransactionContext dalam request-per-thread model.",
-      "A": "Opsi A benar karena ThreadLocal menyediakan per-thread variable storage.",
-      "B": "Opsi B salah karena ThreadLocal hanya ada di dalam memori satu proses JVM.",
-      "C": "Opsi C salah karena daemon status diatur via thread.setDaemon(true).",
-      "D": "Opsi D salah karena alokasi core CPU dikontrol oleh OS scheduler."
-    }
+      "correct": "Koneksi database dari connection pool adalah resource berharga. Jika API eksternal lambat atau mengalami latency jaringan (misal 5 detik), koneksi database akan tertahan selama itu dan dapat menyebabkan connection pool exhaustion. Operasi I/O lambat harus di luar transaksi.",
+      "A": "Salah. Menahan transaksi saat menunggu HTTP call eksternal dapat menguras database connection pool (pool exhaustion).",
+      "B": "Benar. Transaksi database harus dijaga seringkas mungkin; panggil API eksternal di luar blok transaksi.",
+      "C": "Salah. Transaksi tetap diperlukan untuk konsistensi data database internal.",
+      "D": "Salah. Menghapus timeout justru membuat server rentan hang/deadlock."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-069",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Perhatikan kode: Optional<User> opt = ...; Apa perbedaan antara opt.orElse(createUser()) dan opt.orElseGet(this::createUser)?",
+    "topic": "JPA & Hibernate",
+    "questionType": "best-practice",
+    "question": "Mana cara terbaik mengelola migrasi skema database di lingkungan produksi Spring Boot?\n\n```java\n// Pengelolaan evolusi tabel database\n```",
+    "code": "// Pengelolaan evolusi tabel database",
     "options": {
-      "A": "orElse() selalu mengevaluasi argumen createUser() terlepas dari apakah Optional bernilai kosong atau tidak, sedangkan orElseGet() hanya mengeksekusi supplier createUser secara lazy saat Optional kosong",
-      "B": "orElse() melempar NoSuchElementException jika kosong, orElseGet tidak",
-      "C": "orElseGet() mengeksekusi method di thread terpisah",
-      "D": "Keduanya persis sama karena compiler Java mengoptimasi keduanya menjadi bytecode identik"
+      "A": "Menggunakan spring.jpa.hibernate.ddl-auto=update di production",
+      "B": "Menggunakan tool migration versioning seperti Flyway atau Liquibase dengan script SQL terkelola",
+      "C": "Menjalankan script SQL manual langsung di database production tanpa version control",
+      "D": "Menggunakan ddl-auto=create-drop"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "orElse(T other) adalah pemanggilan method biasa yang mengevaluasi parameter 'other' secara eager. orElseGet(Supplier<? extends T>) menerima functional interface yang hanya dipanggil (lazy evaluation) ketika Optional benar-benar kosong, menghindari kalkulasi atau operasi I/O yang tidak perlu.",
-      "A": "Opsi A benar karena eager evaluation pada orElse dapat menyebabkan efek samping dan penurunan performa jika nilainya mahal untuk dibuat.",
-      "B": "Opsi B salah karena orElseThrow yang melempar exception.",
-      "C": "Opsi C salah karena orElseGet berjalan sinkron di thread pemanggil.",
-      "D": "Opsi D salah karena perilaku eksekusinya berbeda secara fundamental."
-    }
+      "correct": "Hibernate ddl-auto=update tidak aman untuk production karena dapat mengunci tabel, tidak dapat rollback, dan tidak mendukung migrasi data kompleks. Flyway/Liquibase mencatat riwayat skema di tabel versioning secara deterministik.",
+      "A": "Salah. ddl-auto=update tidak dapat diandalkan dan berisiko merusak data production.",
+      "B": "Benar. Flyway atau Liquibase adalah standar industri untuk migrasi skema database yang aman dan reproducible.",
+      "C": "Salah. Eksekusi manual rawan human error dan tidak terlacak di version control.",
+      "D": "Salah. create-drop akan menghapus seluruh database setiap kali aplikasi shutdown."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-070",
     "level": "intermediate",
     "topic": "Java Core",
-    "question": "Apa dampak dari menangkap (catching) Throwable atau Error di blok catch aplikasi bisnis?",
+    "questionType": "best-practice",
+    "question": "Mana praktik terbaik dalam mendefinisikan Custom Exception di aplikasi Java Spring Boot?\n\n```java\n// Exception saat resource tidak ditemukan\n```",
+    "code": "// Exception saat resource tidak ditemukan",
     "options": {
-      "A": "Sangat tidak dianjurkan karena Error (seperti OutOfMemoryError, StackOverflowError) menandakan kondisi fatal JVM yang tidak seharusnya dipulihkan oleh kode aplikasi",
-      "B": "Merupakan best practice agar aplikasi tidak pernah crash di server produksi",
-      "C": "Wajib dilakukan untuk semua method yang mengakses koneksi database",
-      "D": "Mempercepat waktu kompilasi program"
+      "A": "public class ResourceNotFoundException extends Exception {}",
+      "B": "public class ResourceNotFoundException extends RuntimeException {\n    public ResourceNotFoundException(String message) { super(message); }\n}",
+      "C": "public class ResourceNotFoundException extends Throwable {}",
+      "D": "public class ResourceNotFoundException extends Error {}"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "java.lang.Error dirancang untuk kondisi abnormal serius yang tidak boleh ditangani oleh aplikasi normal. Menangkap Error dapat membuat JVM berada dalam kondisi state rusak (corrupted state) yang berbahaya.",
-      "A": "Opsi A benar karena aplikasi seharusnya hanya menangani Exception dan turunannya.",
-      "B": "Opsi B salah karena menyembunyikan Error fatal justru memperparah kegagalan sistem.",
-      "C": "Opsi C salah karena koneksi database melempar SQLException (turunan Exception), bukan Error.",
-      "D": "Opsi D salah karena catch block dievaluasi saat runtime, tidak mempercepat kompilasi."
-    }
+      "correct": "Custom Exception untuk logika bisnis sebaiknya meng-extend RuntimeException (Unchecked Exception) agar tidak mengotori signature method dengan deklarasi throws, serta otomatis didukung oleh mekanisme rollback transaksi Spring.",
+      "A": "Salah. Meng-extend Exception (Checked) mewajibkan klausa throws di setiap interface dan method.",
+      "B": "Benar. Meng-extend RuntimeException adalah best practice untuk exception aplikasi modern di Spring Boot.",
+      "C": "Salah. Meng-extend Throwable secara langsung tidak disarankan di Java.",
+      "D": "Salah. Error dicadangkan untuk kondisi fatal JVM (seperti OutOfMemoryError)."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-071",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Dalam konsep Java Memory Model, di manakah objek hasil instansiasi 'new Object()' dan variabel referensi lokalnya masing-masing dialokasikan?",
+    "topic": "Spring Boot",
+    "questionType": "best-practice",
+    "question": "Mana cara paling aman menangani password pengguna sebelum disimpan ke database?\n\n```java\n// Menyimpan password user pendaftaran\n```",
+    "code": "// Menyimpan password user pendaftaran",
     "options": {
-      "A": "Objek dialokasikan di Heap Memory, sedangkan variabel referensi lokal dialokasikan di Stack Memory thread pemanggil",
-      "B": "Keduanya dialokasikan di Stack Memory",
-      "C": "Keduanya dialokasikan di Metaspace",
-      "D": "Objek di Stack dan referensi di Heap"
+      "A": "Menyimpan password dalam bentuk plaintext agar mudah di-recover",
+      "B": "Melakukan hashing menggunakan BCryptPasswordEncoder (dengan salt otomatis)",
+      "C": "Melakukan enkripsi reversible dua arah dengan base64",
+      "D": "Menggunakan MD5 tanpa salt"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "Di Java, semua objek dialokasikan di Heap Memory (dan dibersihkan oleh Garbage Collector), sedangkan primitive local variables dan referensi pointer objek dialokasikan di Stack frame dari thread yang mengeksekusi method.",
-      "A": "Opsi A benar karena membedakan alokasi Heap (objek) vs Stack (stack frame method & local reference).",
-      "B": "Opsi B salah karena objek tidak disimpan langsung di stack (kecuali jika ada optimasi escape analysis oleh JIT).",
-      "C": "Opsi C salah karena Metaspace menyimpan metadata class dan static variables.",
-      "D": "Opsi D salah karena posisi alokasi terbalik."
-    }
+      "correct": "BCrypt (disediakan oleh Spring Security BCryptPasswordEncoder) adalah fungsi hash satu arah yang lambat secara adaptif dan otomatis menyertakan salt acak untuk mencegah serangan rainbow table dan brute force.",
+      "A": "Salah. Plaintext adalah pelanggaran keamanan fatal.",
+      "B": "Benar. BCryptPasswordEncoder adalah standar keamanan industri untuk hashing password.",
+      "C": "Salah. Base64 adalah encoding, bukan hashing atau enkripsi, dan sangat mudah didecode kembali.",
+      "D": "Salah. MD5 sudah usang, cepat di-crack, dan rawan collision."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-072",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Fitur Sealed Classes (diperkenalkan di Java 17) digunakan untuk:",
+    "topic": "Spring Boot",
+    "questionType": "best-practice",
+    "question": "Mana cara yang paling direkomendasikan untuk melakukan validasi input pada REST Controller?\n\n```java\n// Validasi payload registrasi user\n```",
+    "code": "// Validasi payload registrasi user",
     "options": {
-      "A": "Membatasi class atau interface mana saja yang diizinkan untuk meng-extend atau mengimplementasikannya secara eksplisit menggunakan keyword 'permits'",
-      "B": "Mengenkripsi file .class dengan algoritma AES-256",
-      "C": "Mencegah class diakses oleh unit test",
-      "D": "Menonaktifkan refleksi runtime pada class tersebut"
+      "A": "Menulis if-else manual di dalam method controller untuk setiap field",
+      "B": "Menggunakan anotasi Bean Validation (JSR-380 seperti @NotBlank, @Email, @Size) pada DTO dan @Valid pada controller",
+      "C": "Memvalidasi data di layer frontend saja dan mempercayai semua input yang masuk ke backend",
+      "D": "Menyerahkan validasi ke database error constraint saja"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "Sealed Classes memungkinkan pengembang mengontrol pewarisan hierarki dengan mendeklarasikan secara eksplisit subclass mana yang diizinkan meng-extend-nya (contoh: public sealed class Shape permits Circle, Square).",
-      "A": "Opsi A benar karena Sealed Classes memberikan kontrol kepemilikan hierarki class.",
-      "B": "Opsi B salah karena Sealed Classes tidak mengenkripsi bytecode.",
-      "C": "Opsi C salah karena unit test tetap dapat mengakses class sesuai visibilitasnya.",
-      "D": "Opsi D salah karena refleksi tetap berfungsi pada sealed classes."
-    }
+      "correct": "Declarative validation dengan Bean Validation (@Valid + anotasi constraint) memisahkan logika validasi dari alur bisnis, otomatis mengembalikan 400 Bad Request jika tidak valid, dan terdokumentasi otomatis di OpenAPI.",
+      "A": "Salah. Pengecekan manual if-else menyebabkan boilerplate code dan duplikasi di controller.",
+      "B": "Benar. Bean Validation deklaratif adalah best practice resmi standar industri.",
+      "C": "Salah. Jangan pernah mempercayai input client; validasi backend mutlak diperlukan.",
+      "D": "Salah. Menunggu database error menghasilkan exception 500 yang tidak ramah pengguna."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-073",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Manakah pernyataan yang BENAR mengenai method 'intern()' pada class String di Java?",
+    "topic": "Spring Boot",
+    "questionType": "best-practice",
+    "question": "Mana pola pemisahan arsitektur layer yang paling sesuai untuk aplikasi enterprise Spring Boot?\n\n```java\n// Arsitektur layer\n```",
+    "code": "// Arsitektur layer",
     "options": {
-      "A": "Memastikan string tersebut dimasukkan ke dalam String Constant Pool dan mengembalikan referensi kanonikal dari pool",
-      "B": "Menghapus spasi di awal dan akhir string",
-      "C": "Mengonversi string menjadi array byte UTF-8",
-      "D": "Mengunci string agar tidak bisa dibaca oleh thread lain"
+      "A": "Controller langsung mengakses database via EntityManager tanpa Service",
+      "B": "Controller (HTTP) -> Service Layer (Logika Bisnis & Transaksi) -> Repository Layer (Akses Data)",
+      "C": "Repository memanggil Controller untuk memformat data",
+      "D": "Semua logika bisnis ditulis langsung di dalam Entity class"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "Method str.intern() mencari string dengan konten identik di String Constant Pool. Jika ditemukan, referensi pool dikembalikan; jika belum, string ditambahkan ke pool dan referensinya dikembalikan.",
-      "A": "Opsi A benar karena menjelaskan fungsi interning String ke pool memori JVM.",
-      "B": "Opsi B salah karena menghapus spasi menggunakan method .trim() atau .strip().",
-      "C": "Opsi C salah karena konversi byte menggunakan .getBytes(StandardCharsets.UTF_8).",
-      "D": "Opsi D salah karena string sudah immutable secara inheren."
-    }
+      "correct": "Arsitektur 3-tier (Controller -> Service -> Repository) memisahkan tanggung jawab: Controller menangani protokol HTTP, Service mengelola alur bisnis dan transaksi, dan Repository mengisolasi query database.",
+      "A": "Salah. Melewati layer service membuat logika bisnis bercampur dengan protokol web HTTP.",
+      "B": "Benar. Pola 3-tier Controller -> Service -> Repository adalah standar arsitektur Spring enterprise.",
+      "C": "Salah. Repository tidak boleh memiliki dependensi ke controller.",
+      "D": "Salah. Entity adalah domain model/persistensi, bukan tempat logika alur transaksi."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-074",
     "level": "intermediate",
     "topic": "Java Core",
-    "question": "Apa perbedaan mendasar antara fail-fast iterator dan fail-safe (weakly consistent) iterator di Java Collections?",
+    "questionType": "best-practice",
+    "question": "Mana cara terbaik membuat ThreadPool di aplikasi Java backend daripada membuat 'new Thread()' manual?\n\n```java\n// Menjalankan tugas pemrosesan paralel\n```",
+    "code": "// Menjalankan tugas pemrosesan paralel",
     "options": {
-      "A": "Fail-fast iterator melempar ConcurrentModificationException jika koleksi diubah secara struktural saat iterasi berjalan, sedangkan fail-safe iterator bekerja pada kloningan/snapshot data",
-      "B": "Fail-fast mengulang pembacaan dari awal jika ada error",
-      "C": "Fail-safe tidak bisa membaca data bernilai null",
-      "D": "Fail-fast hanya digunakan untuk koleksi berbasis array berukuran tetap"
+      "A": "Selalu membuat new Thread(task).start() setiap ada request",
+      "B": "Menggunakan ExecutorService atau ThreadPoolTaskExecutor terkelola dengan batas ukuran pool yang jelas",
+      "C": "Membuat thread tak terhingga di while loop",
+      "D": "Menjalankan semua proses di thread utama"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "Fail-fast iterator (seperti pada ArrayList, HashMap) memeriksa flag modCount dan langsung melempar ConcurrentModificationException jika terdeteksi mutasi selama iterasi. Fail-safe iterator (seperti pada CopyOnWriteArrayList, ConcurrentHashMap) tidak melempar exception karena membaca snapshot data.",
-      "A": "Opsi A benar karena membedakan mekanisme modCount check vs snapshot iteration.",
-      "B": "Opsi B salah karena fail-fast tidak melakukan retry.",
-      "C": "Opsi C salah karena fail-safe mendukung pembacaan data sesuai spesifikasi tipe koleksinya.",
-      "D": "Opsi D salah karena fail-fast berlaku di berbagai tipe koleksi umum Java."
-    }
+      "correct": "Membuat thread baru di Java membutuhkan alokasi stack memori sistem operasi (~1MB per thread). Jika request melonjak, 'new Thread()' akan menghabiskan memori dan memicu OutOfMemoryError. Thread pool menggunakan kembali thread yang ada secara terkelola.",
+      "A": "Salah. Membuat thread manual tidak terkontrol dan dapat menghabiskan memori server.",
+      "B": "Benar. Thread pool mengontrol jumlah thread yang berjalan bersamaan dan menghemat biaya pembuatan thread.",
+      "C": "Salah. Loop pembuatan thread tanpa batas pasti memicu OOM.",
+      "D": "Salah. Menjalankan semua proses di main thread memblokir request lain."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-075",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Apa fungsi dari method 'Thread.join()' dalam pemrograman concurrent Java?",
+    "topic": "JPA & Hibernate",
+    "questionType": "best-practice",
+    "question": "Mana cara terbaik untuk menghapus entitas anak saat dihapus dari koleksi entitas induk di JPA?\n\n```java\n// Menghapus OrderItem dari Order\n```",
+    "code": "// Menghapus OrderItem dari Order",
     "options": {
-      "A": "Menahan eksekusi thread pemanggil hingga thread target yang dipanggil .join() selesai dieksekusi",
-      "B": "Menggabungkan dua thread menjadi satu thread bersama",
-      "C": "Menyambungkan koneksi socket jaringan",
-      "D": "Memaksa thread target untuk langsung berhenti seketika"
+      "A": "Mengaktifkan orphanRemoval = true pada anotasi @OneToMany",
+      "B": "Menghapus manual lewat native query 'DELETE FROM order_items'",
+      "C": "Mengosongkan semua foreign key menjadi null",
+      "D": "Membuat tabel baru setiap ada penghapusan"
     },
     "answer": "A",
     "explanation": {
-      "correct": "thread.join() membuat thread yang sedang berjalan (misal main thread) menunggu (state WAITING) sampai thread target selesai menyelesaikan pekerjaannya.",
-      "A": "Opsi A benar karena join() berfungsi menyinkronkan penyelesaian thread target.",
-      "B": "Opsi B salah karena thread tidak dapat dimerge secara fisik.",
-      "C": "Opsi C salah karena join bukan operasi socket.",
-      "D": "Opsi D salah karena penghentian thread menggunakan mekanisme interruption (thread.interrupt())."
-    }
+      "correct": "Dengan orphanRemoval = true, menghapus elemen dari koleksi Java (orders.getItems().remove(item)) otomatis diterjemahkan oleh Hibernate menjadi perintah SQL DELETE untuk entitas anak tersebut.",
+      "A": "Benar. orphanRemoval = true secara otomatis menjaga sinkronisasi koleksi memori dengan database.",
+      "B": "Salah. Native query manual melewati persistence context Hibernate dan dapat menyebabkan inkonsistensi cache.",
+      "C": "Salah. Foreign key bernilai null menciptakan baris yatim (orphan record) yang tidak terhubung.",
+      "D": "Salah. Solusi ini tidak rasional."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-076",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Dalam arsitektur ThreadPoolExecutor, apa yang terjadi ketika work queue sudah penuh dan jumlah thread aktif telah mencapai 'maximumPoolSize'?",
+    "topic": "Spring Boot",
+    "questionType": "best-practice",
+    "question": "Mana praktik terbaik dalam mengonfigurasi DataSource Connection Pool (HikariCP) di Spring Boot?\n\n```java\n// Konfigurasi application.properties\n```",
+    "code": "// Konfigurasi application.properties",
     "options": {
-      "A": "Task baru akan ditolak oleh RejectedExecutionHandler sesuai policy (misal: AbortPolicy melempar RejectedExecutionException)",
-      "B": "Aplikasi akan crash seketika dengan Segmentation Fault",
-      "C": "Task baru akan otomatis menghapus task terlama di queue tanpa notifikasi apapun",
-      "D": "ThreadPool akan membuat thread tak terbatas melebihi batas maksimum"
+      "A": "Menyetel maximum-pool-size ke 10.000 agar muat banyak",
+      "B": "Menyesuaikan maximum-pool-size dengan rumus (CPU core * 2) + disk IO thread, biasanya 10-30 untuk beban normal",
+      "C": "Menyetel connection-timeout ke 0 (menunggu selamanya)",
+      "D": "Tidak memakai connection pool sama sekali"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "Ketika pool threads = maximumPoolSize dan antrean tugas (workQueue) berkapasitas penuh, penambahan task baru akan ditangani oleh RejectedExecutionHandler yang terpasang (default: AbortPolicy yang melempar RejectedExecutionException).",
-      "A": "Opsi A benar karena menjelaskan siklus penolakan task pada ThreadPoolExecutor.",
-      "B": "Opsi B salah karena JVM menangani kondisi ini di level aplikasi Java secara terkendali.",
-      "C": "Opsi C salah karena penghapusan task terlama hanya terjadi jika policy secara eksplisit diset ke DiscardOldestPolicy.",
-      "D": "Opsi D salah karena batas maximumPoolSize dihormati secara ketat."
-    }
+      "correct": "Koneksi database yang terlalu banyak justru menurunkan performa database karena context-switching overhead dan disk contention. HikariCP merekomendasikan pool size yang terukur (biasanya 10-30 koneksi) dengan connection timeout yang wajar.",
+      "A": "Salah. Pool terlalu besar membebani CPU database dan memperlambat throughput secara keseluruhan.",
+      "B": "Benar. Pool size terukur mencegah oversubscription CPU database dan mengoptimalkan throughput.",
+      "C": "Salah. Timeout 0 dapat menyebabkan request thread menggantung tanpa batas jika DB sibuk.",
+      "D": "Salah. Tanpa pool, overhead handshake koneksi TCP database sangat lambat."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-077",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Manakah antarmuka (interface) di package java.util.concurrent yang memiliki method 'V call() throws Exception' dan mengembalikan nilai hasil eksekusi?",
+    "topic": "Spring Boot",
+    "questionType": "best-practice",
+    "question": "Mana cara terbaik untuk menangani pagination data dalam jumlah sangat besar (ribuan halaman) di REST API?\n\n```java\n// Endpoint daftar transaksi\n```",
+    "code": "// Endpoint daftar transaksi",
     "options": {
-      "A": "Callable<V>",
-      "B": "Runnable",
-      "C": "Supplier<V>",
-      "D": "Consumer<V>"
+      "A": "Mengembalikan semua 1 juta data sekaligus dalam satu array JSON",
+      "B": "Membatasi ukuran halaman maksimum (misal max 100) dan menggunakan cursor/keyset pagination untuk dataset sangat besar",
+      "C": "Meminta client menghitung pagination sendiri",
+      "D": "Menghapus data lama secara otomatis"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "Callable<V> mirip dengan Runnable tetapi method call()-nya dapat mengembalikan sebuah nilai bertipe V dan diperbolehkan mendeklarasikan checked exception.",
-      "A": "Opsi A benar karena Callable dirancang untuk asynchronous task yang mengembalikan nilai.",
-      "B": "Opsi B salah karena method run() milik Runnable mengembalikan void dan tidak boleh melempar checked exception.",
-      "C": "Opsi C salah karena Supplier adalah functional interface tanpa deklarasi throws Exception dan bukan primitif task executor concurrency secara langsung.",
-      "D": "Opsi D salah karena Consumer menerima argumen dan tidak mengembalikan nilai."
-    }
+      "correct": "Offset pagination (OFFSET 100000) lambat pada dataset besar karena database harus memindai semua baris sebelumnya. Keyset pagination (WHERE id > last_id LIMIT 20) memanfaatkan B-Tree index dan berkecepatan konstan O(1).",
+      "A": "Salah. Mengembalikan 1 juta data akan memicu OutOfMemoryError di server dan browser.",
+      "B": "Benar. Keyset pagination dan pembatasan page size menjamin performa database tetap cepat dan stabil.",
+      "C": "Salah. Client tidak bisa membagi data jika server belum mempaginasinya.",
+      "D": "Salah. Menghapus data tanpa aturan bisnis tidak diperbolehkan."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-078",
     "level": "intermediate",
     "topic": "Java Core",
-    "question": "Apa fungsi dari keyword 'default' pada method di dalam sebuah interface Java (sejak Java 8)?",
+    "questionType": "best-practice",
+    "question": "Mana cara terbaik melakukan pengecekan null yang aman dan ekspresif pada Stream pipeline?\n\n```java\n// Memproses list data yang mungkin berisi elemen null\n```",
+    "code": "// Memproses list data yang mungkin berisi elemen null",
     "options": {
-      "A": "Menyediakan implementasi method bawaan pada interface tanpa memaksa semua kelas yang sudah ada untuk meng-overridenya",
-      "B": "Menjadikan method tersebut hanya dapat diakses di dalam package yang sama",
-      "C": "Membuat method otomatis mengembalikan nilai null",
-      "D": "Menjadikan interface tersebut sebagai FunctionalInterface"
+      "A": "list.stream().filter(Objects::nonNull).map(...)",
+      "B": "list.stream().map(x -> { try { return x.toString(); } catch(Exception e) { return null; } })",
+      "C": "Membiarkan NullPointerException terjadi",
+      "D": "Menggunakan loop while manual"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Default method diperkenalkan di Java 8 untuk memungkinkan evolusi interface (seperti penambahan method stream() pada Collection) dengan backward-compatibility tanpa merusak ribuan library kelas pihak ketiga yang mengimplementasikannya.",
-      "A": "Opsi A benar karena default method menjaga kompatibilitas mundur saat interface ditambahkan method baru.",
-      "B": "Opsi B salah karena default method di interface selalu ber-modifier public.",
-      "C": "Opsi C salah karena default method memiliki body implementasi konkret yang ditentukan pembuat interface.",
-      "D": "Opsi D salah karena FunctionalInterface hanya boleh memiliki tepat satu abstract method, bukan karena adanya default method."
-    }
+      "correct": "Method reference 'Objects::nonNull' adalah predikat bawaan Java yang bersih, efisien, dan ekspresif untuk membuang elemen null dari stream sebelum operasi selanjutnya.",
+      "A": "Benar. filter(Objects::nonNull) adalah idiom standar Java Stream untuk membersihkan elemen null.",
+      "B": "Salah. Menggunakan try-catch di dalam lambda stream berbiaya performa tinggi dan buruk secara desain.",
+      "C": "Salah. NullPointerException harus dicegah.",
+      "D": "Salah. Stream filter lebih deklaratif dan fungsional."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-079",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Perhatikan kode berikut: List<String> list = List.of(\"a\", \"b\"); list.add(\"c\");. Apa yang terjadi saat kode dijalankan?",
+    "topic": "Spring Boot",
+    "questionType": "best-practice",
+    "question": "Mana cara terbaik mendokumentasikan REST API secara otomatis di Spring Boot?\n\n```java\n// Pembuatan dokumentasi endpoint dan skema DTO\n```",
+    "code": "// Pembuatan dokumentasi endpoint dan skema DTO",
     "options": {
-      "A": "Melemparkan UnsupportedOperationException karena List.of() menghasilkan unmodifiable / immutable list",
-      "B": "Elemen \"c\" berhasil ditambahkan sehingga list berukuran 3",
-      "C": "Menghasilkan compile error karena method .add() tidak ada di interface List",
-      "D": "Elemen pertama \"a\" akan digantikan oleh \"c\""
+      "A": "Menulis dokumen PDF manual setiap ada perubahan kode",
+      "B": "Mengintegrasikan springdoc-openapi untuk menghasilkan Swagger UI dan OpenAPI 3 spec secara otomatis dari anotasi kode",
+      "C": "Menyuruh client menebak struktur request body",
+      "D": "Menyimpan file text di server"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "Factory method List.of(), Set.of(), dan Map.of() (diperkenalkan di Java 9) menghasilkan koleksi yang benar-benar immutable. Setiap pemanggilan method mutasi seperti add(), remove(), atau set() akan melempar java.lang.UnsupportedOperationException.",
-      "A": "Opsi A benar karena List.of() mengembalikan koleksi unmodifiable.",
-      "B": "Opsi B salah karena elemen tidak dapat ditambahkan.",
-      "C": "Opsi C salah karena method add() dideklarasikan di interface List.",
-      "D": "Opsi D salah karena tidak terjadi penggantian nilai."
-    }
+      "correct": "Springdoc-openapi menganalisis controller, anotasi JSR-380, dan tipe kembalian untuk menghasilkan dokumentasi interaktif Swagger UI (/swagger-ui.html) yang selalu sinkron dengan kode.",
+      "A": "Salah. Dokumentasi manual cepat usang dan memakan waktu.",
+      "B": "Benar. springdoc-openapi menghasilkan OpenAPI spec dan UI interaktif langsung dari kode sumber.",
+      "C": "Salah. Menghambat integrasi tim.",
+      "D": "Salah. File teks statis tidak interaktif dan sulit dipelihara."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-080",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Apakah tujuan utama dari metode 'System.identityHashCode(Object x)' di Java?",
+    "topic": "JPA & Hibernate",
+    "questionType": "best-practice",
+    "question": "Mana praktik terbaik dalam mendesain query pencarian dinamis (filter banyak kolom opsional) di Spring Data JPA?\n\n```java\n// Filter produk berdasarkan nama, kategori, harga min, harga max yang semuanya opsional\n```",
+    "code": "// Filter produk berdasarkan nama, kategori, harga min, harga max yang semuanya opsional",
     "options": {
-      "A": "Mengembalikan hashcode asli berdasarkan alamat memori bawaan JVM dari objek tersebut, terlepas dari apakah method hashCode() dioverride atau tidak",
-      "B": "Menghasilkan string identitas KTP/Paspor pengguna",
-      "C": "Menghitung hash SHA-256 dari seluruh atribut objek",
-      "D": "Memastikan dua objek selalu dianggap sama oleh garbage collector"
+      "A": "Membuat puluhan method di repository untuk setiap kombinasi filter",
+      "B": "Menggunakan JPA Specification (Criteria API) dengan JpaSpecificationExecutor",
+      "C": "Menyambung string SQL query mentah dengan konkatenasi string '+'",
+      "D": "Mengambil seluruh isi tabel ke memori lalu filter manual di Java for loop"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "System.identityHashCode(obj) mengembalikan nilai yang sama dengan apa yang dihasilkan oleh implementasi default java.lang.Object.hashCode(), mengabaikan kustomisasi method hashCode() yang mungkin dibuat pada kelas tersebut.",
-      "A": "Opsi A benar karena mengambil default identity hashcode asli objek.",
-      "B": "Opsi B salah karena bukan fungsi bisnis identitas personal.",
-      "C": "Opsi C salah karena bukan cryptographic hash.",
-      "D": "Opsi D salah karena tidak mempengaruhi algoritma GC."
-    }
+      "correct": "JPA Specification memungkinkan komposisi predikat query secara modular dan type-safe (Specification.where(byName).and(byPrice)), menghindari SQL injection dan ledakan jumlah method repository.",
+      "A": "Salah. Menghasilkan kombinasi method eksponensial (combinatorial explosion).",
+      "B": "Benar. JPA Specification adalah solusi standar Spring Data untuk query pencarian dengan multi-kriteria dinamis.",
+      "C": "Salah. Konkatenasi string SQL mentah sangat rentan serangan SQL Injection.",
+      "D": "Salah. Memuat seluruh tabel ke memori menyebabkan pemborosan RAM dan lambat."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-081",
     "level": "intermediate",
-    "topic": "Java Core",
-    "question": "Apa fungsi dari pattern matching for instanceof yang distandarisasi pada Java 16?",
+    "topic": "Spring Boot",
+    "questionType": "best-practice",
+    "question": "Mana cara terbaik mengamankan endpoint REST API menggunakan stateless authentication di arsitektur microservice?\n\n```java\n// Autentikasi API untuk mobile & web client\n```",
+    "code": "// Autentikasi API untuk mobile & web client",
     "options": {
-      "A": "Mengizinkan deklarasi variabel pola secara langsung tanpa perlu melakukan explicit casting manual (contoh: if (obj instanceof String s) { s.length(); })",
-      "B": "Membuat objek baru bertipe String secara otomatis",
-      "C": "Memvalidasi string format JSON",
-      "D": "Mempercepat alokasi memori di heap"
+      "A": "Menyimpan session di memori server Tomcat tunggal (Stateful Session)",
+      "B": "Menggunakan JSON Web Token (JWT) dengan signature verifikasi pada filter Spring Security",
+      "C": "Mengirimkan password username mentah di setiap HTTP Header request",
+      "D": "Membuka seluruh endpoint tanpa proteksi keamanan"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": {
-      "correct": "Pattern matching for instanceof menyederhanakan kode idiomatik dengan menggabungkan pemeriksaan tipe dan casting dalam satu langkah deklarasi variabel pola (binding variable).",
-      "A": "Opsi A benar karena mengeliminasi boilerplate casting manual.",
-      "B": "Opsi B salah karena tidak membuat objek baru.",
-      "C": "Opsi C salah karena bukan parser JSON.",
-      "D": "Opsi D salah karena ini adalah fitur sintaksis compiler dan bytecode, bukan pengubah alokasi memori."
-    }
+      "correct": "JWT bersifat stateless dan self-contained: server tidak perlu menyimpan session di database/memory pada setiap request, sehingga sangat scalable untuk arsitektur multi-instance atau microservice.",
+      "A": "Salah. Stateful session menyulitkan horizontal scaling tanpa sticky session atau Redis session replication.",
+      "B": "Benar. JWT stateless adalah standar industri autentikasi API modern yang scalable.",
+      "C": "Salah. Mengirim password di setiap request sangat berisiko keamanan tinggi.",
+      "D": "Salah. Tidak aman sama sekali."
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-082",
     "level": "intermediate",
     "topic": "Java Core",
+    "questionType": "concept",
     "question": "Pada mekanisme Exception Handling, apa yang dimaksud dengan 'Suppressed Exceptions' di try-with-resources?",
     "options": {
       "A": "Exception sekunder yang terjadi saat penutupan otomatis resource (close()), yang disematkan ke exception primer blok try melalui method addSuppressed()",
@@ -1094,12 +1883,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena suppressed exception tidak diabaikan melainkan dicatat.",
       "C": "Opsi C salah karena suppressed exception tetap berwujud objek Throwable.",
       "D": "Opsi D salah karena berada di level runtime JVM."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-083",
     "level": "intermediate",
     "topic": "Java Core",
+    "questionType": "concept",
     "question": "Manakah pernyataan yang benar mengenai interface java.lang.AutoCloseable?",
     "options": {
       "A": "Hanya memiliki satu method: 'void close() throws Exception' dan merupakan prasyarat tipe objek yang dapat digunakan di blok try-with-resources",
@@ -1114,12 +1905,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena Serializable dan AutoCloseable independen.",
       "C": "Opsi C salah karena dapat digunakan untuk socket jaringan, koneksi database, dan resource memori lainnya.",
       "D": "Opsi D salah karena tidak bertugas mematikan thread."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-084",
     "level": "intermediate",
     "topic": "Java Core",
+    "questionType": "concept",
     "question": "Dalam operasi Stream API, apa perbedaan antara 'findFirst()' dan 'findAny()'?",
     "options": {
       "A": "'findFirst()' selalu mengembalikan elemen pertama sesuai urutan encounter order, sedangkan 'findAny()' bebas mengembalikan elemen apa saja yang ditemukan lebih dulu terutama pada parallel stream untuk performa maksimal",
@@ -1134,12 +1927,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena keduanya bekerja pada sembarang Stream.",
       "C": "Opsi C salah karena keduanya mengembalikan tipe Optional<T>.",
       "D": "Opsi D salah karena perilakunya berbeda signifikan pada parallel stream."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-085",
     "level": "intermediate",
     "topic": "Java Core",
+    "questionType": "concept",
     "question": "Bagaimanakah cara mencegah terjadinya Deadlock dalam aplikasi multi-threaded di Java?",
     "options": {
       "A": "Memastikan semua thread selalu mengakuisisi multiple lock dengan urutan hierarki yang sama persis (lock ordering konsisten) atau menggunakan tryLock() dengan timeout",
@@ -1154,12 +1949,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena menghapus sinkronisasi akan menyebabkan race condition fatal dan korupsi data.",
       "C": "Opsi C salah karena menambah core CPU tidak mencegah deadlock logika perangkat lunak.",
       "D": "Opsi D salah karena method static tetap memiliki class monitor lock yang bisa menyebabkan deadlock jika saling memanggil."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-086",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Bagaimanakah urutan siklus hidup (Bean Lifecycle) dari sebuah Spring Bean mulai dari pembuatannya hingga penghancuran?",
     "options": {
       "A": "Instansiasi -> Dependency Injection (Populate Properties) -> BeanNameAware/BeanFactoryAware -> BeanPostProcessor BeforeInitialization -> @PostConstruct / InitializingBean -> BeanPostProcessor AfterInitialization -> Siap Digunakan -> @PreDestroy / DisposableBean",
@@ -1174,12 +1971,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena garbage collection terjadi setelah bean dihancurkan.",
       "C": "Opsi C salah karena @PostConstruct hanya bisa dipanggil setelah instansiasi dan populasi dependensi selesai.",
       "D": "Opsi D salah karena kompilasi bytecode terjadi sebelum aplikasi Spring dijalankan."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-087",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Apa perbedaan mendasar antara BeanPostProcessor dan BeanFactoryPostProcessor di Spring Framework?",
     "options": {
       "A": "BeanFactoryPostProcessor dapat memodifikasi definisi bean (metadata) sebelum bean diinstansiasi, sedangkan BeanPostProcessor memodifikasi instance objek bean yang sudah dibuat",
@@ -1194,12 +1993,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena keduanya berlaku global di ApplicationContext.",
       "C": "Opsi C salah karena BeanFactoryPostProcessor dieksekusi di fase paling awal sebelum bean dibuat.",
       "D": "Opsi D salah karena kontrak method dan waktu eksekusinya berbeda."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-088",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Bagaimana Spring Boot menangani circular dependency (ketergantungan melingkar) secara default pada versi Spring Boot 2.6+?",
     "options": {
       "A": "Secara default melempar BeanCurrentlyInCreationException dan gagal startup untuk mendorong developer mendesain ulang arsitektur kelas",
@@ -1214,12 +2015,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena Spring tidak membuat mock di runtime produksi.",
       "C": "Opsi C salah karena Spring tidak membuang bean sembarangan.",
       "D": "Opsi D salah karena startup akan langsung gagal dengan exception yang jelas."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-089",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Anotasi apakah yang digunakan untuk memetakan sekelompok hierarki konfigurasi di application.yml ke sebuah kelas Java bertipe kuat (type-safe configuration)?",
     "options": {
       "A": "@ConfigurationProperties",
@@ -1234,12 +2037,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan anotasi Spring.",
       "C": "Opsi C salah karena @PropertySource untuk mendeklarasikan lokasi file eksternal, bukan binding hirarkis.",
       "D": "Opsi D salah karena bukan anotasi Spring."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-090",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Anotasi kondisional manakah yang memastikan bahwa sebuah Spring Bean hanya dibuat jika terdapat bean lain bertipe tertentu yang sudah terdaftar di konteks?",
     "options": {
       "A": "@ConditionalOnBean",
@@ -1254,12 +2059,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena @ConditionalOnMissingBean justru aktif jika bean tersebut BELUM ada (sering dipakai untuk default fallback).",
       "C": "Opsi C salah karena @ConditionalOnProperty memeriksa nilai konfigurasi properti.",
       "D": "Opsi D salah karena @ConditionalOnClass memeriksa keberadaan class file di classpath."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-091",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Bagaimanakah cara mengaktifkan profil 'production' saat menjalankan file jar Spring Boot melalui terminal command line?",
     "options": {
       "A": "java -jar app.jar --spring.profiles.active=production",
@@ -1274,12 +2081,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan sintaks parameter Spring Boot.",
       "C": "Opsi C salah karena bukan sintaks Spring Boot.",
       "D": "Opsi D salah karena sintaks java launcher tidak valid."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-092",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Apa fungsi dari file 'META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports' pada custom Spring Boot Starter (Spring Boot 3+)?",
     "options": {
       "A": "Mendaftarkan daftar kelas auto-configuration kustom yang harus dimuat oleh mekanisme Spring Boot AutoConfiguration",
@@ -1294,12 +2103,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena port server ditentukan di properties/yml.",
       "C": "Opsi C salah karena skema database menggunakan Flyway, Liquibase, atau schema.sql.",
       "D": "Opsi D salah karena file impor bukan penyimpan kredensial rahasia."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-093",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Anotasi apakah yang digunakan untuk mengaktifkan pemrosesan tugas asynchronous menggunakan method @Async di Spring Boot?",
     "options": {
       "A": "@EnableAsync",
@@ -1314,12 +2125,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena @EnableScheduling untuk tugas terjadwal (@Scheduled).",
       "C": "Opsi C salah karena @EnableAutoConfiguration untuk konfigurasi otomatis starter.",
       "D": "Opsi D salah karena untuk Spring Batch."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-094",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Apa yang terjadi jika sebuah method beranotasi @Async dipanggil secara langsung dari dalam kelas yang sama (internal self-invocation)?",
     "options": {
       "A": "Method akan dieksekusi secara sinkron (synchronous) di thread yang sama karena panggilan internal melewati (bypass) proxy Spring",
@@ -1334,12 +2147,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena tidak ada exception yang dilempar; kode hanya berjalan secara sinkron biasa.",
       "C": "Opsi C salah karena proxy ter-bypass sehingga tidak dieksekusi di thread pool.",
       "D": "Opsi D salah karena eksekusi sinkron tidak memicu deadlock."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-095",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Apa peran utama dari DispatcherServlet di dalam arsitektur Spring MVC / Spring Boot Web?",
     "options": {
       "A": "Bertindak sebagai Front Controller yang menerima semua HTTP request yang masuk dan mendelegasikannya ke HandlerMapping, Controller, dan ViewResolver yang sesuai",
@@ -1354,12 +2169,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena koneksi pool database dikelola oleh DataSource.",
       "C": "Opsi C salah karena koneksi Kafka dikelola oleh KafkaListenerContainerFactory.",
       "D": "Opsi D salah karena DispatcherServlet tidak menangani enkripsi konfigurasi."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-096",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Anotasi apakah yang digunakan untuk mengaktifkan validasi otomatis objek DTO berdasarkan batasan anotasi Bean Validation (seperti @NotNull, @Size, @Email) pada parameter method controller?",
     "options": {
       "A": "@Valid atau @Validated",
@@ -1374,12 +2191,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan anotasi validasi standar.",
       "C": "Opsi C salah karena bukan anotasi validasi standar.",
       "D": "Opsi D salah karena bukan anotasi validasi standar."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-097",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Apa perbedaan utama dalam penggunaan scope 'prototype' dibandingkan 'singleton' pada Spring Bean?",
     "options": {
       "A": "Scope 'prototype' menghasilkan instance objek baru setiap kali diminta dari container, dan Spring tidak mengelola pembersihan akhir (destruction lifecycle) dari bean prototype tersebut",
@@ -1394,12 +2213,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena itu definisi singleton.",
       "C": "Opsi C salah karena tipe bean prototype tidak harus berkaitan dengan database.",
       "D": "Opsi D salah karena dependensi tetap diinjeksi normal saat pembuatan."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-098",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Di Spring Boot, bagaimanakah cara mengkonfigurasi CORS (Cross-Origin Resource Sharing) secara global untuk seluruh controller API?",
     "options": {
       "A": "Mengimplementasikan interface WebMvcConfigurer dan meng-override method addCorsMappings(CorsRegistry registry)",
@@ -1414,12 +2235,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena pom.xml adalah build tool Maven.",
       "C": "Opsi C salah karena CORS adalah protokol web HTTP browser, bukan database.",
       "D": "Opsi D salah karena firewall OS tidak mengelola HTTP header CORS browser."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-099",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Anotasi apakah yang digunakan untuk menjadwalkan eksekusi berkala suatu method di Spring Boot menggunakan ekspresi cron?",
     "options": {
       "A": "@Scheduled(cron = \"...\")",
@@ -1434,12 +2257,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan anotasi bawaan Spring.",
       "C": "Opsi C salah karena bukan anotasi Spring.",
       "D": "Opsi D salah karena TimerTask adalah kelas bawaan java.util lama."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-100",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Apa fungsi dari anotasi @Primary pada sebuah deklarasi bean di Spring?",
     "options": {
       "A": "Memberikan preferensi prioritas utama pada bean tersebut saat ada beberapa kandidat bean bertipe sama yang diinjeksi tanpa @Qualifier spesifik",
@@ -1454,12 +2279,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bean kandidat lain tetap dapat dibuat dan diinjeksi menggunakan @Qualifier.",
       "C": "Opsi C salah karena primary key database menggunakan @Id JPA.",
       "D": "Opsi D salah karena @Primary tidak mempengaruhi urutan main method."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-101",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Kapan Anda sebaiknya menggunakan CommandLineRunner atau ApplicationRunner di Spring Boot?",
     "options": {
       "A": "Ketika ingin mengeksekusi blok kode atau inisialisasi data khusus tepat setelah Spring ApplicationContext selesai dimuat dan sebelum aplikasi menerima request",
@@ -1474,12 +2301,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena tidak berkaitan dengan GUI.",
       "C": "Opsi C salah karena tidak menggantikan servlet container.",
       "D": "Opsi D salah karena tujuan utamanya adalah startup initialization, bukan crash."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-102",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Anotasi apakah yang digunakan untuk menyuntikkan (inject) instance ApplicationContext ke dalam sebuah Spring Bean?",
     "options": {
       "A": "@Autowired pada field ApplicationContext atau mengimplementasikan ApplicationContextAware",
@@ -1494,12 +2323,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan anotasi Spring.",
       "C": "Opsi C salah karena bukan komponen Spring.",
       "D": "Opsi D salah karena bukan komponen Spring."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-103",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Apa fungsi dari anotasi @ResponseStatus pada sebuah custom exception class di Spring MVC?",
     "options": {
       "A": "Menentukan secara otomatis HTTP status code (misal: HttpStatus.NOT_FOUND) yang akan dikembalikan ke klien saat exception tersebut dilempar dari controller",
@@ -1514,12 +2345,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena response HTTP tetap dikirimkan ke klien.",
       "C": "Opsi C salah karena status disesuaikan dengan atribut yang ditentukan pada anotasi.",
       "D": "Opsi D salah karena tidak mengirimkan instruksi refresh browser."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-104",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Apa manfaat menggunakan dependency starter 'spring-boot-devtools' selama proses development?",
     "options": {
       "A": "Menyediakan fitur automatic restart saat file class berubah, LiveReload di browser, dan konfigurasi cache template yang otomatis dinonaktifkan",
@@ -1534,12 +2367,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena devtools secara otomatis dinonaktifkan saat aplikasi dipaketkan ke dalam JAR produksi.",
       "C": "Opsi C salah karena bukan ORM tool.",
       "D": "Opsi D salah karena tidak memanipulasi pengujian unit."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-105",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Manakah cara yang benar untuk mendefinisikan custom exception response structure menggunakan RFC 7807 Problem Details di Spring Boot 3+?",
     "options": {
       "A": "Menggunakan kelas org.springframework.http.ProblemDetail atau meng-extend ResponseEntityExceptionHandler",
@@ -1554,12 +2389,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena SOAP XML sudah usang untuk REST modern.",
       "C": "Opsi C salah karena respons kosong tidak informatif bagi klien API.",
       "D": "Opsi D salah karena Throwable mentah mengekspos stack trace sensitif."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-106",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Bagaimana cara mematikan (gracefully shutdown) embedded web server di Spring Boot saat menerima sinyal SIGTERM?",
     "options": {
       "A": "Mengatur konfigurasi 'server.shutdown=graceful' di application.properties",
@@ -1574,12 +2411,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena System.exit(0) mematikan JVM secara mendadak tanpa menunggu request aktif selesai.",
       "C": "Opsi C salah karena mematikan paksa hardware menyebabkan data tidak konsisten.",
       "D": "Opsi D salah karena tidak relevan dengan runtime shutdown."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-107",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Apa fungsi dari anotasi @Lazy pada Spring Bean atau titik injeksi dependensi?",
     "options": {
       "A": "Menunda inisialisasi bean hingga pertama kali bean tersebut diminta atau diakses, bukan saat startup aplikasi",
@@ -1594,12 +2433,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena @Lazy tidak menambahkan sleep/delay buatan.",
       "C": "Opsi C salah karena tidak ada hubungannya dengan pengujian.",
       "D": "Opsi D salah karena tidak mengubah manajemen koneksi database."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-108",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Anotasi apakah yang digunakan untuk mengekspos metrics kustom aplikasi ke endpoint Prometheus melalui Micrometer di Spring Boot?",
     "options": {
       "A": "@Timed",
@@ -1614,12 +2455,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan anotasi Micrometer standar.",
       "C": "Opsi C salah karena bukan anotasi resmi.",
       "D": "Opsi D salah karena bukan anotasi resmi."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-109",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Bagaimana cara memuat file konfigurasi tambahan seperti 'custom.properties' ke dalam Environment Spring?",
     "options": {
       "A": "Menggunakan anotasi @PropertySource(\"classpath:custom.properties\") pada kelas konfigurasi",
@@ -1634,12 +2477,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena file bytecode tidak boleh dimodifikasi secara manual.",
       "C": "Opsi C salah karena tidak praktis dan tidak fleksibel.",
       "D": "Opsi D salah karena Spring menyediakan abstraksi Resource independen dari OS."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-110",
     "level": "intermediate",
     "topic": "Spring Boot",
+    "questionType": "concept",
     "question": "Apa fungsi dari anotasi @Inherited pada custom annotation di Java / Spring?",
     "options": {
       "A": "Menunjukkan bahwa anotasi tersebut secara otomatis diwariskan ke subclass jika diterapkan pada superclass",
@@ -1654,12 +2499,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena pewarisan class diatur oleh kata kunci abstract/extends.",
       "C": "Opsi C salah karena metadata Java tidak mengatur record database secara otomatis tanpa JPA.",
       "D": "Opsi D salah karena pencegahan pewarisan dilakukan dengan modifier final."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-111",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Menurut Richardson Maturity Model, level keberapakah yang menerapkan HATEOAS (Hypermedia As The Engine Of Application State)?",
     "options": {
       "A": "Level 3: Hypermedia Controls",
@@ -1674,12 +2521,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena Level 2 hanya mencakup penggunaan HTTP methods dan status codes yang benar.",
       "C": "Opsi C salah karena Level 1 hanya memperkenalkan URI resource terpisah.",
       "D": "Opsi D salah karena Level 0 adalah remote procedure call biasa tanpa konsep REST."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-112",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Header HTTP manakah yang digunakan untuk mengimplementasikan optimasi caching bersyarat dan mendeteksi konflik pembaruan konkuren (Concurrency Control) bersama status 412 Precondition Failed?",
     "options": {
       "A": "ETag dan If-Match / If-None-Match",
@@ -1694,12 +2543,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena User-Agent dan Referer untuk metadata klien dan perujuk.",
       "C": "Opsi C salah karena Authorization untuk autentikasi kredensial.",
       "D": "Opsi D salah karena Accept-Encoding dan Content-Length untuk kompresi dan ukuran payload."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-113",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "HTTP Status Code manakah yang paling tepat dikembalikan ketika request klien berhasil divalidasi tetapi melanggar aturan bisnis (misal: saldo rekening tidak mencukupi untuk transfer)?",
     "options": {
       "A": "422 Unprocessable Content (Entity)",
@@ -1714,12 +2565,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena 400 lebih cocok untuk kesalahan sintaksis request (malformed JSON atau tipe data salah).",
       "C": "Opsi C salah karena 500 menandakan bug/kesalahan tak terduga di sisi server.",
       "D": "Opsi D salah karena 404 menandakan resource tidak ditemukan."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-114",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Dalam Spring Data Web, bagaimana cara menerima parameter pagination dan sorting di controller method secara terstandar?",
     "options": {
       "A": "Menambahkan parameter 'Pageable pageable' di method controller",
@@ -1734,12 +2587,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena Spring Data sudah menyediakannya secara otomatis tanpa filter manual.",
       "C": "Opsi C salah meskipun limit/offset dapat dipakai, Pageable jauh lebih kaya fitur (menghasilkan Page<T> dengan total elements dan pages).",
       "D": "Opsi D salah karena pagination dilakukan di tingkat query database, bukan thread terpisah."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-115",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Apa perbedaan performa dan beban query antara mengembalikan 'Page<T>' versus 'Slice<T>' di Spring Data JPA?",
     "options": {
       "A": "'Page<T>' mengeksekusi query tambahan 'COUNT(*)' untuk mengetahui total keseluruhan data, sedangkan 'Slice<T>' hanya mengambil 'size + 1' record untuk mengetahui apakah ada halaman berikutnya tanpa query COUNT yang mahal",
@@ -1754,12 +2609,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena Slice mendukung sorting penuh.",
       "C": "Opsi C salah karena Page mendukung pagination penuh.",
       "D": "Opsi D salah karena Page melakukan 2 query (data + count) sedangkan Slice hanya 1 query."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-116",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Kapan HTTP status code '409 Conflict' harus digunakan oleh server RESTful API?",
     "options": {
       "A": "Ketika permintaan tidak dapat diselesaikan karena terjadi konflik dengan state resource saat ini di server (misalnya mencoba mendaftarkan username/email yang sudah ada di database)",
@@ -1774,12 +2631,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena server overload menghasilkan status 503 Service Unavailable atau 500.",
       "C": "Opsi C salah karena format tidak cocok menghasilkan status 415 Unsupported Media Type.",
       "D": "Opsi D salah karena masalah koneksi fisik jaringan tidak menghasilkan respons HTTP dari server."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-117",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Apa fungsi dari HTTP response header 'Cache-Control: no-cache, no-store, must-revalidate' pada endpoint sensitif?",
     "options": {
       "A": "Mencegah browser dan server proxy perantara menyimpan salinan respons ke memori cache demi keamanan data rahasia",
@@ -1794,12 +2653,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena kompresi diatur dengan Content-Encoding (gzip/br).",
       "C": "Opsi C salah karena penghapusan cookie dilakukan melalui header Set-Cookie dengan Max-Age=0.",
       "D": "Opsi D salah karena cache HTTP beroperasi di layer transportasi web, bukan database locking."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-118",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Manakah praktik terbaik (best practice) dalam merancang URI endpoint RESTful yang baik?",
     "options": {
       "A": "Menggunakan kata benda jamak (plural nouns) dalam huruf kecil dan garis hubung (kebab-case), serta menghindari kata kerja (verbs) dalam path (contoh: GET /api/v1/orders/123/items)",
@@ -1814,12 +2675,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena memasukkan verbs ke dalam URI mengarah ke RPC (Remote Procedure Call) style, bukan REST murni.",
       "C": "Opsi C salah karena kebab-case huruf kecil adalah standar de-facto URI web.",
       "D": "Opsi D salah karena path URI memiliki batas panjang dan tidak cocok untuk data kompleks."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-119",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Anotasi apakah di Spring Web yang digunakan untuk menangani pengiriman file multipart (file upload) dari klien?",
     "options": {
       "A": "@RequestPart atau @RequestParam(\"file\") MultipartFile file",
@@ -1834,12 +2697,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena @RequestBody mem-parse seluruh payload ke satu objek dan tidak menangani boundary multipart secara otomatis.",
       "C": "Opsi C salah karena @PathVariable hanya membaca segmen URL path.",
       "D": "Opsi D salah karena bukan anotasi Spring."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-120",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Apa fungsi dari HTTP header 'Content-Disposition: attachment; filename=\"laporan.pdf\"' dalam respons API?",
     "options": {
       "A": "Menginstruksikan browser klien untuk mengunduh konten sebagai file attachment dengan nama 'laporan.pdf' daripada menampilkannya langsung (inline)",
@@ -1854,12 +2719,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena header HTTP tidak menghapus file server.",
       "C": "Opsi C salah karena browser merender sesuai Content-Type.",
       "D": "Opsi D salah karena bukan proteksi cetak."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-121",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Manakah HTTP status code yang paling tepat ketika klien mengirim payload dengan tipe media yang tidak didukung server (contoh: mengirim XML padahal endpoint hanya menerima JSON)?",
     "options": {
       "A": "415 Unsupported Media Type",
@@ -1874,12 +2741,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena 406 terjadi jika server tidak dapat menghasilkan respons yang diminta oleh header Accept.",
       "C": "Opsi C salah karena 400 untuk bad syntax umum.",
       "D": "Opsi D salah karena 501 menandakan server tidak mengenali HTTP method yang dikirim."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-122",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Kapan status code '406 Not Acceptable' dikembalikan oleh server Spring Web?",
     "options": {
       "A": "Ketika server tidak dapat menghasilkan representasi respons yang sesuai dengan format yang diminta oleh header 'Accept' klien",
@@ -1894,12 +2763,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena penolakan pembayaran menggunakan 402 Payment Required.",
       "C": "Opsi C salah karena database timeout memicu status 500 atau 504.",
       "D": "Opsi D salah karena token expired menghasilkan 401 Unauthorized."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-123",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Dalam arsitektur microservices, apa keuntungan menggunakan API Gateway (seperti Spring Cloud Gateway)?",
     "options": {
       "A": "Menyediakan titik masuk tunggal (single entry point) untuk routing lalu lintas, autentikasi terpusat, rate limiting, SSL termination, dan cross-cutting concerns",
@@ -1914,12 +2785,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena API Gateway bukan tempat penyimpanan database.",
       "C": "Opsi C salah karena gateway menjaga pemisahan modular arsitektur terdistribusi.",
       "D": "Opsi D salah karena Docker tetap digunakan untuk deployment services."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-124",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Apa fungsi dari header 'Location' pada HTTP response?",
     "options": {
       "A": "Menunjukkan URI dari resource baru yang baru saja dibuat (pada status 201 Created) atau target URL baru pada pengalihan (status 3xx)",
@@ -1934,12 +2807,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan koordinat GPS dinamis.",
       "C": "Opsi C salah karena bukan metadata geografis server.",
       "D": "Opsi D salah karena bukan pengatur zona waktu."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-125",
     "level": "intermediate",
     "topic": "RESTful API",
+    "questionType": "concept",
     "question": "Bagaimana cara menangani versi API (API Versioning) yang paling umum dan mudah di-cache oleh browser serta CDN?",
     "options": {
       "A": "URI Path Versioning (contoh: /api/v1/users dan /api/v2/users)",
@@ -1954,12 +2829,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah meskipun mudah, query param versioning kurang disukai untuk caching beberapa CDN.",
       "C": "Opsi C salah karena menyulitkan pengujian via browser address bar dan mempersulit CDN caching tanpa konfigurasi header Vary.",
       "D": "Opsi D salah karena lebih kompleks diterapkan dan tidak langsung terlihat di URL browser."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-126",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Apakah yang dimaksud dengan masalah 'N+1 Query Problem' di JPA/Hibernate?",
     "options": {
       "A": "Kondisi di mana aplikasi mengeksekusi 1 query awal untuk mengambil N parent records, lalu secara berulang mengeksekusi N query tambahan terpisah untuk mengambil data relasi masing-masing parent",
@@ -1974,12 +2851,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan error kegagalan transaksi.",
       "C": "Opsi C salah karena bukan error aritmatika.",
       "D": "Opsi D salah karena bukan masalah timeout."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-127",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Bagaimanakah cara terbaik dan paling umum untuk mengatasi masalah N+1 Query Problem di JPQL?",
     "options": {
       "A": "Menggunakan klausul 'JOIN FETCH' dalam query JPQL (misal: 'SELECT o FROM Order o JOIN FETCH o.items')",
@@ -1994,12 +2873,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena FetchType.EAGER justru sering memicu N+1 query secara implisit saat menggunakan query method biasa.",
       "C": "Opsi C salah karena menghapus integritas referensial merusak data.",
       "D": "Opsi D salah karena masalahnya ada pada round-trip jaringan, bukan RAM database."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-128",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Apa fungsi dari fitur @EntityGraph di Spring Data JPA?",
     "options": {
       "A": "Mendefinisikan atribut relasi mana yang harus di-fetch secara eager (menggunakan SQL JOIN) secara deklaratif pada method query tertentu tanpa mengubah konfigurasi default relasi",
@@ -2014,12 +2895,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan tool diagram batang.",
       "C": "Opsi C salah karena JPA adalah standar untuk database relasional.",
       "D": "Opsi D salah karena tidak menonaktifkan transaksi."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-129",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Apa perbedaan efek antara CascadeType.REMOVE dan 'orphanRemoval = true' pada relasi @OneToMany di JPA?",
     "options": {
       "A": "CascadeType.REMOVE hanya menghapus entitas anak jika entitas parent dihapus, sedangkan orphanRemoval=true juga akan menghapus entitas anak jika anak tersebut dilepaskan dari koleksi parent",
@@ -2034,12 +2917,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena keduanya adalah fitur JPA relasional.",
       "C": "Opsi C salah karena CascadeType.REMOVE mengeksekusi SQL DELETE saat parent dihapus.",
       "D": "Opsi D salah karena perilaku terhadap modifikasi koleksi sangat berbeda."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-130",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Apakah yang dimaksud dengan fitur 'Dirty Checking' (Automatic Dirty Checking) di Hibernate?",
     "options": {
       "A": "Hibernate secara otomatis mendeteksi perubahan atribut pada entitas yang berstatus 'managed' di Persistence Context dan melakukan UPDATE ke database saat transaksi commit tanpa perlu memanggil repository.save()",
@@ -2054,12 +2939,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan fungsi antivirus database.",
       "C": "Opsi C salah karena SQL injection dicegah oleh parameterized queries (PreparedStatement).",
       "D": "Opsi D salah karena null value dipetakan ke NULL SQL."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-131",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Mengapa method repositori Spring Data JPA yang menggunakan anotasi @Modifying dan query kustom UPDATE/DELETE sering memerlukan atribut 'clearAutomatically = true'?",
     "options": {
       "A": "Untuk membersihkan Persistence Context (L1 Cache) agar tidak menyimpan entitas dengan state usang (stale state) yang belum disinkronkan pasca eksekusi query bulk update langsung ke database",
@@ -2074,12 +2961,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena hanya membersihkan EntityManager cache, bukan data tabel.",
       "C": "Opsi C salah karena koneksi tetap berada di pool.",
       "D": "Opsi D salah karena operasi @Modifying tetap memerlukan @Transactional."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-132",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Apa perbedaan utama antara tingkat isolasi transaksi 'READ COMMITTED' dan 'REPEATABLE READ' di database relasional?",
     "options": {
       "A": "READ COMMITTED mencegah Dirty Read, sedangkan REPEATABLE READ selain mencegah Dirty Read juga mencegah Non-Repeatable Read",
@@ -2094,12 +2983,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena REPEATABLE READ umumnya menggunakan MVCC tanpa memblokir pembacaan concurrent.",
       "C": "Opsi C salah karena operasi INSERT dari transaksi lain tetap dimungkinkan.",
       "D": "Opsi D salah karena READ COMMITTED dijamin bebas dari Dirty Read."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-133",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Apakah anomali transaksi yang disebut sebagai 'Phantom Read' di database?",
     "options": {
       "A": "Ketika sebuah transaksi mengeksekusi query pencarian rentang data dua kali, dan pada pembacaan kedua muncul baris data baru yang di-insert dan di-commit oleh transaksi lain",
@@ -2114,12 +3005,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena itu adalah definisi Dirty Read.",
       "C": "Opsi C salah karena bukan kerusakan perangkat keras.",
       "D": "Opsi D salah karena transaksi terjadi dalam cakupan database yang sama."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-134",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Apa fungsi dari atribut propagation 'Propagation.REQUIRES_NEW' pada anotasi @Transactional Spring?",
     "options": {
       "A": "Selalu menunda (suspend) transaksi aktif saat ini dan membuat transaksi baru yang benar-benar independen",
@@ -2134,12 +3027,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena itu adalah perilaku Propagation.MANDATORY.",
       "C": "Opsi C salah karena eksekusi tanpa transaksi adalah NOT_SUPPORTED atau NEVER.",
       "D": "Opsi D salah karena transaksi hanya rollback jika terjadi exception."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-135",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Apa perbedaan utama antara Optimistic Locking dan Pessimistic Locking dalam JPA?",
     "options": {
       "A": "Optimistic Locking mendeteksi konflik saat commit menggunakan kolom versi (@Version) tanpa mengunci baris di database, sedangkan Pessimistic Locking secara fisik mengunci baris data di level database menggunakan 'SELECT ... FOR UPDATE'",
@@ -2154,12 +3049,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena pessimistic locking memiliki overhead lock yang lebih tinggi.",
       "C": "Opsi C salah karena optimistic locking tidak memblokir pembacaan.",
       "D": "Opsi D salah karena pessimistic locking mengandalkan fitur locking database."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-136",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Anotasi apakah yang wajib ditambahkan pada field versi bertipe Long, Integer, atau Timestamp untuk mengaktifkan Optimistic Locking di JPA?",
     "options": {
       "A": "@Version",
@@ -2174,12 +3071,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan anotasi standar JPA.",
       "C": "Opsi C salah karena bukan anotasi JPA.",
       "D": "Opsi D salah karena @Revision adalah anotasi Hibernate Envers untuk audit riwayat entitas."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-137",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Dalam relasi dua arah (bidirectional) @OneToMany dan @ManyToOne, di sisi manakah atribut 'mappedBy' WAJIB ditempatkan?",
     "options": {
       "A": "Di sisi @OneToMany (sisi inverse/non-owning side), menunjuk ke nama field referensi yang ada di entitas anak",
@@ -2194,12 +3093,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena sisi @ManyToOne selalu merupakan owning side yang memegang foreign key fisik (@JoinColumn).",
       "C": "Opsi C salah karena mappedBy di kedua sisi akan membingungkan Hibernate.",
       "D": "Opsi D salah karena tanpa mappedBy, JPA akan membuat join table terpisah yang tidak diinginkan."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-138",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Apa fungsi dari method 'flush()' pada EntityManager di JPA?",
     "options": {
       "A": "Menyinkronkan semua perubahan yang ada di Persistence Context ke database dengan mengeksekusi query SQL yang tertunda tanpa melakukan commit transaksi",
@@ -2214,12 +3115,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena pembatalan transaksi dilakukan dengan rollback.",
       "C": "Opsi C salah karena tidak menghapus tabel.",
       "D": "Opsi D salah karena penutupan koneksi dilakukan saat transaksi selesai."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-139",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Apa fungsi dari method 'detach(Object entity)' pada EntityManager?",
     "options": {
       "A": "Mengeluarkan entitas dari status 'managed' di Persistence Context sehingga perubahan pada entitas tidak akan lagi otomatis disimpan ke database oleh dirty checking",
@@ -2234,12 +3137,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena penghapusan baris menggunakan method remove().",
       "C": "Opsi C salah karena mengembalikan entitas detached ke status managed menggunakan method merge().",
       "D": "Opsi D salah karena bukan serializer JSON."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-140",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Manakah default rollback behavior dari anotasi @Transactional di Spring saat terjadi exception di dalam method?",
     "options": {
       "A": "Otomatis melakukan rollback hanya untuk unchecked exceptions (RuntimeException dan Error), tetapi TIDAK melakukan rollback untuk checked exceptions secara default",
@@ -2254,12 +3159,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena checked exception bawaan tidak memicu rollback tanpa rollbackFor.",
       "C": "Opsi C salah karena RuntimeException otomatis memicu rollback.",
       "D": "Opsi D salah karena semua RuntimeException memicu rollback."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-141",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Apa peran dari First-Level Cache (L1 Cache) di Hibernate?",
     "options": {
       "A": "Merupakan cache wajib yang terikat pada satu instance EntityManager/Session tunggal untuk mencegah pembacaan berulang entitas yang sama dalam satu transaksi",
@@ -2274,12 +3181,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena cache global lintas sesi adalah Second-Level Cache (L2 Cache).",
       "C": "Opsi C salah karena L1 Cache berada di memori heap JVM aplikasi.",
       "D": "Opsi D salah karena bukan web static cache."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-142",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Bagaimana cara memetakan inheritance hierarki kelas di JPA di mana setiap subclass memiliki tabel database fisik terpisah sendiri beserta semua kolom parent-nya?",
     "options": {
       "A": "@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)",
@@ -2294,12 +3203,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena SINGLE_TABLE menggabungkan seluruh hierarki kelas ke dalam satu tabel tunggal.",
       "C": "Opsi C salah karena JOINED membuat tabel terpisah yang dihubungkan dengan relasi foreign key.",
       "D": "Opsi D salah karena @MappedSuperclass bukan hierarki entitas polimorfik penuh."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-143",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Apa fungsi dari anotasi @Embeddable dan @Embedded di JPA?",
     "options": {
       "A": "Memungkinkan komposisi kelas pembantu (Value Object) ke dalam entitas, di mana atribut kelas @Embeddable dipetakan sebagai kolom-kolom biasa di tabel entitas pemiliknya tanpa membuat tabel baru",
@@ -2314,12 +3225,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan pemutar video.",
       "C": "Opsi C salah karena bukan multi-datasource router.",
       "D": "Opsi D salah karena relasi Many-to-Many memerlukan @ManyToMany."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-144",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Kapan Anda sebaiknya menggunakan Spring Data JPA Specifications (berbasis Criteria API)?",
     "options": {
       "A": "Ketika aplikasi membutuhkan query pencarian dinamis (dynamic query) dengan filter pencarian yang opsional dan dapat dikombinasikan secara fleksibel saat runtime",
@@ -2334,12 +3247,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena pencarian ID cukup dengan findById().",
       "C": "Opsi C salah karena skema tabel dibuat oleh migration tool.",
       "D": "Opsi D salah karena Criteria API dikhususkan untuk SQL relasional."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-145",
     "level": "intermediate",
     "topic": "JPA & Hibernate",
+    "questionType": "concept",
     "question": "Mengapa operasi 'findAll()' pada dataset jutaan baris tanpa pagination sangat berbahaya bagi aplikasi berbasis JPA?",
     "options": {
       "A": "Dapat menyebabkan OutOfMemoryError (OOM) di JVM karena seluruh jutaan baris akan diinstansiasi menjadi objek Java di memori heap bersamaan dan membebani First-Level Cache",
@@ -2354,12 +3269,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena operasi SELECT tidak memodifikasi struktur index tabel.",
       "C": "Opsi C salah karena pembacaan SELECT standar tidak mengunci tabel secara eksklusif.",
       "D": "Opsi D salah karena pemanggilan findAll() lolos kompilasi."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-146",
     "level": "intermediate",
     "topic": "Testing",
+    "questionType": "concept",
     "question": "Apa perbedaan mendasar antara @Mock dan @Spy di framework Mockito?",
     "options": {
       "A": "@Mock membuat objek tiruan kosong di mana semua method mengembalikan nilai default (null/0) kecuali di-stub, sedangkan @Spy membungkus objek asli sehingga method nyata tetap dieksekusi kecuali di-stub secara spesifik",
@@ -2374,12 +3291,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena pemanggilan method pada @Spy dapat diverifikasi dengan verify().",
       "C": "Opsi C salah karena class final memerlukan mock-maker-inline.",
       "D": "Opsi D salah karena perilaku eksekusi method aslinya berbeda secara fundamental."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-147",
     "level": "intermediate",
     "topic": "Testing",
+    "questionType": "concept",
     "question": "Bagaimana cara menangkap (capture) argumen objek yang diteruskan ke method dependensi mock untuk diperiksa nilainya di Mockito?",
     "options": {
       "A": "Menggunakan ArgumentCaptor.forClass(...) bersamaan dengan method verify(mock).method(captor.capture())",
@@ -2394,12 +3313,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena kelas mock tidak memiliki print statement internal.",
       "C": "Opsi C salah karena bukan anotasi Mockito.",
       "D": "Opsi D salah karena verifikasi unit test tidak boleh mengandalkan pembacaan log manual."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-148",
     "level": "intermediate",
     "topic": "Testing",
+    "questionType": "concept",
     "question": "Anotasi JUnit 5 manakah yang digunakan untuk menjalankan satu method pengujian berkali-kali dengan kumpulan data input parameter yang berbeda?",
     "options": {
       "A": "@ParameterizedTest bersama @ValueSource, @CsvSource, atau @MethodSource",
@@ -2414,12 +3335,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena @RepeatedTest hanya mengulang test yang sama N kali tanpa parameter berbeda.",
       "C": "Opsi C salah karena bukan anotasi JUnit 5.",
       "D": "Opsi D salah karena bukan anotasi JUnit 5."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-149",
     "level": "intermediate",
     "topic": "Testing",
+    "questionType": "concept",
     "question": "Ketika menguji REST API menggunakan MockMvc di Spring Boot, method apakah yang digunakan untuk memverifikasi nilai atribut field di dalam respons JSON?",
     "options": {
       "A": "andExpect(jsonPath(\"$.fieldName\").value(\"expectedValue\"))",
@@ -2434,12 +3357,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan method Spring MVC Test.",
       "C": "Opsi C salah karena assert substring teks tidak mengevaluasi struktur JSON secara akurat.",
       "D": "Opsi D salah karena bukan sintaks MockMvc."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-150",
     "level": "intermediate",
     "topic": "Testing",
+    "questionType": "concept",
     "question": "Anotasi apakah yang disediakan oleh Spring Boot Test untuk menguji repositori database secara terisolasi menggunakan in-memory database (seperti H2)?",
     "options": {
       "A": "@DataJpaTest",
@@ -2454,12 +3379,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena @WebMvcTest untuk lapisan controller.",
       "C": "Opsi C salah karena @SpringBootTest memuat seluruh aplikasi sehingga lebih lambat.",
       "D": "Opsi D salah karena @RestClientTest untuk REST client."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-151",
     "level": "intermediate",
     "topic": "Testing",
+    "questionType": "concept",
     "question": "Di Mockito, apa perbedaan penting antara 'when(mock.method()).thenReturn(...)' dan 'doReturn(...).when(mock).method()' saat berhadapan dengan objek @Spy?",
     "options": {
       "A": "when(...).thenReturn(...) akan mengeksekusi method asli (real method) sekali saat evaluasi stubbing, sedangkan doReturn(...).when(...) tidak akan memanggil method asli",
@@ -2474,12 +3401,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena doReturn mendukung semua tipe kembalian generik.",
       "C": "Opsi C salah karena when/thenReturn bekerja pada interface mock biasa.",
       "D": "Opsi D salah karena dampaknya sangat krusial pada partial mocks."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-152",
     "level": "intermediate",
     "topic": "Testing",
+    "questionType": "concept",
     "question": "Apa fungsi dari TestEntityManager yang disediakan oleh @DataJpaTest?",
     "options": {
       "A": "Menyediakan method helper EntityManager (seperti persistAndFlush, find, clear) yang dirancang khusus untuk mempermudah penyiapan fixture data pengujian database",
@@ -2494,12 +3423,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan driver JDBC.",
       "C": "Opsi C salah karena bukan parser data.",
       "D": "Opsi D salah karena pembersihan data dilakukan melalui rollback transaksi otomatis."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-153",
     "level": "intermediate",
     "topic": "Testing",
+    "questionType": "concept",
     "question": "Manakah cara yang benar untuk memverifikasi bahwa sebuah method pada mock objek TIDAK PERNAH dipanggil sama sekali selama pengujian di Mockito?",
     "options": {
       "A": "verify(mockObject, never()).methodName(any())",
@@ -2514,12 +3445,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena times(1) memverifikasi dipanggil tepat 1 kali.",
       "C": "Opsi C salah karena bukan method Mockito.",
       "D": "Opsi D salah karena verifyNoInteractions adalah method statis Mockito.verifyNoInteractions(mock)."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-154",
     "level": "intermediate",
     "topic": "Testing",
+    "questionType": "concept",
     "question": "Apa tujuan dari prinsip pengujian FIRST (Fast, Independent, Repeatable, Self-Validating, Timely)?",
     "options": {
       "A": "Sebagai panduan kualitas agar unit test dapat berjalan cepat, terisolasi antar test, konsisten di semua lingkungan, memiliki hasil lolos/gagal otomatis, dan ditulis tepat waktu",
@@ -2534,12 +3467,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan untuk database.",
       "C": "Opsi C salah karena bukan aturan penamaan file.",
       "D": "Opsi D salah karena bukan protokol jaringan."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-155",
     "level": "intermediate",
     "topic": "Testing",
+    "questionType": "concept",
     "question": "Anotasi JUnit 5 manakah yang digunakan untuk menonaktifkan atau melewati (skip) sebuah test case sementara waktu?",
     "options": {
       "A": "@Disabled",
@@ -2554,12 +3489,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena @Ignore adalah anotasi JUnit 4.",
       "C": "Opsi C salah karena bukan anotasi JUnit standar.",
       "D": "Opsi D salah karena bukan anotasi JUnit."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-156",
     "level": "intermediate",
     "topic": "Testing",
+    "questionType": "concept",
     "question": "Manakah assertion JUnit 5 yang digunakan untuk memverifikasi bahwa potongan kode tertentu MELEMPARKAN tipe exception yang diharapkan?",
     "options": {
       "A": "assertThrows(ExpectedException.class, () -> { ... })",
@@ -2574,12 +3511,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan method JUnit.",
       "C": "Opsi C salah karena bukan method JUnit.",
       "D": "Opsi D salah karena bukan method JUnit."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-157",
     "level": "intermediate",
     "topic": "Testing",
+    "questionType": "concept",
     "question": "Apa fungsi dari @MockBean di Spring Boot Test?",
     "options": {
       "A": "Membuat objek mock Mockito dan secara otomatis mendaftarkannya ke dalam ApplicationContext Spring, menggantikan bean asli yang bertipe sama",
@@ -2594,12 +3533,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena @MockBean tidak terbatas pada database.",
       "C": "Opsi C salah karena tidak menyimpan ke disk.",
       "D": "Opsi D salah karena tidak mengubah controller menjadi async."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-158",
     "level": "intermediate",
     "topic": "Clean Code & SOLID",
+    "questionType": "concept",
     "question": "Bagaimana penerapan prinsip Interface Segregation Principle (ISP) dalam arsitektur software?",
     "options": {
       "A": "Memecah interface besar yang gemuk (fat interface) menjadi banyak interface kecil yang spesifik, sehingga klien tidak dipaksa bergantung pada method yang tidak mereka butuhkan",
@@ -2614,12 +3555,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena itu adalah antipattern Fat Interface.",
       "C": "Opsi C salah karena interface menyediakan decoupling yang lebih fleksibel dibanding abstract class.",
       "D": "Opsi D salah karena method yang terlalu banyak adalah pelanggaran berat ISP."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-159",
     "level": "intermediate",
     "topic": "Clean Code & SOLID",
+    "questionType": "concept",
     "question": "Bagaimana Dependency Inversion Principle (DIP) diterapkan secara nyata dalam pengembangan aplikasi Spring Boot?",
     "options": {
       "A": "Lapisan Service tingkat tinggi bergantung pada antarmuka (interface) Repositori, bukan pada kelas implementasi persistensi konkret, dan Spring IoC bertindak menginjeksi implementasinya",
@@ -2634,12 +3577,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena menginstansiasi dengan 'new' mengunci dependensi ke kelas konkret.",
       "C": "Opsi C salah karena melanggar layered architecture.",
       "D": "Opsi D salah karena static method mempersulit decoupling dan testing."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-160",
     "level": "intermediate",
     "topic": "Clean Code & SOLID",
+    "questionType": "concept",
     "question": "Code smell apakah yang terjadi ketika suatu method di kelas A lebih sering mengakses data dan method milik kelas B daripada datanya sendiri?",
     "options": {
       "A": "Feature Envy",
@@ -2654,12 +3599,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena Data Clumps adalah kumpulan variabel yang selalu muncul bersamaan.",
       "C": "Opsi C salah karena Dead Code adalah kode yang tidak pernah dieksekusi.",
       "D": "Opsi D salah karena Primitive Obsession adalah kebiasaan memakai tipe primitif untuk konsep domain kompleks."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-161",
     "level": "intermediate",
     "topic": "Clean Code & SOLID",
+    "questionType": "concept",
     "question": "Teknik refactoring apakah yang paling tepat untuk menggantikan serangkaian percabangan 'switch-case' atau 'if-else' panjang yang memeriksa tipe objek?",
     "options": {
       "A": "Replace Conditional with Polymorphism (menggunakan Strategy Pattern atau subclass)",
@@ -2674,12 +3621,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena memperparah kompleksitas siklomatis.",
       "C": "Opsi C salah karena ternary bertingkat merusak keterbacaan.",
       "D": "Opsi D salah karena menimbulkan bug runtime."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-162",
     "level": "intermediate",
     "topic": "Clean Code & SOLID",
+    "questionType": "concept",
     "question": "Apa yang dimaksud dengan code smell 'Primitive Obsession'?",
     "options": {
       "A": "Penggunaan tipe data primitif bawaan (seperti String, int) secara berlebihan untuk merepresentasikan konsep domain spesifik (seperti Money, PhoneNumber, Email) alih-alih membuat Value Object",
@@ -2694,12 +3643,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan masalah loop.",
       "C": "Opsi C salah karena bukan perbandingan tipe database.",
       "D": "Opsi D salah karena bukan tentang versi JDK."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-163",
     "level": "intermediate",
     "topic": "Clean Code & SOLID",
+    "questionType": "concept",
     "question": "Menurut Clean Code oleh Robert C. Martin, berapa jumlah parameter ideal yang sebaiknya dimiliki oleh sebuah method?",
     "options": {
       "A": "Nol (niladic) atau satu (monadic), dan maksimal dua (dyadic); jika parameter berjumlah 3 atau lebih, sebaiknya dibungkus ke dalam objek parameter khusus",
@@ -2714,12 +3665,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena parameter terlalu banyak adalah code smell.",
       "C": "Opsi C salah karena menyulitkan pemeliharaan.",
       "D": "Opsi D salah karena menyembunyikan desain yang buruk."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-164",
     "level": "intermediate",
     "topic": "Clean Code & SOLID",
+    "questionType": "concept",
     "question": "Apa arti dari aturan 'The Boy Scout Rule' dalam pemeliharaan kode perangkat lunak?",
     "options": {
       "A": "Tinggalkan perkemahan (kode yang sedang Anda kerjakan) dalam kondisi selalu lebih bersih daripada saat Anda pertama kali menemukannya",
@@ -2734,12 +3687,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena kode lama yang buruk harus diperbaiki secara bertanggung jawab.",
       "C": "Opsi C salah karena bukan kegiatan fisik di luar ruangan.",
       "D": "Opsi D salah karena membiarkan technical debt membusuk."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-165",
     "level": "intermediate",
     "topic": "Clean Code & SOLID",
+    "questionType": "concept",
     "question": "Kapan suatu method sebaiknya dinyatakan sebagai 'Side-Effect Free' (Pure Function)?",
     "options": {
       "A": "Ketika method hanya menghasilkan output berdasarkan parameter input-nya tanpa mengubah state objek luar, memodifikasi argumen, atau melakukan I/O eksternal",
@@ -2754,12 +3709,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena method void hampir selalu mengandalkan efek samping (mutasi state).",
       "C": "Opsi C salah karena mengembalikan null bukan kriteria fungsi murni.",
       "D": "Opsi D salah karena eksekusi thread tidak menentukan status kebebasan efek samping."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-166",
     "level": "intermediate",
     "topic": "SQL & Database",
+    "questionType": "concept",
     "question": "Diberikan indeks komposit pada kolom: CREATE INDEX idx_user ON users(last_name, first_name, age);. Berdasarkan Leftmost Prefix Rule, query manakah yang TIDAK BISA memanfaatkan indeks ini secara efisien?",
     "options": {
       "A": "SELECT * FROM users WHERE first_name = 'Budi' AND age = 25;",
@@ -2774,12 +3731,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena menyertakan prefix kolom pertama (last_name).",
       "C": "Opsi C salah karena menyertakan dua kolom prefix paling kiri.",
       "D": "Opsi D salah karena mencakup ketiga kolom indeks secara berurutan."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-167",
     "level": "intermediate",
     "topic": "SQL & Database",
+    "questionType": "concept",
     "question": "Apakah yang dimaksud dengan 'Covering Index' dalam optimasi query SQL?",
     "options": {
       "A": "Indeks yang mencakup semua kolom yang diminta oleh query SELECT (baik klausa WHERE maupun SELECT list), sehingga database tidak perlu melakukan lookup tambahan ke tabel data utama (zero heap lookup)",
@@ -2794,12 +3753,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan mekanisme enkripsi atau masking data.",
       "C": "Opsi C salah karena indeks dibuat per kolom tertentu, bukan seluruh isi tabel.",
       "D": "Opsi D salah karena indeks aktif terus-menerus."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-168",
     "level": "intermediate",
     "topic": "SQL & Database",
+    "questionType": "concept",
     "question": "Fitur SQL apakah yang digunakan untuk mendefinisikan Common Table Expression (CTE) yang memudahkan penulisan query hierarkis dan subquery modular?",
     "options": {
       "A": "Klausa 'WITH cte_name AS (...)'",
@@ -2814,12 +3775,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena CREATE VIEW membuat objek skema persisten atau sesi.",
       "C": "Opsi C salah karena bukan sintaks standar CTE.",
       "D": "Opsi D salah karena klausa FOR EACH ROW digunakan pada database trigger."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-169",
     "level": "intermediate",
     "topic": "SQL & Database",
+    "questionType": "concept",
     "question": "Window function SQL manakah yang memberikan nomor urut unik berurutan (1, 2, 3...) untuk setiap baris di dalam partisi tanpa ada angka yang sama meskipun nilainya kembar?",
     "options": {
       "A": "ROW_NUMBER() OVER (PARTITION BY ... ORDER BY ...)",
@@ -2834,12 +3797,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena RANK menghasilkan nilai kembar dan meninggalkan celah urutan.",
       "C": "Opsi C salah karena DENSE_RANK menghasilkan nilai kembar untuk baris dengan nilai sama.",
       "D": "Opsi D salah karena COUNT menghitung jumlah rekaman total."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-170",
     "level": "intermediate",
     "topic": "SQL & Database",
+    "questionType": "concept",
     "question": "Apa tujuan utama dari proses Normalisasi Database hingga Bentuk Normal Ketiga (3NF)?",
     "options": {
       "A": "Menghilangkan redundansi data dan mencegah anomali insersi, pembaruan, serta penghapusan dengan memastikan setiap kolom non-key bergantung penuh hanya pada primary key (tidak ada ketergantungan transitif)",
@@ -2854,12 +3819,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena primary key adalah prasyarat mutlak normalisasi relasional.",
       "C": "Opsi C salah karena penggabungan ke satu tabel adalah denormalisasi.",
       "D": "Opsi D salah karena bukan proses kriptografi keamanan."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-171",
     "level": "intermediate",
     "topic": "SQL & Database",
+    "questionType": "concept",
     "question": "Perintah SQL apakah yang digunakan untuk melihat rencana eksekusi query (Execution Plan) dari database engine guna menganalisis apakah query menggunakan index atau full table scan?",
     "options": {
       "A": "EXPLAIN atau EXPLAIN ANALYZE",
@@ -2874,12 +3841,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena bukan sintaks SQL.",
       "C": "Opsi C salah karena bukan sintaks SQL standar.",
       "D": "Opsi D salah karena bukan sintaks SQL standar."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-172",
     "level": "intermediate",
     "topic": "SQL & Database",
+    "questionType": "concept",
     "question": "Dalam manajemen koneksi database di aplikasi Spring Boot, mengapa kita menggunakan Connection Pool seperti HikariCP?",
     "options": {
       "A": "Membuka dan menutup koneksi fisik TCP ke database sangat mahal; connection pool menjaga kumpulan koneksi tetap terbuka siap pakai sehingga latency request berkurang drastis",
@@ -2894,12 +3863,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena connection pool tidak membatalkan kueri secara otomatis tanpa setting timeout.",
       "C": "Opsi C salah karena connection pool tidak melakukan translasi format data.",
       "D": "Opsi D salah karena koneksi pool dirancang khusus untuk concurrent multi-user."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-173",
     "level": "intermediate",
     "topic": "Spring Security & JWT",
+    "questionType": "concept",
     "question": "Dalam arsitektur Spring Security modern (Spring Security 6 / Spring Boot 3+), bagaimanakah cara mengkonfigurasi aturan otorisasi HTTP request?",
     "options": {
       "A": "Mendefinisikan bean SecurityFilterChain dan menggunakan metode HttpSecurity.authorizeHttpRequests(auth -> auth...)",
@@ -2914,12 +3885,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena WebSecurityConfigurerAdapter sudah usang (deprecated & removed).",
       "C": "Opsi C salah karena keamanan sisi frontend mudah dibobol dan otorisasi wajib ditegakkan di backend.",
       "D": "Opsi D salah karena XML-based security configuration sudah ditinggalkan di ekosistem modern."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-174",
     "level": "intermediate",
     "topic": "Spring Security & JWT",
+    "questionType": "concept",
     "question": "Kelas filter manakah yang paling ideal di-extend untuk mengimplementasikan filter validasi token JWT kustom yang hanya dieksekusi tepat satu kali per HTTP request?",
     "options": {
       "A": "OncePerRequestFilter",
@@ -2934,12 +3907,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena GenericFilterBean dapat terpanggil berulang jika ada request internal forwarding.",
       "C": "Opsi C salah karena ServletFilter adalah interface generic dasar Java EE.",
       "D": "Opsi D salah karena BasicAuthenticationFilter dikhususkan untuk HTTP Basic Authentication."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-175",
     "level": "intermediate",
     "topic": "Spring Security & JWT",
+    "questionType": "concept",
     "question": "Di manakah informasi autentikasi pengguna yang sedang aktif (seperti Principal dan GrantedAuthorities) disimpan di dalam thread yang sedang berjalan di Spring Security?",
     "options": {
       "A": "SecurityContextHolder.getContext().getAuthentication()",
@@ -2954,12 +3929,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena dalam API stateless berbasis token (JWT), session HTTP tidak digunakan.",
       "C": "Opsi C salah karena System properties bersifat global JVM dan bukan per-request user.",
       "D": "Opsi D salah karena nama thread hanya berupa string nama teknis worker thread."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-176",
     "level": "intermediate",
     "topic": "Spring Security & JWT",
+    "questionType": "concept",
     "question": "Mengapa arsitektur REST API stateless berbasis JWT biasanya menggunakan pasangan Access Token dan Refresh Token?",
     "options": {
       "A": "Access Token berumur pendek (misal 15 menit) untuk membatasi jendela risiko jika token bocor, sedangkan Refresh Token berumur lebih panjang (misal 7 hari) disimpan aman untuk mendapatkan Access Token baru tanpa meminta login ulang",
@@ -2974,12 +3951,14 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena keduanya adalah string token JWT Base64URL standar.",
       "C": "Opsi C salah karena token tidak mengenkripsi database.",
       "D": "Opsi D salah karena keduanya disimpan dan dikirim oleh klien sesuai fungsi alurnya."
-    }
+    },
+    "jobId": "junior-java"
   },
   {
     "id": "JI-177",
     "level": "intermediate",
     "topic": "Spring Security & JWT",
+    "questionType": "concept",
     "question": "Apa perbedaan konseptual antara 'hasRole('ADMIN')' dan 'hasAuthority('ADMIN')' di Spring Security?",
     "options": {
       "A": "hasRole('ADMIN') secara otomatis memeriksa authority dengan prefix bawaan 'ROLE_' (mencari 'ROLE_ADMIN'), sedangkan hasAuthority('ADMIN') memeriksa string izin secara presisi tanpa prefix ('ADMIN')",
@@ -2994,6 +3973,7 @@ export const TECH_INTERMEDIATE: Question[] = [
       "B": "Opsi B salah karena keduanya dapat digunakan di semua arsitektur aplikasi.",
       "C": "Opsi C salah karena tidak ada batasan modifier method.",
       "D": "Opsi D salah karena prefix 'ROLE_' membuat pencocokan string berbeda."
-    }
+    },
+    "jobId": "junior-java"
   }
 ];

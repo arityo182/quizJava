@@ -7,10 +7,15 @@ import { TECH_ADVANCED } from "./techAdvanced";
 import { JAVA_TEST_QUESTIONS } from "./javaTestQuestions";
 import { GIS_QUESTIONS } from "./gisQuestions";
 import { GIS_TEST_QUESTIONS } from "./gisTestQuestions";
+import { FULLSTACK_BEGINNER } from "./fullstackBeginner";
+import { FULLSTACK_INTERMEDIATE } from "./fullstackIntermediate";
+import { FULLSTACK_ADVANCED } from "./fullstackAdvanced";
+import { FULLSTACK_TEST_QUESTIONS } from "./fullstackTestQuestions";
 
-export type JobId = "junior-java" | "fullstack-gis";
+export type JobId = "junior-java" | "fullstack-gis" | "fullstack";
 export type Mode = "menu" | "study" | "test" | "results";
 export type LevelFilter = "all" | Difficulty;
+export type QTypeFilter = "all" | "concept" | "output" | "debug" | "completion" | "best-practice";
 export type ReviewFilter = "all" | "wrong" | "correct" | "flagged";
 
 // 450 Study Questions for Lowongan 1
@@ -19,6 +24,13 @@ const JAVA_QUESTIONS: Question[] = [
   ...TECH_BEGINNER,
   ...TECH_INTERMEDIATE,
   ...TECH_ADVANCED,
+];
+
+// 450 Study Questions for Lowongan 3
+const FULLSTACK_QUESTIONS: Question[] = [
+  ...FULLSTACK_BEGINNER,
+  ...FULLSTACK_INTERMEDIATE,
+  ...FULLSTACK_ADVANCED,
 ];
 
 // Helper functions for data access compatibility
@@ -31,6 +43,39 @@ const getQExp = (q: Question): string => {
   const e = q.exp || (q as any).explanation;
   if (typeof e === "object" && e !== null) return (e as any).correct || "";
   return typeof e === "string" ? e : "";
+};
+const getQType = (q: Question): "concept" | "output" | "debug" | "completion" | "best-practice" => {
+  if (q.questionType) return q.questionType;
+  if (q.code) return "output";
+  return "concept";
+};
+
+const getJobTitle = (job: JobId, format: "short" | "full" | "label" = "full"): string => {
+  switch (job) {
+    case "junior-java":
+      return format === "short" ? "☕ Junior Java" : format === "label" ? "Lowongan 1: Junior Java Developer" : "Junior Java Developer";
+    case "fullstack-gis":
+      return format === "short" ? "🛰️ Fullstack GIS" : format === "label" ? "Lowongan 2: Fullstack Engineer (GIS)" : "Fullstack Engineer Support (Remote Sensing & GIS)";
+    case "fullstack":
+      return format === "short" ? "⚡ Fullstack SB+TS" : format === "label" ? "Lowongan 3: Fullstack Engineer (Spring Boot + TS)" : "Fullstack Engineer Support (Java Spring Boot + TypeScript)";
+  }
+};
+
+const parseQuestion = (q: Question): { text: string; code?: string } => {
+  const rawText = getQText(q);
+  const match = rawText.match(/```([\w]*)\n([\s\S]*?)```/);
+  if (match) {
+    const cleanText = rawText.replace(/```[\w]*\n[\s\S]*?```/g, "").trim();
+    const extractedCode = match[2].trim();
+    return {
+      text: cleanText || rawText,
+      code: q.code || extractedCode,
+    };
+  }
+  return {
+    text: rawText,
+    code: q.code,
+  };
 };
 
 const C = {
@@ -137,6 +182,7 @@ const RenderExplanation = ({ q }: { q: Question }) => {
 export default function App() {
   const [selectedJob, setSelectedJob] = useState<JobId>("junior-java");
   const [difficultyFilter, setDifficultyFilter] = useState<LevelFilter>("all");
+  const [qTypeFilter, setQTypeFilter] = useState<QTypeFilter>("all");
   const [testLevelFilter, setTestLevelFilter] = useState<LevelFilter>("all");
   const [mode, setMode] = useState<Mode>("menu");
   const [name, setName] = useState<string>("Ari");
@@ -191,8 +237,50 @@ export default function App() {
     advanced: GIS_TEST_QUESTIONS.filter((q) => q.level === "advanced").length,
   }), []);
 
-  const currentStudyCounts = selectedJob === "junior-java" ? javaStudyCounts : gisStudyCounts;
-  const currentTestCounts = selectedJob === "junior-java" ? javaTestCounts : gisTestCounts;
+  const fullstackStudyCounts = useMemo(() => ({
+    total: FULLSTACK_QUESTIONS.length,
+    beginner: FULLSTACK_QUESTIONS.filter((q) => q.level === "beginner").length,
+    intermediate: FULLSTACK_QUESTIONS.filter((q) => q.level === "intermediate").length,
+    advanced: FULLSTACK_QUESTIONS.filter((q) => q.level === "advanced").length,
+  }), []);
+
+  const fullstackTestCounts = useMemo(() => ({
+    total: FULLSTACK_TEST_QUESTIONS.length,
+    beginner: FULLSTACK_TEST_QUESTIONS.filter((q) => q.level === "beginner").length,
+    intermediate: FULLSTACK_TEST_QUESTIONS.filter((q) => q.level === "intermediate").length,
+    advanced: FULLSTACK_TEST_QUESTIONS.filter((q) => q.level === "advanced").length,
+  }), []);
+
+  const currentStudyCounts = selectedJob === "junior-java" ? javaStudyCounts : selectedJob === "fullstack-gis" ? gisStudyCounts : fullstackStudyCounts;
+  const currentTestCounts = selectedJob === "junior-java" ? javaTestCounts : selectedJob === "fullstack-gis" ? gisTestCounts : fullstackTestCounts;
+
+  const currentStudyBase = useMemo(() => {
+    return selectedJob === "junior-java"
+      ? JAVA_QUESTIONS
+      : selectedJob === "fullstack-gis"
+      ? GIS_QUESTIONS
+      : FULLSTACK_QUESTIONS;
+  }, [selectedJob]);
+
+  const currentStudyTypeCounts = useMemo(() => {
+    const pool = difficultyFilter === "all"
+      ? currentStudyBase
+      : currentStudyBase.filter((q) => q.level === difficultyFilter);
+
+    const counts = {
+      all: pool.length,
+      concept: 0,
+      output: 0,
+      debug: 0,
+      completion: 0,
+      "best-practice": 0,
+    };
+    pool.forEach((q) => {
+      const t = getQType(q);
+      if (counts[t] !== undefined) counts[t]++;
+    });
+    return counts;
+  }, [currentStudyBase, difficultyFilter]);
 
   // Test Mode Timer countdown
   useEffect(() => {
@@ -214,14 +302,31 @@ export default function App() {
     return () => clearInterval(timer);
   }, [mode, timeRemaining]);
 
-  const startStudyMode = (filter?: LevelFilter) => {
-    const targetFilter = filter !== undefined ? filter : difficultyFilter;
-    if (filter !== undefined) setDifficultyFilter(filter);
+  const getFilteredStudyQuestions = (
+    lvl: LevelFilter,
+    type: QTypeFilter,
+    job: JobId = selectedJob
+  ) => {
+    const base =
+      job === "junior-java"
+        ? JAVA_QUESTIONS
+        : job === "fullstack-gis"
+        ? GIS_QUESTIONS
+        : FULLSTACK_QUESTIONS;
+    return base.filter((q) => {
+      const matchLvl = lvl === "all" || q.level === lvl;
+      const matchType = type === "all" || getQType(q) === type;
+      return matchLvl && matchType;
+    });
+  };
 
-    const base = selectedJob === "junior-java" ? JAVA_QUESTIONS : GIS_QUESTIONS;
-    const questionsToUse =
-      targetFilter === "all" ? base : base.filter((q) => q.level === targetFilter);
+  const startStudyMode = (lvl?: LevelFilter, type?: QTypeFilter) => {
+    const targetLvl = lvl !== undefined ? lvl : difficultyFilter;
+    const targetType = type !== undefined ? type : qTypeFilter;
+    if (lvl !== undefined) setDifficultyFilter(targetLvl);
+    if (type !== undefined) setQTypeFilter(targetType);
 
+    const questionsToUse = getFilteredStudyQuestions(targetLvl, targetType);
     setSessionQs(questionsToUse);
     setQi(0);
     setStudyAns({});
@@ -229,11 +334,16 @@ export default function App() {
     setMode("study");
   };
 
-  const handleStudyFilterChange = (filter: LevelFilter) => {
-    setDifficultyFilter(filter);
-    const base = selectedJob === "junior-java" ? JAVA_QUESTIONS : GIS_QUESTIONS;
-    const questionsToUse =
-      filter === "all" ? base : base.filter((q) => q.level === filter);
+  const handleStudyLevelChange = (lvl: LevelFilter) => {
+    setDifficultyFilter(lvl);
+    const questionsToUse = getFilteredStudyQuestions(lvl, qTypeFilter);
+    setSessionQs(questionsToUse);
+    setQi(0);
+  };
+
+  const handleStudyTypeChange = (type: QTypeFilter) => {
+    setQTypeFilter(type);
+    const questionsToUse = getFilteredStudyQuestions(difficultyFilter, type);
     setSessionQs(questionsToUse);
     setQi(0);
   };
@@ -242,7 +352,7 @@ export default function App() {
     const targetFilter = filter !== undefined ? filter : testLevelFilter;
     if (filter !== undefined) setTestLevelFilter(targetFilter);
 
-    const base = selectedJob === "junior-java" ? JAVA_TEST_QUESTIONS : GIS_TEST_QUESTIONS;
+    const base = selectedJob === "junior-java" ? JAVA_TEST_QUESTIONS : selectedJob === "fullstack-gis" ? GIS_TEST_QUESTIONS : FULLSTACK_TEST_QUESTIONS;
     const questionsToUse =
       targetFilter === "all" ? base : base.filter((q) => q.level === targetFilter);
 
@@ -282,15 +392,27 @@ export default function App() {
 
     const byTopic: Record<string, { total: number; correct: number }> = {};
 
+    const byQuestionType: Record<string, { total: number; correct: number }> = {
+      concept: { total: 0, correct: 0 },
+      output: { total: 0, correct: 0 },
+      debug: { total: 0, correct: 0 },
+      completion: { total: 0, correct: 0 },
+      "best-practice": { total: 0, correct: 0 },
+    };
+
     sessionQs.forEach((q, idx) => {
       const userChoice = testAns[idx];
       const actualAns = getQAnswer(q);
       const lvl = q.level;
       const topic = getQTopic(q);
+      const qType = getQType(q);
 
       byLevel[lvl].total += 1;
       if (!byTopic[topic]) byTopic[topic] = { total: 0, correct: 0 };
       byTopic[topic].total += 1;
+
+      if (!byQuestionType[qType]) byQuestionType[qType] = { total: 0, correct: 0 };
+      byQuestionType[qType].total += 1;
 
       if (userChoice === undefined) {
         unanswered += 1;
@@ -298,6 +420,7 @@ export default function App() {
         correct += 1;
         byLevel[lvl].correct += 1;
         byTopic[topic].correct += 1;
+        byQuestionType[qType].correct += 1;
       } else {
         wrong += 1;
       }
@@ -316,6 +439,7 @@ export default function App() {
       timeSpent,
       byLevel,
       byTopic,
+      byQuestionType,
     };
   }, [sessionQs, testAns, totalTestTime, timeRemaining]);
 
@@ -342,9 +466,41 @@ export default function App() {
     );
   };
 
+  // Question Type Badge helper component
+  const renderTypeBadge = (type?: string) => {
+    const t = type || "concept";
+    const map: Record<string, { label: string; color: string }> = {
+      concept: { label: "💡 Konsep", color: "#38BDF8" },
+      output: { label: "💻 Output", color: "#A855F7" },
+      debug: { label: "🐛 Debug", color: "#F43F5E" },
+      completion: { label: "🧩 Completion", color: "#F59E0B" },
+      "best-practice": { label: "⭐ Best Practice", color: "#10B981" },
+    };
+    const item = map[t] || { label: t, color: "#94A3B8" };
+    return (
+      <span
+        style={{
+          fontSize: 11,
+          fontWeight: 700,
+          textTransform: "uppercase",
+          padding: "3px 8px",
+          borderRadius: 6,
+          background: `${item.color}22`,
+          color: item.color,
+          border: `1px solid ${item.color}44`,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 4,
+        }}
+      >
+        {item.label}
+      </span>
+    );
+  };
+
   // Study Mode Progress by level calculation
   const studyProgress = useMemo(() => {
-    const base = selectedJob === "junior-java" ? JAVA_QUESTIONS : GIS_QUESTIONS;
+    const base = selectedJob === "junior-java" ? JAVA_QUESTIONS : selectedJob === "fullstack-gis" ? GIS_QUESTIONS : FULLSTACK_QUESTIONS;
     let bAns = 0, bTot = 0;
     let iAns = 0, iTot = 0;
     let aAns = 0, aTot = 0;
@@ -577,6 +733,86 @@ export default function App() {
                 </div>
               </div>
             </div>
+
+            {/* Card 3: Fullstack (Spring Boot + TypeScript) */}
+            <div
+              onClick={() => setSelectedJob("fullstack")}
+              style={{
+                background: selectedJob === "fullstack" ? `${C.ok}15` : C.surf,
+                border: `2px solid ${selectedJob === "fullstack" ? C.ok : C.border}`,
+                padding: 24,
+                borderRadius: 18,
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                boxShadow:
+                  selectedJob === "fullstack"
+                    ? `0 10px 25px -5px ${C.ok}33`
+                    : "0 4px 12px rgba(0,0,0,0.2)",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+                <div style={{ fontSize: 36 }}>⚡</div>
+                <div style={{ textAlign: "right" }}>
+                  <span
+                    style={{
+                      background: `${C.ok}22`,
+                      color: C.ok,
+                      padding: "4px 10px",
+                      borderRadius: 20,
+                      fontSize: 12,
+                      fontWeight: 700,
+                      border: `1px solid ${C.ok}44`,
+                      display: "inline-block",
+                    }}
+                  >
+                    {fullstackStudyCounts.total} Latihan + {fullstackTestCounts.total} Ujian
+                  </span>
+                  <div style={{ fontSize: 11, color: C.sub, marginTop: 4 }}>
+                    Total {fullstackStudyCounts.total + fullstackTestCounts.total} Soal
+                  </div>
+                </div>
+              </div>
+              <h2 style={{ color: "#FFF", fontSize: 18, margin: "0 0 8px", fontWeight: 700 }}>
+                Lowongan 3: Fullstack Engineer (Spring Boot + TS)
+              </h2>
+              <p style={{ color: C.sub, fontSize: 13, lineHeight: 1.6, margin: "0 0 16px" }}>
+                TypeScript + React, Java Spring Boot, JPA/Hibernate, REST API, PostgreSQL, Git, dan GIS dasar.
+              </p>
+
+              <div style={{ background: C.card, padding: "10px 12px", borderRadius: 10, border: `1px solid ${C.border}`, marginBottom: 10 }}>
+                <div style={{ fontSize: 11.5, color: C.sub, marginBottom: 6, fontWeight: 600 }}>
+                  📖 Mode Latihan ({fullstackStudyCounts.total} Soal):
+                </div>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 11, background: "#060F1C", color: C.ok, padding: "2px 8px", borderRadius: 6 }}>
+                    🌱 Beg: {fullstackStudyCounts.beginner}
+                  </span>
+                  <span style={{ fontSize: 11, background: "#060F1C", color: C.warn, padding: "2px 8px", borderRadius: 6 }}>
+                    ⚡ Int: {fullstackStudyCounts.intermediate}
+                  </span>
+                  <span style={{ fontSize: 11, background: "#060F1C", color: C.adv, padding: "2px 8px", borderRadius: 6 }}>
+                    🔥 Adv: {fullstackStudyCounts.advanced}
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ background: C.card, padding: "10px 12px", borderRadius: 10, border: `1px solid ${C.border}` }}>
+                <div style={{ fontSize: 11.5, color: C.ok, marginBottom: 6, fontWeight: 600 }}>
+                  ⏱️ Mode Ujian Khusus ({fullstackTestCounts.total} Soal):
+                </div>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 11, background: "#060F1C", color: C.ok, padding: "2px 8px", borderRadius: 6 }}>
+                    Beg: {fullstackTestCounts.beginner}
+                  </span>
+                  <span style={{ fontSize: 11, background: "#060F1C", color: C.warn, padding: "2px 8px", borderRadius: 6 }}>
+                    Int: {fullstackTestCounts.intermediate}
+                  </span>
+                  <span style={{ fontSize: 11, background: "#060F1C", color: C.adv, padding: "2px 8px", borderRadius: 6 }}>
+                    Adv: {fullstackTestCounts.advanced}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Level Filter & Options Bar */}
@@ -733,7 +969,7 @@ export default function App() {
                       Pilih Level Ujian (Simulasi Tes)
                     </h3>
                     <p style={{ margin: "2px 0 0", color: C.sub, fontSize: 13 }}>
-                      {selectedJob === "junior-java" ? "Lowongan 1: Junior Java Developer" : "Lowongan 2: Fullstack Engineer (GIS)"}
+                      {getJobTitle(selectedJob, "label")}
                     </p>
                   </div>
                 </div>
@@ -862,16 +1098,16 @@ export default function App() {
               <span style={{ color: C.muted }}>|</span>
               <span
                 style={{
-                  background: `${selectedJob === "junior-java" ? C.acc : C.pur}22`,
-                  color: selectedJob === "junior-java" ? C.acc : C.pur,
+                  background: `${selectedJob === "junior-java" ? C.acc : selectedJob === "fullstack-gis" ? C.pur : C.ok}22`,
+                  color: selectedJob === "junior-java" ? C.acc : selectedJob === "fullstack-gis" ? C.pur : C.ok,
                   padding: "4px 10px",
                   borderRadius: 8,
                   fontSize: 12,
                   fontWeight: 700,
-                  border: `1px solid ${selectedJob === "junior-java" ? C.acc : C.pur}44`,
+                  border: `1px solid ${selectedJob === "junior-java" ? C.acc : selectedJob === "fullstack-gis" ? C.pur : C.ok}44`,
                 }}
               >
-                {selectedJob === "junior-java" ? "☕ Junior Java" : "🛰️ Fullstack GIS"}
+                {selectedJob === "junior-java" ? "☕ Junior Java" : selectedJob === "fullstack-gis" ? "🛰️ Fullstack GIS" : "⚡ Fullstack SB+TS"}
               </span>
               <span
                 style={{
@@ -883,7 +1119,7 @@ export default function App() {
                   fontWeight: 700,
                 }}
               >
-                📖 Mode Belajar (450 Soal)
+                📖 Mode Belajar ({currentStudyCounts.total} Soal)
               </span>
             </div>
 
@@ -892,31 +1128,84 @@ export default function App() {
             </div>
           </div>
 
-          {/* Quick Difficulty Switcher Tabs */}
-          <div style={{ display: "flex", gap: 8, marginBottom: 14, overflowX: "auto", paddingBottom: 4 }}>
-            {(["all", "beginner", "intermediate", "advanced"] as LevelFilter[]).map((lvl) => {
-              const active = difficultyFilter === lvl;
-              const count = lvl === "all" ? currentStudyCounts.total : currentStudyCounts[lvl];
-              return (
-                <button
-                  key={lvl}
-                  onClick={() => handleStudyFilterChange(lvl)}
-                  style={{
-                    background: active ? C.acc : C.surf,
-                    color: active ? "#060F1C" : C.sub,
-                    border: `1px solid ${active ? C.acc : C.border}`,
-                    borderRadius: 8,
-                    padding: "6px 14px",
-                    fontSize: 12.5,
-                    fontWeight: active ? 700 : 500,
-                    cursor: "pointer",
-                    transition: "all 0.15s ease",
-                  }}
-                >
-                  {lvl === "all" ? "Semua Level" : lvl.charAt(0).toUpperCase() + lvl.slice(1)} ({count})
-                </button>
-              );
-            })}
+          {/* Filter Bar: Level & Question Type */}
+          <div
+            style={{
+              background: C.surf,
+              border: `1px solid ${C.border}`,
+              borderRadius: 14,
+              padding: "14px 18px",
+              marginBottom: 16,
+              display: "flex",
+              flexDirection: "column",
+              gap: 12,
+            }}
+          >
+            {/* Level Filter */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, overflowX: "auto", paddingBottom: 2 }}>
+              <span style={{ fontSize: 12, color: C.sub, fontWeight: 700, minWidth: 45, textTransform: "uppercase" }}>Level:</span>
+              {(["all", "beginner", "intermediate", "advanced"] as LevelFilter[]).map((lvl) => {
+                const active = difficultyFilter === lvl;
+                const count = lvl === "all" ? currentStudyCounts.total : currentStudyCounts[lvl];
+                const color = lvl === "beginner" ? C.ok : lvl === "intermediate" ? C.warn : lvl === "advanced" ? C.adv : C.acc;
+                return (
+                  <button
+                    key={lvl}
+                    onClick={() => handleStudyLevelChange(lvl)}
+                    style={{
+                      background: active ? color : C.card,
+                      color: active ? "#060F1C" : C.text,
+                      border: `1px solid ${active ? color : C.border}`,
+                      borderRadius: 8,
+                      padding: "6px 12px",
+                      fontSize: 12,
+                      fontWeight: active ? 700 : 500,
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {lvl === "all" ? "Semua Level" : lvl.charAt(0).toUpperCase() + lvl.slice(1)} ({count})
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Question Type Filter */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, overflowX: "auto", paddingBottom: 2 }}>
+              <span style={{ fontSize: 12, color: C.sub, fontWeight: 700, minWidth: 45, textTransform: "uppercase" }}>Tipe:</span>
+              {[
+                { key: "all", label: "Semua Tipe" },
+                { key: "concept", label: "💡 Konsep" },
+                { key: "output", label: "💻 Output" },
+                { key: "debug", label: "🐛 Debug" },
+                { key: "completion", label: "🧩 Completion" },
+                { key: "best-practice", label: "⭐ Best Practice" },
+              ].map((item) => {
+                const active = qTypeFilter === item.key;
+                const count = currentStudyTypeCounts[item.key as keyof typeof currentStudyTypeCounts] ?? 0;
+                return (
+                  <button
+                    key={item.key}
+                    onClick={() => handleStudyTypeChange(item.key as QTypeFilter)}
+                    style={{
+                      background: active ? C.pur : C.card,
+                      color: active ? "#FFF" : C.sub,
+                      border: `1px solid ${active ? C.pur : C.border}`,
+                      borderRadius: 8,
+                      padding: "6px 12px",
+                      fontSize: 12,
+                      fontWeight: active ? 700 : 500,
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {item.label} ({count})
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Progress per Level Bar */}
@@ -955,8 +1244,49 @@ export default function App() {
             </div>
           </div>
 
-          {/* Question Box */}
-          <div
+          {sessionQs.length === 0 ? (
+            <div
+              style={{
+                background: C.surf,
+                border: `1px solid ${C.border}`,
+                borderRadius: 16,
+                padding: "48px 24px",
+                textAlign: "center",
+                marginBottom: 20,
+              }}
+            >
+              <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
+              <h3 style={{ color: "#FFF", fontSize: 18, margin: "0 0 8px", fontWeight: 700 }}>
+                Tidak Ada Soal yang Sesuai Filter
+              </h3>
+              <p style={{ color: C.sub, fontSize: 13, marginBottom: 20 }}>
+                Tidak ditemukan soal untuk kombinasi level "{difficultyFilter}" dan tipe "{qTypeFilter}".
+              </p>
+              <button
+                onClick={() => {
+                  setDifficultyFilter("all");
+                  setQTypeFilter("all");
+                  setSessionQs(currentStudyBase);
+                  setQi(0);
+                }}
+                style={{
+                  background: C.acc,
+                  color: "#060F1C",
+                  border: "none",
+                  borderRadius: 8,
+                  padding: "10px 22px",
+                  fontWeight: 700,
+                  fontSize: 13,
+                  cursor: "pointer",
+                }}
+              >
+                Reset Semua Filter
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* Question Box */}
+              <div
             style={{
               background: C.surf,
               border: `1px solid ${C.border}`,
@@ -977,34 +1307,42 @@ export default function App() {
                   {getQTopic(curQ)}
                 </span>
               </div>
-              {renderLevelBadge(curQ.level)}
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                {renderTypeBadge(getQType(curQ))}
+                {renderLevelBadge(curQ.level)}
+              </div>
             </div>
 
-            {/* Question Text */}
-            <h2 style={{ color: "#FFF", fontSize: 16, lineHeight: 1.6, margin: "0 0 18px", fontWeight: 600 }}>
-              {getQText(curQ)}
-            </h2>
-
-            {/* Code Block if any */}
-            {curQ.code && (
-              <pre
-                style={{
-                  background: "#040C18",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 10,
-                  padding: 16,
-                  color: "#7DD3FC",
-                  fontSize: 13,
-                  margin: "0 0 20px",
-                  overflowX: "auto",
-                  whiteSpace: "pre-wrap",
-                  fontFamily: "'Fira Code', 'Courier New', monospace",
-                  lineHeight: 1.5,
-                }}
-              >
-                {curQ.code}
-              </pre>
-            )}
+            {/* Question Text & Code Block */}
+            {(() => {
+              const parsed = parseQuestion(curQ);
+              return (
+                <>
+                  <h2 style={{ color: "#FFF", fontSize: 16, lineHeight: 1.6, margin: "0 0 18px", fontWeight: 600 }}>
+                    {parsed.text}
+                  </h2>
+                  {parsed.code && (
+                    <pre
+                      style={{
+                        background: "#040C18",
+                        border: `1px solid ${C.border}`,
+                        borderRadius: 10,
+                        padding: 16,
+                        color: "#7DD3FC",
+                        fontSize: 13,
+                        margin: "0 0 20px",
+                        overflowX: "auto",
+                        whiteSpace: "pre-wrap",
+                        fontFamily: "'Fira Code', 'Courier New', monospace",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {parsed.code}
+                    </pre>
+                  )}
+                </>
+              );
+            })()}
 
             {/* Options */}
             <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
@@ -1203,9 +1541,11 @@ export default function App() {
               })}
             </div>
           </div>
-        </div>
-      </div>
-    );
+        </>
+      )}
+    </div>
+  </div>
+);
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -1252,7 +1592,7 @@ export default function App() {
               </button>
               <span style={{ color: C.muted }}>|</span>
               <span style={{ color: C.text, fontWeight: 700, fontSize: 14 }}>
-                {selectedJob === "junior-java" ? "☕ Java Developer" : "🛰️ Fullstack GIS"}
+                {getJobTitle(selectedJob, "short")}
               </span>
               <span style={{ color: C.pur, fontSize: 12, fontWeight: 700, background: `${C.pur}22`, padding: "3px 8px", borderRadius: 6 }}>
                 Simulasi Ujian
@@ -1308,7 +1648,7 @@ export default function App() {
                 </span>
               </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <button
                   onClick={() => setFlagged((p) => ({ ...p, [qi]: !p[qi] }))}
                   style={{
@@ -1327,35 +1667,41 @@ export default function App() {
                 >
                   {isFlagged ? "🚩 Ditandai Ragu" : "🏳️ Tandai Ragu"}
                 </button>
+                {renderTypeBadge(getQType(curQ))}
                 {renderLevelBadge(curQ.level)}
               </div>
             </div>
 
-            {/* Question Text */}
-            <h2 style={{ color: "#FFF", fontSize: 16, lineHeight: 1.6, margin: "0 0 18px", fontWeight: 600 }}>
-              {getQText(curQ)}
-            </h2>
-
-            {/* Code snippet */}
-            {curQ.code && (
-              <pre
-                style={{
-                  background: "#040C18",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 10,
-                  padding: 16,
-                  color: "#7DD3FC",
-                  fontSize: 13,
-                  margin: "0 0 20px",
-                  overflowX: "auto",
-                  whiteSpace: "pre-wrap",
-                  fontFamily: "'Fira Code', 'Courier New', monospace",
-                  lineHeight: 1.5,
-                }}
-              >
-                {curQ.code}
-              </pre>
-            )}
+            {/* Question Text & Code Block */}
+            {(() => {
+              const parsed = parseQuestion(curQ);
+              return (
+                <>
+                  <h2 style={{ color: "#FFF", fontSize: 16, lineHeight: 1.6, margin: "0 0 18px", fontWeight: 600 }}>
+                    {parsed.text}
+                  </h2>
+                  {parsed.code && (
+                    <pre
+                      style={{
+                        background: "#040C18",
+                        border: `1px solid ${C.border}`,
+                        borderRadius: 10,
+                        padding: 16,
+                        color: "#7DD3FC",
+                        fontSize: 13,
+                        margin: "0 0 20px",
+                        overflowX: "auto",
+                        whiteSpace: "pre-wrap",
+                        fontFamily: "'Fira Code', 'Courier New', monospace",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {parsed.code}
+                    </pre>
+                  )}
+                </>
+              );
+            })()}
 
             {/* Options (Hidden Answers During Test) */}
             <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
@@ -1624,7 +1970,7 @@ export default function App() {
   // ═══════════════════════════════════════════════════════════════════════
   //  4. RESULTS / REVIEW MODE
   // ═══════════════════════════════════════════════════════════════════════
-  const { total, correct, wrong, unanswered, scorePct, timeSpent, byLevel, byTopic } = testResults;
+  const { total, correct, wrong, unanswered, scorePct, timeSpent, byLevel, byTopic, byQuestionType } = testResults;
   const isPassed = scorePct >= 70;
 
   const filteredReviewIndices = sessionQs
@@ -1651,7 +1997,7 @@ export default function App() {
           </h1>
           <p style={{ color: C.sub, fontSize: 14, margin: 0 }}>
             Peserta: <strong>{name}</strong> • Lowongan:{" "}
-            <strong>{selectedJob === "junior-java" ? "Junior Java Developer" : "Fullstack Engineer Support (Remote Sensing & GIS)"}</strong>
+            <strong>{getJobTitle(selectedJob, "full")}</strong>
           </p>
         </div>
 
@@ -1766,6 +2112,50 @@ export default function App() {
                 </div>
               );
             })}
+          </div>
+        </div>
+
+        {/* Question Type Breakdown Cards */}
+        <div
+          style={{
+            background: C.surf,
+            border: `1px solid ${C.border}`,
+            borderRadius: 16,
+            padding: 20,
+            marginBottom: 20,
+          }}
+        >
+          <div style={{ color: C.sub, fontSize: 12, textTransform: "uppercase", fontWeight: 700, marginBottom: 14 }}>
+            Breakdown Akurasi per Tipe Soal
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12 }}>
+            {Object.entries(byQuestionType)
+              .filter(([_, stats]) => stats.total > 0)
+              .map(([typeKey, stats]) => {
+                const pct = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0;
+                const typeMap: Record<string, { label: string; color: string }> = {
+                  concept: { label: "💡 Konsep", color: "#38BDF8" },
+                  output: { label: "💻 Output", color: "#A855F7" },
+                  debug: { label: "🐛 Debug", color: "#F43F5E" },
+                  completion: { label: "🧩 Completion", color: "#F59E0B" },
+                  "best-practice": { label: "⭐ Best Practice", color: "#10B981" },
+                };
+                const info = typeMap[typeKey] || { label: typeKey, color: C.acc };
+                return (
+                  <div key={typeKey} style={{ background: C.card, padding: 14, borderRadius: 10, border: `1px solid ${C.border}` }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                      <span style={{ fontWeight: 600, color: info.color }}>{info.label}</span>
+                      <span style={{ fontWeight: 700 }}>{pct}%</span>
+                    </div>
+                    <div style={{ background: C.bg, height: 6, borderRadius: 4, overflow: "hidden" }}>
+                      <div style={{ background: info.color, width: `${pct}%`, height: "100%", transition: "width 0.3s ease" }} />
+                    </div>
+                    <div style={{ color: C.sub, fontSize: 11, marginTop: 6, textAlign: "right" }}>
+                      {stats.correct} dari {stats.total} Soal
+                    </div>
+                  </div>
+                );
+              })}
           </div>
         </div>
 
@@ -1925,31 +2315,40 @@ export default function App() {
                       </span>
                       <span style={{ color: C.sub, fontSize: 12 }}>{getQTopic(q)}</span>
                     </div>
-                    {renderLevelBadge(q.level)}
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      {renderTypeBadge(getQType(q))}
+                      {renderLevelBadge(q.level)}
+                    </div>
                   </div>
 
-                  <p style={{ color: C.text, fontSize: 14.5, lineHeight: 1.5, margin: "0 0 14px", fontWeight: 600 }}>
-                    {getQText(q)}
-                  </p>
-
-                  {q.code && (
-                    <pre
-                      style={{
-                        background: "#040C18",
-                        border: `1px solid ${C.border}`,
-                        borderRadius: 8,
-                        padding: 12,
-                        color: "#7DD3FC",
-                        fontSize: 12.5,
-                        margin: "0 0 14px",
-                        overflowX: "auto",
-                        whiteSpace: "pre-wrap",
-                        fontFamily: "'Fira Code', monospace",
-                      }}
-                    >
-                      {q.code}
-                    </pre>
-                  )}
+                  {(() => {
+                    const parsed = parseQuestion(q);
+                    return (
+                      <>
+                        <p style={{ color: C.text, fontSize: 14.5, lineHeight: 1.5, margin: "0 0 14px", fontWeight: 600 }}>
+                          {parsed.text}
+                        </p>
+                        {parsed.code && (
+                          <pre
+                            style={{
+                              background: "#040C18",
+                              border: `1px solid ${C.border}`,
+                              borderRadius: 8,
+                              padding: 12,
+                              color: "#7DD3FC",
+                              fontSize: 12.5,
+                              margin: "0 0 14px",
+                              overflowX: "auto",
+                              whiteSpace: "pre-wrap",
+                              fontFamily: "'Fira Code', monospace",
+                            }}
+                          >
+                            {parsed.code}
+                          </pre>
+                        )}
+                      </>
+                    );
+                  })()}
 
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 14 }}>
                     {(["A", "B", "C", "D"] as OptionKey[]).map((key) => {

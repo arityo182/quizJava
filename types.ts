@@ -20,6 +20,7 @@ export interface Question {
   cat?: string;
   question?: string;
   q?: string;
+  questionType?: "concept" | "output" | "debug" | "completion" | "best-practice";
   options?: Record<OptionKey, string>;
   opts?: Record<OptionKey, string>;
   answer?: OptionKey;
@@ -59,7 +60,7 @@ export interface ThemeColors {
   adv: string;
 }
 
-export type JobId = "junior-java" | "fullstack-gis";
+export type JobId = "junior-java" | "fullstack-gis" | "fullstack";
 
 export const getQId = (q: Question, idx?: number): string | number =>
   q.id ?? (idx !== undefined ? idx + 1 : 1);

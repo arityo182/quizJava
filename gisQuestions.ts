@@ -1,1431 +1,1567 @@
-import { Question } from "./types";
+import { Question } from './types';
 
 export const GIS_QUESTIONS: Question[] = [
   {
     "id": "GIS-001",
     "level": "beginner",
-    "topic": "HTML & CSS",
-    "question": "Tag HTML5 semantik manakah yang paling tepat digunakan untuk membungkus komponen peta interaktif utama (map container)?",
+    "topic": "JavaScript & GeoJSON",
+    "questionType": "output",
+    "question": "Apa output dari pembacaan koordinat GeoJSON Point berikut?\n\n```javascript\nconst point = {\n  type: \"Feature\",\n  geometry: {\n    type: \"Point\",\n    coordinates: [106.8456, -6.2088]\n  }\n};\nconst [lng, lat] = point.geometry.coordinates;\nconsole.log(`Lat: ${lat}, Lng: ${lng}`);\n```",
+    "code": "const point = {\n  type: \"Feature\",\n  geometry: {\n    type: \"Point\",\n    coordinates: [106.8456, -6.2088]\n  }\n};\nconst [lng, lat] = point.geometry.coordinates;\nconsole.log(`Lat: ${lat}, Lng: ${lng}`);",
     "options": {
-      "A": "<main> atau <section>",
-      "B": "<aside>",
-      "C": "<header>",
-      "D": "<footer>"
+      "A": "Lat: -6.2088, Lng: 106.8456",
+      "B": "Lat: 106.8456, Lng: -6.2088",
+      "C": "Lat: undefined, Lng: undefined",
+      "D": "TypeError: Cannot read properties"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Tag <main> merepresentasikan konten inti dokumen, sedangkan <section> mendefinisikan bagian tematik mandiri yang cocok untuk wadah viewport peta utama.",
-      "A": "Opsi A benar karena merefleksikan semantik konten utama aplikasi peta.",
-      "B": "Opsi B salah karena <aside> untuk konten sekunder/sidebar.",
-      "C": "Opsi C salah karena <header> untuk navigasi/judul atas.",
-      "D": "Opsi D salah karena <footer> untuk informasi penutup/hak cipta."
+      "correct": "Standar GeoJSON (RFC 7946) mewajibkan urutan koordinat [longitude, latitude]. Dengan destrukturisasi array [lng, lat], elemen pertama (106.8456) adalah longitude dan elemen kedua (-6.2088) adalah latitude.",
+      "A": "Benar. coordinates[0] adalah longitude (106.8456) dan coordinates[1] adalah latitude (-6.2088).",
+      "B": "Salah. Tertukar antara latitude dan longitude.",
+      "C": "Salah. Destrukturisasi array bekerja normal pada properti coordinates.",
+      "D": "Salah. Objek point dan geometry valid dan tidak melempar TypeError."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-002",
     "level": "beginner",
-    "topic": "HTML & CSS",
-    "question": "Elemen HTML5 apakah yang digunakan oleh library pemetaan modern untuk merender ribuan titik koordinat (points) secara efisien menggunakan akselerasi GPU 2D/WebGL?",
+    "topic": "JavaScript Async",
+    "questionType": "output",
+    "question": "Apa urutan pencetakan log saat memuat data GeoJSON secara asynchronous?\n\n```javascript\nconsole.log(\"Start\");\nfetch(\"/api/points.geojson\")\n  .then(() => console.log(\"Data Loaded\"));\nconsole.log(\"End\");\n```",
+    "code": "console.log(\"Start\");\nfetch(\"/api/points.geojson\")\n  .then(() => console.log(\"Data Loaded\"));\nconsole.log(\"End\");",
     "options": {
-      "A": "<canvas>",
-      "B": "<table>",
-      "C": "<article>",
-      "D": "<frameset>"
+      "A": "Start -> End -> Data Loaded",
+      "B": "Start -> Data Loaded -> End",
+      "C": "Data Loaded -> Start -> End",
+      "D": "End -> Start -> Data Loaded"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Elemen <canvas> menyediakan area render bitmap berkecepatan tinggi via Canvas 2D API atau WebGL, mampu merender puluhan ribu fitur spasial tanpa membebani DOM tree.",
-      "A": "Opsi A benar karena canvas adalah standar rendering grafik performa tinggi di browser.",
-      "B": "Opsi B salah karena table berbasis DOM dan sangat berat untuk data ribuan titik grafis.",
-      "C": "Opsi C salah karena article adalah elemen semantik teks konten.",
-      "D": "Opsi D salah karena frameset sudah usang (obsolete) di HTML5."
+      "correct": "fetch() bersifat asynchronous dan callback Promise .then() dimasukkan ke microtask queue, sehingga dieksekusi setelah semua kode synchronous (Start dan End) selesai dieksekusi.",
+      "A": "Benar. Kode synchronous dieksekusi tuntas di Call Stack sebelum event loop mengambil callback Promise.",
+      "B": "Salah. fetch tidak memblokir thread JavaScript sehingga 'End' dicetak sebelum callback selesai.",
+      "C": "Salah. Operasi I/O jaringan tidak mungkin mendahului eksekusi baris synchronous pertama.",
+      "D": "Salah. 'Start' dieksekusi pertama kali dari atas ke bawah."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-003",
     "level": "beginner",
-    "topic": "HTML & CSS",
-    "question": "Properti CSS apakah yang wajib diatur pada container peta (misal #map) agar peta Leaflet atau OpenLayers dapat muncul di layar browser?",
+    "topic": "JavaScript Array Methods",
+    "questionType": "output",
+    "question": "Berapa jumlah titik yang dihasilkan setelah filter koordinat Indonesia berikut?\n\n```javascript\nconst points = [\n  { name: \"Jakarta\", lat: -6.2, lng: 106.8 },\n  { name: \"Tokyo\", lat: 35.6, lng: 139.6 },\n  { name: \"Surabaya\", lat: -7.2, lng: 112.7 }\n];\nconst indo = points.filter(p => p.lat < 0);\nconsole.log(indo.length);\n```",
+    "code": "const points = [\n  { name: \"Jakarta\", lat: -6.2, lng: 106.8 },\n  { name: \"Tokyo\", lat: 35.6, lng: 139.6 },\n  { name: \"Surabaya\", lat: -7.2, lng: 112.7 }\n];\nconst indo = points.filter(p => p.lat < 0);\nconsole.log(indo.length);",
     "options": {
-      "A": "height (misal: height: 100vh atau height: 500px)",
-      "B": "color: red",
-      "C": "font-family: Arial",
-      "D": "text-align: center"
+      "A": "2",
+      "B": "1",
+      "C": "3",
+      "D": "0"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Leaflet dan OpenLayers membutuhkan tinggi eksplisit pada elemen container. Jika height bernilai 0 (default untuk block kosong tanpa child berkonten teks), peta tidak akan terlihat sama sekali.",
-      "A": "Opsi A benar karena height eksplisit adalah prasyarat mutlak rendering viewport peta.",
-      "B": "Opsi B salah karena color hanya mengatur warna teks.",
-      "C": "Opsi C salah karena font-family mengatur jenis huruf teks.",
-      "D": "Opsi D salah karena text-align mengatur perataan teks."
+      "correct": "Filter mencari titik dengan latitude negatif (di belahan bumi selatan). Jakarta (-6.2) dan Surabaya (-7.2) memiliki lat < 0, sedangkan Tokyo (35.6) bernilai positif. Total ada 2 titik.",
+      "A": "Benar. Jakarta dan Surabaya memenuhi syarat lat < 0.",
+      "B": "Salah. Terdapat 2 titik dengan latitude negatif, bukan hanya 1.",
+      "C": "Salah. Tokyo memiliki latitude positif (belahan bumi utara) sehingga disaring keluar.",
+      "D": "Salah. Kondisi filter terpenuhi untuk 2 kota."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-004",
     "level": "beginner",
-    "topic": "HTML & CSS",
-    "question": "Properti CSS Flexbox apakah yang digunakan untuk mengatur posisi item di sepanjang sumbu utama (main axis)?",
+    "topic": "Spatial SQL",
+    "questionType": "output",
+    "question": "Apa output dari fungsi PostGIS ST_AsText berikut?\n\n```sql\nSELECT ST_AsText(ST_MakePoint(106.8456, -6.2088));\n```",
+    "code": "SELECT ST_AsText(ST_MakePoint(106.8456, -6.2088));",
     "options": {
-      "A": "justify-content",
-      "B": "align-items",
-      "C": "flex-direction",
-      "D": "flex-wrap"
+      "A": "POINT(106.8456 -6.2088)",
+      "B": "POINT(-6.2088 106.8456)",
+      "C": "POINT(106.8456, -6.2088)",
+      "D": "GEOMETRYCOLLECTION EMPTY"
     },
     "answer": "A",
     "explanation": {
-      "correct": "justify-content mengatur perataan elemen di sepanjang main axis (horizontal secara default jika flex-direction adalah row).",
-      "A": "Opsi A benar karena justify-content mengontrol perataan main axis.",
-      "B": "Opsi B salah karena align-items mengatur perataan cross axis.",
-      "C": "Opsi C salah karena flex-direction menentukan arah sumbu utama (row/column).",
-      "D": "Opsi D salah karena flex-wrap mengatur apakah item boleh berpindah baris."
+      "correct": "ST_MakePoint(X, Y) menerima (Longitude, Latitude). Format WKT (Well-Known Text) memisahkan koordinat X dan Y dengan spasi, tanpa tanda koma di antara keduanya: 'POINT(X Y)'.",
+      "A": "Benar. Format WKT Point memisahkan nilai X dan Y dengan spasi tunggal.",
+      "B": "Salah. Urutan parameter ST_MakePoint adalah X (lon) lalu Y (lat).",
+      "C": "Salah. WKT tidak menggunakan tanda koma di antara koordinat X dan Y dalam satu titik.",
+      "D": "Salah. ST_MakePoint menghasilkan geometri POINT yang valid."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-005",
     "level": "beginner",
-    "topic": "HTML & CSS",
-    "question": "Dalam CSS Grid, fungsi manakah yang digunakan untuk membuat grid responsif dengan kolom fleksibel yang otomatis menyesuaikan jumlah kolom berdasarkan lebar layar?",
+    "topic": "JavaScript GeoJSON",
+    "questionType": "output",
+    "question": "Apa nilai yang dikembalikan oleh ekspresi pengecekan tipe geometry berikut?\n\n```javascript\nconst geojson = {\n  type: \"FeatureCollection\",\n  features: [\n    { type: \"Feature\", geometry: { type: \"Polygon\", coordinates: [] } }\n  ]\n};\nconsole.log(geojson.features[0].geometry.type);\n```",
+    "code": "const geojson = {\n  type: \"FeatureCollection\",\n  features: [\n    { type: \"Feature\", geometry: { type: \"Polygon\", coordinates: [] } }\n  ]\n};\nconsole.log(geojson.features[0].geometry.type);",
     "options": {
-      "A": "grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))",
-      "B": "grid-template-columns: 100px 100px 100px",
-      "C": "grid-columns: responsive",
-      "D": "grid-layout: auto-flex"
+      "A": "Polygon",
+      "B": "FeatureCollection",
+      "C": "Feature",
+      "D": "undefined"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Kombinasi repeat(auto-fit, minmax(...)) memungkinkan CSS Grid membungkus item ke baris berikutnya secara otomatis tanpa perlu media queries.",
-      "A": "Opsi A benar karena pola auto-fit minmax adalah standar layout responsif CSS Grid.",
-      "B": "Opsi B salah karena nilai piksel statis tidak responsif terhadap ukuran layar.",
-      "C": "Opsi C salah karena bukan sintaks CSS Grid standar.",
-      "D": "Opsi D salah karena bukan properti CSS yang valid."
+      "correct": "geojson.features[0] mengakses feature pertama, dan .geometry.type mengembalikan string tipe geometrinya yaitu 'Polygon'.",
+      "A": "Benar. Properti type dari objek geometry berisi string 'Polygon'.",
+      "B": "Salah. FeatureCollection adalah tipe dari root object GeoJSON.",
+      "C": "Salah. Feature adalah tipe dari elemen pembungkus fitur.",
+      "D": "Salah. Properti geometry dan type terdefinisi dengan jelas."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-006",
     "level": "beginner",
-    "topic": "HTML & CSS",
-    "question": "Properti CSS apakah yang digunakan untuk mengatur urutan tumpukan lapisan visual (stacking order) antara peta, kontrol zoom, dan sidebar modal?",
+    "topic": "JavaScript Math & Distance",
+    "questionType": "output",
+    "question": "Berapa jarak Euclidean kuadrat sederhana antara dua titik 2D berikut?\n\n```javascript\nconst dx = 4 - 1;\nconst dy = 7 - 3;\nconst distSq = dx * dx + dy * dy;\nconsole.log(distSq);\n```",
+    "code": "const dx = 4 - 1;\nconst dy = 7 - 3;\nconst distSq = dx * dx + dy * dy;\nconsole.log(distSq);",
     "options": {
-      "A": "z-index",
-      "B": "opacity",
-      "C": "position: static",
-      "D": "float"
+      "A": "25",
+      "B": "5",
+      "C": "7",
+      "D": "12"
     },
     "answer": "A",
     "explanation": {
-      "correct": "z-index menentukan urutan kedalaman layer pada elemen yang memiliki properti position (relative, absolute, fixed). Kontrol peta biasanya memiliki z-index tinggi (misal 1000).",
-      "A": "Opsi A benar karena z-index mengatur urutan lapisan z-axis.",
-      "B": "Opsi B salah karena opacity mengatur tingkat transparansi.",
-      "C": "Opsi C salah karena position static mengabaikan nilai z-index.",
-      "D": "Opsi D salah karena float hanya untuk perataan kiri/kanan teks lama."
+      "correct": "dx = 4 - 1 = 3. dy = 7 - 3 = 4. distSq = (3 * 3) + (4 * 4) = 9 + 16 = 25. (Jarak akarnya adalah 5).",
+      "A": "Benar. Kuadrat jarak adalah 3^2 + 4^2 = 25.",
+      "B": "Salah. 5 adalah akar kuadrat dari jarak (Math.sqrt(distSq)), bukan distSq itu sendiri.",
+      "C": "Salah. 7 adalah hasil penjumlahan dx + dy (3 + 4).",
+      "D": "Salah. 12 adalah hasil perkalian dx * dy (3 * 4)."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-007",
     "level": "beginner",
-    "topic": "HTML & CSS",
-    "question": "Fitur CSS modern apakah yang digunakan untuk mendefinisikan variabel warna tema yang dapat digunakan kembali di seluruh stylesheet?",
+    "topic": "Spatial SQL",
+    "questionType": "output",
+    "question": "Apa nilai SRID yang dikembalikan oleh kueri PostGIS berikut jika geometri dibuat tanpa SRID?\n\n```sql\nSELECT ST_SRID(ST_GeomFromText('POINT(106.8 -6.2)'));\n```",
+    "code": "SELECT ST_SRID(ST_GeomFromText('POINT(106.8 -6.2)'));",
     "options": {
-      "A": "CSS Custom Properties (misal: --primary-color: #38BDF8;)",
-      "B": "$primary-color: #38BDF8 (hanya di vanilla CSS)",
-      "C": "@define primary #38BDF8",
-      "D": "var primary = #38BDF8"
+      "A": "0",
+      "B": "4326",
+      "C": "3857",
+      "D": "-1"
     },
     "answer": "A",
     "explanation": {
-      "correct": "CSS Custom Properties didefinisikan dengan prefix ganda '--' (biasanya di pseudo-class :root) dan diakses menggunakan fungsi var(--nama-variabel).",
-      "A": "Opsi A benar karena merupakan sintaks resmi CSS Variables standar W3C.",
-      "B": "Opsi B salah karena sintaks $ adalah variabel preprocessor SASS/SCSS, bukan vanilla CSS.",
-      "C": "Opsi C salah karena bukan sintaks CSS.",
-      "D": "Opsi D salah karena itu adalah deklarasi variabel JavaScript."
+      "correct": "Di PostGIS, jika geometri dibuat tanpa mendefinisikan SRID eksplisit, SRID default yang diberikan adalah 0 (unknown/unspecified spatial reference system).",
+      "A": "Benar. Default SRID untuk geometri tanpa referensi spasial di PostGIS adalah 0.",
+      "B": "Salah. SRID 4326 (WGS 84) harus ditentukan secara eksplisit.",
+      "C": "Salah. SRID 3857 (Web Mercator) harus ditentukan secara eksplisit.",
+      "D": "Salah. PostGIS menggunakan nilai 0 untuk unknown SRID, bukan -1."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-008",
     "level": "beginner",
-    "topic": "HTML & CSS",
-    "question": "Bagaimana aturan penulisan Media Query untuk menerapkan gaya CSS khusus pada layar perangkat smartphone dengan lebar maksimal 768 piksel?",
+    "topic": "Leaflet.js",
+    "questionType": "output",
+    "question": "Perhatikan inisialisasi peta Leaflet berikut. Berapa zoom level awal peta tersebut?\n\n```javascript\nconst map = L.map(\"map\").setView([-6.2088, 106.8456], 13);\nconsole.log(map.getZoom());\n```",
+    "code": "const map = L.map(\"map\").setView([-6.2088, 106.8456], 13);\nconsole.log(map.getZoom());",
     "options": {
-      "A": "@media (max-width: 768px) { ... }",
-      "B": "@screen mobile { ... }",
-      "C": "@query (device: phone) { ... }",
-      "D": "@viewport mobile-only { ... }"
+      "A": "13",
+      "B": "-6.2088",
+      "C": "106.8456",
+      "D": "0"
     },
     "answer": "A",
     "explanation": {
-      "correct": "@media (max-width: 768px) mengevaluasi kondisi ukuran viewport browser dan menerapkan aturan CSS hanya jika lebar layar kurang dari atau sama dengan 768px.",
-      "A": "Opsi A benar karena sintaks standar Media Query CSS responsif.",
-      "B": "Opsi B salah karena bukan aturan CSS standar.",
-      "C": "Opsi C salah karena bukan aturan CSS standar.",
-      "D": "Opsi D salah karena bukan sintaks Media Query."
+      "correct": "Signature method Leaflet `setView(centerLatLng, zoom)`. Parameter kedua adalah 13, sehingga getZoom() mengembalikan 13.",
+      "A": "Benar. Parameter kedua pada setView() menentukan level zoom awal.",
+      "B": "Salah. -6.2088 adalah koordinat latitude.",
+      "C": "Salah. 106.8456 adalah koordinat longitude.",
+      "D": "Salah. Level zoom diatur ke 13, bukan 0."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-009",
     "level": "beginner",
-    "topic": "HTML & CSS",
-    "question": "Dalam CSS, apa perbedaan model layout antara 'display: flex' dan 'display: inline-flex'?",
+    "topic": "JavaScript Object Destructuring",
+    "questionType": "output",
+    "question": "Apa output dari ekstraksi properti GeoJSON Feature berikut?\n\n```javascript\nconst feat = {\n  type: \"Feature\",\n  properties: { id: 101, nama: \"Halte Monas\", kapasitas: 50 }\n};\nconst { nama, status = \"Aktif\" } = feat.properties;\nconsole.log(`${nama}: ${status}`);\n```",
+    "code": "const feat = {\n  type: \"Feature\",\n  properties: { id: 101, nama: \"Halte Monas\", kapasitas: 50 }\n};\nconst { nama, status = \"Aktif\" } = feat.properties;\nconsole.log(`${nama}: ${status}`);",
     "options": {
-      "A": "'display: flex' membuat container bertindak sebagai block-level box (memenuhi lebar parent), sedangkan 'display: inline-flex' bertindak sebagai inline-level box (lebar mengikuti konten)",
-      "B": "'inline-flex' tidak mendukung perataan justify-content",
-      "C": "'display: flex' hanya bekerja untuk gambar",
-      "D": "Keduanya persis sama tanpa perbedaan"
+      "A": "Halte Monas: Aktif",
+      "B": "Halte Monas: undefined",
+      "C": "undefined: Aktif",
+      "D": "ReferenceError"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Perbedaannya terletak pada bagaimana container berinteraksi dengan elemen di sekelilingnya di luar container (block flow vs inline flow), sementara flex formatting context di dalam container bekerja serupa.",
-      "A": "Opsi A benar karena membedakan perilaku box model eksternal block vs inline.",
-      "B": "Opsi B salah karena inline-flex mendukung semua properti anak flexbox.",
-      "C": "Opsi C salah karena flexbox bekerja pada semua elemen HTML.",
-      "D": "Opsi D salah karena perilaku display eksternalnya berbeda."
+      "correct": "Properti `nama` bernilai 'Halte Monas'. Karena properti `status` tidak ada pada `feat.properties`, default value 'Aktif' digunakan. Output: 'Halte Monas: Aktif'.",
+      "A": "Benar. Nilai properti nama ada, dan properti status menggunakan default fallback 'Aktif'.",
+      "B": "Salah. Default value 'Aktif' mencegah nilai menjadi undefined.",
+      "C": "Salah. Properti nama ditemukan pada objek properties.",
+      "D": "Salah. Sintaks destrukturisasi default value sepenuhnya valid."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-010",
     "level": "beginner",
-    "topic": "HTML & CSS",
-    "question": "Format gambar vektor berbasis teks XML apakah yang didukung secara native oleh browser untuk merender ikon kompas, panah, atau marker peta tanpa pecah saat di-zoom?",
+    "topic": "PostGIS Function",
+    "questionType": "output",
+    "question": "Apa tipe geometri yang dikembalikan oleh ST_GeometryType berikut?\n\n```sql\nSELECT ST_GeometryType(ST_GeomFromText('LINESTRING(0 0, 1 1, 2 4)'));\n```",
+    "code": "SELECT ST_GeometryType(ST_GeomFromText('LINESTRING(0 0, 1 1, 2 4)'));",
     "options": {
-      "A": "SVG (Scalable Vector Graphics)",
-      "B": "PNG",
-      "C": "JPEG",
-      "D": "BMP"
+      "A": "ST_LineString",
+      "B": "LINESTRING",
+      "C": "ST_Point",
+      "D": "ST_MultiLineString"
     },
     "answer": "A",
     "explanation": {
-      "correct": "SVG adalah format grafis vektor berbasis XML dua dimensi yang dapat di-scale secara bebas ke resolusi berapapun tanpa mengalami pixelation atau kehilangan ketajaman.",
-      "A": "Opsi A benar karena SVG adalah format vektor standar web.",
-      "B": "Opsi B salah karena PNG adalah format raster bitmap berbasis piksel.",
-      "C": "Opsi C salah karena JPEG adalah format raster terkompresi lossy.",
-      "D": "Opsi D salah karena BMP adalah format raster bitmap tidak terkompresi."
+      "correct": "Fungsi PostGIS `ST_GeometryType(geom)` mengembalikan nama tipe geometri lengkap dengan prefix standar ISO/OGC 'ST_', yaitu 'ST_LineString'.",
+      "A": "Benar. ST_GeometryType mengembalikan string berawalan 'ST_LineString'.",
+      "B": "Salah. 'LINESTRING' tanpa 'ST_' adalah format yang dikembalikan oleh fungsi legacy GeometryType(), bukan ST_GeometryType().",
+      "C": "Salah. Geometri tersebut memiliki lebih dari 1 vertex dan membentuk garis lurus, bukan Point.",
+      "D": "Salah. Geometri tersebut adalah single linestring, bukan multi linestring."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-011",
     "level": "beginner",
-    "topic": "HTML & CSS",
-    "question": "Unit ukuran viewport CSS manakah yang mewakili 1% dari tinggi dinamis layar viewport mobile yang memperhitungkan munculnya address bar browser?",
+    "topic": "JavaScript Array Reduce",
+    "questionType": "output",
+    "question": "Berapa total panjang garis sederhana dari array segmen berikut?\n\n```javascript\nconst segments = [12.5, 8.0, 15.5, 4.0];\nconst total = segments.reduce((acc, curr) => acc + curr, 0);\nconsole.log(total);\n```",
+    "code": "const segments = [12.5, 8.0, 15.5, 4.0];\nconst total = segments.reduce((acc, curr) => acc + curr, 0);\nconsole.log(total);",
     "options": {
-      "A": "dvh (Dynamic Viewport Height)",
-      "B": "px",
-      "C": "em",
-      "D": "%"
+      "A": "40",
+      "B": "36",
+      "C": "40.5",
+      "D": "NaN"
     },
     "answer": "A",
     "explanation": {
-      "correct": "dvh (Dynamic Viewport Height) diperkenalkan untuk mengatasi masalah lonjakan tinggi layar di mobile browser saat address bar muncul atau tersembunyi.",
-      "A": "Opsi A benar karena dvh beradaptasi dinamis terhadap UI browser mobile.",
-      "B": "Opsi B salah karena px adalah satuan piksel absolut tetap.",
-      "C": "Opsi C salah karena em relatif terhadap font-size elemen induk.",
-      "D": "Opsi D salah karena % relatif terhadap elemen parent langsung, bukan viewport."
+      "correct": "12.5 + 8.0 = 20.5. 20.5 + 15.5 = 36.0. 36.0 + 4.0 = 40.0. reduce menjumlahkan seluruh elemen secara akurat.",
+      "A": "Benar. Jumlah akumulasi seluruh panjang segmen adalah 40.",
+      "B": "Salah. 36 adalah hasil sebelum menjumlahkan segmen terakhir (4.0).",
+      "C": "Salah. Perhitungan penjumlahan tidak menghasilkan 40.5.",
+      "D": "Salah. Semua operan bertipe number dengan nilai awal 0 sehingga tidak menghasilkan NaN."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-012",
     "level": "beginner",
-    "topic": "HTML & CSS",
-    "question": "Properti CSS apakah yang digunakan untuk memotong konten yang meluap dari batas container dan menampilkan scrollbar hanya jika diperlukan?",
+    "topic": "Leaflet LatLng",
+    "questionType": "output",
+    "question": "Di Leaflet, bagaimana urutan penulisan parameter saat membuat objek L.latLng()?\n\n```javascript\nconst pos = L.latLng(-6.2, 106.8);\nconsole.log(pos.lat + \" / \" + pos.lng);\n```",
+    "code": "const pos = L.latLng(-6.2, 106.8);\nconsole.log(pos.lat + \" / \" + pos.lng);",
     "options": {
-      "A": "overflow: auto",
-      "B": "overflow: visible",
-      "C": "display: scroll",
-      "D": "clip-path: auto"
+      "A": "-6.2 / 106.8",
+      "B": "106.8 / -6.2",
+      "C": "undefined / undefined",
+      "D": "TypeError"
     },
     "answer": "A",
     "explanation": {
-      "correct": "overflow: auto secara otomatis menampilkan scrollbar jika konten melebihi dimensi box, dan menyembunyikannya jika konten muat di dalam container.",
-      "A": "Opsi A benar karena overflow: auto adalah nilai standar penanganan scroll fleksibel.",
-      "B": "Opsi B salah karena visible membiarkan konten tumpah keluar dari box.",
-      "C": "Opsi C salah karena display: scroll bukan nilai CSS yang valid.",
-      "D": "Opsi D salah karena clip-path digunakan untuk memotong bentuk poligon/lingkaran."
+      "correct": "Berbeda dengan standar GeoJSON (lng, lat), Library Leaflet secara konsisten menggunakan urutan geografis klasik (latitude, longitude) pada class `L.latLng(lat, lng)`. Sehingga pos.lat = -6.2 dan pos.lng = 106.8.",
+      "A": "Benar. Leaflet menggunakan urutan (Latitude, Longitude) pada konstruktor L.latLng().",
+      "B": "Salah. Leaflet tidak menggunakan urutan GeoJSON untuk pemanggilan L.latLng.",
+      "C": "Salah. Objek LatLng terbentuk dengan properti lat dan lng yang valid.",
+      "D": "Salah. L.latLng adalah factory method resmi Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-013",
     "level": "beginner",
-    "topic": "JavaScript/TypeScript",
-    "question": "Keyword deklarasi variabel manakah di JavaScript ES6 yang memiliki 'block scope' dan nilainya tidak dapat di-reassign?",
+    "topic": "PostGIS Distance",
+    "questionType": "output",
+    "question": "Apa satuan nilai yang dikembalikan oleh ST_Distance jika kedua geometri bertipe `geometry` dengan SRID 4326 (WGS 84)?\n\n```sql\nSELECT ST_Distance(\n  ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326),\n  ST_SetSRID(ST_MakePoint(106.9, -6.2), 4326)\n);\n```",
+    "code": "SELECT ST_Distance(\n  ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326),\n  ST_SetSRID(ST_MakePoint(106.9, -6.2), 4326)\n);",
     "options": {
-      "A": "const",
-      "B": "let",
-      "C": "var",
-      "D": "static"
+      "A": "Derajat sudut (Degrees)",
+      "B": "Meter",
+      "C": "Kilometer",
+      "D": "Mil laut"
     },
     "answer": "A",
     "explanation": {
-      "correct": "const memiliki cakupan blok (block-scoped) dan mengikat variabel sehingga identifier tidak dapat ditugaskan kembali (reassigned) nilai baru.",
-      "A": "Opsi A benar karena const adalah deklarasi konstanta block-scope ES6.",
-      "B": "Opsi B salah karena let mengizinkan re-assignment nilai.",
-      "C": "Opsi C salah karena var ber-cakupan fungsi (function-scoped) dan dapat di-reassign serta mengalami hoisting aneh.",
-      "D": "Opsi D salah karena static adalah modifier member class, bukan deklarasi variabel lokal."
+      "correct": "Pada tipe `geometry` dengan proyeksi koordinat geografis (SRID 4326), satuan koordinat dasar adalah derajat (degrees). ST_Distance menghitung jarak Euclidean planar Cartesian murni pada nilai derajat, BUKAN meter di permukaan bumi.",
+      "A": "Benar. Tipe geometry planar 4326 mengembalikan jarak dalam satuan derajat busur.",
+      "B": "Salah. Untuk mendapatkan jarak dalam meter di permukaan bumi bola, harus di-cast ke tipe `geography` atau menggunakan ST_DistanceSphere.",
+      "C": "Salah. Satuan tidak pernah dikonversi otomatis ke kilometer.",
+      "D": "Salah. Mil laut bukan satuan default PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-014",
     "level": "beginner",
-    "topic": "JavaScript/TypeScript",
-    "question": "Apa hasil dari operasi JavaScript: 'typeof null'?",
+    "topic": "JavaScript Array Map",
+    "questionType": "output",
+    "question": "Apa output dari pemetaan array koordinat berikut?\n\n```javascript\nconst coords = [[100, 0], [101, 1], [102, 0]];\nconst lats = coords.map(([lng, lat]) => lat);\nconsole.log(lats);\n```",
+    "code": "const coords = [[100, 0], [101, 1], [102, 0]];\nconst lats = coords.map(([lng, lat]) => lat);\nconsole.log(lats);",
     "options": {
-      "A": "\"object\"",
-      "B": "\"null\"",
-      "C": "\"undefined\"",
-      "D": "\"number\""
+      "A": "[0, 1, 0]",
+      "B": "[100, 101, 102]",
+      "C": "[[0], [1], [0]]",
+      "D": "[undefined, undefined, undefined]"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Dalam JavaScript, 'typeof null === \"object\"' adalah kejanggalan historis bawaan bahasa sejak versi awal JavaScript yang dipertahankan demi kompatibilitas mundur.",
-      "A": "Opsi A benar karena merupakan perilaku resmi runtime JavaScript.",
-      "B": "Opsi B salah karena typeof null tidak menghasilkan \"null\".",
-      "C": "Opsi C salah karena undefined memiliki tipe \"undefined\" sendiri.",
-      "D": "Opsi D salah karena null bukan number."
+      "correct": "Array map mendestrukturisasi tiap pasangan [lng, lat]. Nilai lat (elemen indeks 1) dari masing-masing pasangan adalah 0, 1, dan 0. Hasilnya adalah `[0, 1, 0]`.",
+      "A": "Benar. Elemen kedua (latitude) dari masing-masing koordinat diambil.",
+      "B": "Salah. [100, 101, 102] adalah nilai longitude (indeks 0).",
+      "C": "Salah. Hasilnya adalah array angka datar, bukan nested array.",
+      "D": "Salah. Destrukturisasi parameter array bekerja dengan sempurna."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-015",
     "level": "beginner",
-    "topic": "JavaScript/TypeScript",
-    "question": "Operator apakah di JavaScript ES2020 (Optional Chaining) yang digunakan untuk membaca properti bersarang tanpa melempar TypeError jika properti induk bernilai null atau undefined?",
+    "topic": "Spatial SQL Bounding Box",
+    "questionType": "output",
+    "question": "Operator PostGIS manakah yang memeriksa apakah bounding box geometri A beririsan dengan bounding box geometri B?\n\n```sql\n-- Operator: geom_a && geom_b\n```",
+    "code": "-- Operator: geom_a && geom_b",
     "options": {
-      "A": "?.",
-      "B": "??",
-      "C": "||",
-      "D": "&&"
+      "A": "Operator '&&' memeriksa apakah bounding box (2D) kedua geometri saling tumpang tindih (overlap)",
+      "B": "Operator '&&' memeriksa kesamaan atribut non-spasial",
+      "C": "Operator '&&' menggabungkan dua geometri menjadi satu linestring",
+      "D": "Operator '&&' menghitung jarak terdekat"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Optional chaining operator (?.) memungkinkan evaluasi aman: user?.address?.street akan mengembalikan undefined alih-alih melempar error jika user atau address bernilai null/undefined.",
-      "A": "Opsi A benar karena ?. adalah operator optional chaining resmi.",
-      "B": "Opsi B salah karena ?? adalah nullish coalescing operator untuk fallback nilai.",
-      "C": "Opsi C salah karena || adalah logical OR yang mengevaluasi nilai falsy (termasuk 0 dan string kosong).",
-      "D": "Opsi D salah karena && adalah logical AND."
+      "correct": "Di PostGIS, operator `&&` adalah bounding box overlap operator. Operator ini dapat memanfaatkan indeks spasial GiST dengan sangat cepat sebelum kalkulasi geometri presisi dilakukan.",
+      "A": "Benar. '&&' membandingkan overlap bounding box 2D secara efisien via indeks GiST.",
+      "B": "Salah. Operator '&&' tidak berhubungan dengan atribut non-spasial.",
+      "C": "Salah. Penggabungan geometri dilakukan oleh ST_Union, bukan '&&'.",
+      "D": "Salah. Pengukuran jarak menggunakan ST_Distance."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-016",
     "level": "beginner",
-    "topic": "JavaScript/TypeScript",
-    "question": "Apa perbedaan mendasar antara operator kesetaraan '==' dan '===' di JavaScript?",
+    "topic": "JavaScript String / JSON",
+    "questionType": "output",
+    "question": "Apa output pemanggilan JSON.stringify pada geometri GeoJSON berikut?\n\n```javascript\nconst geom = { type: \"Point\", coordinates: [10, 20] };\nconsole.log(typeof JSON.stringify(geom));\n```",
+    "code": "const geom = { type: \"Point\", coordinates: [10, 20] };\nconsole.log(typeof JSON.stringify(geom));",
     "options": {
-      "A": "'==' melakukan konversi tipe data otomatis (type coercion) sebelum membandingkan, sedangkan '===' membandingkan nilai DAN tipe data secara ketat tanpa konversi",
-      "B": "'===' hanya bisa digunakan untuk membandingkan angka",
-      "C": "'==' selalu lebih cepat daripada '==='",
-      "D": "Keduanya persis sama tanpa perbedaan"
+      "A": "string",
+      "B": "object",
+      "C": "geojson",
+      "D": "undefined"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Operator strict equality (===) memastikan bahwa jika tipe data kedua operan berbeda (misal 5 === \"5\"), hasilnya langsung false tanpa konversi paksa.",
-      "A": "Opsi A benar karena membedakan loose equality (coercion) vs strict equality.",
-      "B": "Opsi B salah karena === bekerja pada semua tipe data JavaScript.",
-      "C": "Opsi C salah karena === justru sedikit lebih cepat karena tidak ada langkah konversi tipe implisit.",
-      "D": "Opsi D salah karena perilakunya berbeda drastis pada tipe campuran."
+      "correct": "JSON.stringify mengonversi objek JavaScript apa pun menjadi representasi teks JSON yang bertipe data primitif 'string'.",
+      "A": "Benar. Hasil dari JSON.stringify() selalu bertipe string.",
+      "B": "Salah. Objek diubah menjadi string, bukan tetap berupa object.",
+      "C": "Salah. 'geojson' bukan tipe data primitif bawaan JavaScript.",
+      "D": "Salah. Nilai kembalian tidak pernah undefined untuk objek valid."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-017",
     "level": "beginner",
-    "topic": "JavaScript/TypeScript",
-    "question": "Method array JavaScript manakah yang mengembalikan array baru berisi hasil pemanggilan fungsi pada setiap elemen (transformasi 1:1)?",
+    "topic": "Leaflet Marker",
+    "questionType": "output",
+    "question": "Perhatikan kode pembuatan marker Leaflet berikut. Di mana marker akan ditambahkan?\n\n```javascript\nconst map = L.map(\"map\");\nconst marker = L.marker([-6.2, 106.8]);\nmarker.addTo(map);\nconsole.log(map.hasLayer(marker));\n```",
+    "code": "const map = L.map(\"map\");\nconst marker = L.marker([-6.2, 106.8]);\nmarker.addTo(map);\nconsole.log(map.hasLayer(marker));",
     "options": {
-      "A": "array.map()",
-      "B": "array.forEach()",
-      "C": "array.filter()",
-      "D": "array.find()"
+      "A": "true",
+      "B": "false",
+      "C": "null",
+      "D": "TypeError"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Array.prototype.map() mengiterasi elemen dan mengembalikan array baru dengan panjang yang sama berisi hasil transformasi dari callback function.",
-      "A": "Opsi A benar karena map menghasilkan array baru ter-transformasi.",
-      "B": "Opsi B salah karena forEach hanya mengeksekusi efek samping dan selalu mengembalikan undefined.",
-      "C": "Opsi C salah karena filter menyaring subset elemen berdasarkan kondisi boolean.",
-      "D": "Opsi D salah karena find hanya mengembalikan satu elemen pertama yang cocok."
+      "correct": "Method `marker.addTo(map)` menambahkan layer marker ke dalam instance peta Leaflet. Fungsi `map.hasLayer(marker)` memeriksa keberadaan layer tersebut dan mengembalikan boolean `true`.",
+      "A": "Benar. Marker telah berhasil didaftarkan ke dalam layer peta.",
+      "B": "Salah. marker.addTo(map) sukses sehingga hasLayer mengembalikan true.",
+      "C": "Salah. hasLayer selalu mengembalikan nilai boolean.",
+      "D": "Salah. Pemanggilan method ini adalah standar Leaflet API."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-018",
     "level": "beginner",
-    "topic": "JavaScript/TypeScript",
-    "question": "Method array JavaScript manakah yang digunakan untuk menyaring elemen-elemen yang memenuhi kondisi kriteria tertentu?",
+    "topic": "PostGIS Centroid",
+    "questionType": "output",
+    "question": "Apa output dari fungsi ST_Centroid pada POINT(10 20)?\n\n```sql\nSELECT ST_AsText(ST_Centroid(ST_GeomFromText('POINT(10 20)')));\n```",
+    "code": "SELECT ST_AsText(ST_Centroid(ST_GeomFromText('POINT(10 20)')));",
     "options": {
-      "A": "array.filter()",
-      "B": "array.reduce()",
-      "C": "array.some()",
-      "D": "array.slice()"
+      "A": "POINT(10 20)",
+      "B": "POINT(0 0)",
+      "C": "POINT(5 10)",
+      "D": "POLYGON((10 20))"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Array.prototype.filter() menghasilkan array baru yang hanya berisi elemen-elemen di mana callback function mengembalikan nilai truthy.",
-      "A": "Opsi A benar karena filter adalah method seleksi elemen.",
-      "B": "Opsi B salah karena reduce mengakumulasi elemen menjadi satu nilai tunggal.",
-      "C": "Opsi C salah karena some mengembalikan boolean true/false jika ada minimal satu elemen yang cocok.",
-      "D": "Opsi D salah karena slice memotong array berdasarkan indeks start dan end."
+      "correct": "Titik berat (centroid) dari geometri yang hanya terdiri dari satu titik (Point) adalah titik itu sendiri, yaitu POINT(10 20).",
+      "A": "Benar. Centroid dari sebuah Point adalah koordinat Point itu sendiri.",
+      "B": "Salah. Centroid tidak kembali ke titik origin (0 0).",
+      "C": "Salah. Koordinat tidak dibagi dua.",
+      "D": "Salah. Centroid selalu menghasilkan geometri bertipe Point."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-019",
     "level": "beginner",
-    "topic": "JavaScript/TypeScript",
-    "question": "Dalam TypeScript, tipe data apakah yang menandakan sebuah nilai yang bertipe benar-benar tidak diketahui dan mewajibkan type checking/narrowing sebelum nilainya dapat dioperasikan?",
+    "topic": "JavaScript Set",
+    "questionType": "output",
+    "question": "Berapa jumlah kategori unik pada array data POI berikut?\n\n```javascript\nconst pois = [\n  { name: \"RS A\", cat: \"Kesehatan\" },\n  { name: \"Puskesmas B\", cat: \"Kesehatan\" },\n  { name: \"SDN 01\", cat: \"Pendidikan\" }\n];\nconst cats = new Set(pois.map(p => p.cat));\nconsole.log(cats.size);\n```",
+    "code": "const pois = [\n  { name: \"RS A\", cat: \"Kesehatan\" },\n  { name: \"Puskesmas B\", cat: \"Kesehatan\" },\n  { name: \"SDN 01\", cat: \"Pendidikan\" }\n];\nconst cats = new Set(pois.map(p => p.cat));\nconsole.log(cats.size);",
     "options": {
-      "A": "unknown",
-      "B": "any",
-      "C": "never",
-      "D": "void"
+      "A": "2",
+      "B": "3",
+      "C": "1",
+      "D": "undefined"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Tipe 'unknown' adalah alternatif type-safe dari 'any'. Kita tidak dapat memanggil method atau mengakses properti pada nilai bertipe unknown sebelum melakukan pengecekan tipe (seperti typeof atau instanceof).",
-      "A": "Opsi A benar karena unknown menuntut pemeriksaan tipe eksplisit sebelum digunakan.",
-      "B": "Opsi B salah karena any menonaktifkan semua pemeriksaan tipe compiler secara total.",
-      "C": "Opsi C salah karena never menunjukkan nilai yang tidak pernah terjadi (seperti fungsi yang selalu melempar error).",
-      "D": "Opsi D salah karena void digunakan untuk fungsi yang tidak mengembalikan nilai."
+      "correct": "Set hanya menyimpan nilai unik. Kategori yang ada: 'Kesehatan' (duplikat dihilangkan) dan 'Pendidikan'. cats.size = 2.",
+      "A": "Benar. Objek Set menghapus duplikasi 'Kesehatan' sehingga hanya tersisa 2 elemen.",
+      "B": "Salah. 3 adalah panjang array awal sebelum deduplikasi.",
+      "C": "Salah. Terdapat 2 kategori unik, bukan hanya 1.",
+      "D": "Salah. Properti size pada Set mengembalikan angka integer."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-020",
     "level": "beginner",
-    "topic": "JavaScript/TypeScript",
-    "question": "Bagaimana sintaks Arrow Function di JavaScript yang mengembalikan nilai objek secara langsung (implicit return)?",
+    "topic": "Spatial SQL Area",
+    "questionType": "output",
+    "question": "Berapa luas bidang yang dihasilkan oleh ST_Area untuk poligon persegi 2x2 pada koordinat Cartesian planar?\n\n```sql\nSELECT ST_Area(ST_GeomFromText('POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))'));\n```",
+    "code": "SELECT ST_Area(ST_GeomFromText('POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))'));",
     "options": {
-      "A": "const makePoint = (x, y) => ({ x, y });",
-      "B": "const makePoint = (x, y) => { x, y };",
-      "C": "const makePoint = (x, y) => return { x, y };",
-      "D": "const makePoint = (x, y) -> { x, y };"
+      "A": "4",
+      "B": "2",
+      "C": "8",
+      "D": "0"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Tanda kurung biasa mengelilingi kurung kurawal '({ ... })' diperlukan agar JavaScript mengenali bahwa kurung kurawal tersebut adalah object literal, bukan blok body fungsi.",
-      "A": "Opsi A benar karena membungkus object literal dengan tanda kurung untuk implicit return.",
-      "B": "Opsi B salah karena { x, y } akan dianggap sebagai blok statement kosong dengan label x dan y, bukan objek.",
-      "C": "Opsi C salah karena keyword return di luar blok kurung kurawal adalah sintaks ilegal.",
-      "D": "Opsi D salah karena panah di JavaScript adalah => bukan ->."
+      "correct": "Persegi dengan titik sudut (0,0), (2,0), (2,2), dan (0,2) memiliki panjang sisi 2 unit. Luas bidang persegi 2D Cartesian adalah sisi * sisi = 2 * 2 = 4.",
+      "A": "Benar. Luas poligon berukuran 2x2 adalah 4.",
+      "B": "Salah. 2 adalah panjang sisi, bukan luas bidang.",
+      "C": "Salah. 8 adalah keliling dikalikan panjang sisi.",
+      "D": "Salah. Poligon tertutup dan valid sehingga luasnya tidak nol."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-021",
     "level": "beginner",
-    "topic": "JavaScript/TypeScript",
-    "question": "Method DOM API modern apakah yang digunakan untuk memilih elemen HTML pertama yang cocok dengan selektor CSS tertentu?",
+    "topic": "Leaflet GeoJSON onEachFeature",
+    "questionType": "output",
+    "question": "Apa yang terjadi saat opsi onEachFeature dipanggil di L.geoJSON?\n\n```javascript\nconst geoLayer = L.geoJSON(geojsonFeature, {\n  onEachFeature: (feature, layer) => {\n    layer.bindPopup(feature.properties.name);\n  }\n});\n```",
+    "code": "const geoLayer = L.geoJSON(geojsonFeature, {\n  onEachFeature: (feature, layer) => {\n    layer.bindPopup(feature.properties.name);\n  }\n});",
     "options": {
-      "A": "document.querySelector()",
-      "B": "document.getElementBySelector()",
-      "C": "document.selectFirst()",
-      "D": "document.findNode()"
+      "A": "Setiap fitur GeoJSON yang dirender otomatis dikaitkan dengan popup berisi nama fiturnya",
+      "B": "Peta dihapus dari DOM browser",
+      "C": "Koordinat dibalik menjadi [lat, lng]",
+      "D": "Seluruh fitur digabungkan menjadi single linestring"
     },
     "answer": "A",
     "explanation": {
-      "correct": "document.querySelector(\".map-container\") mengembalikan elemen pertama di DOM yang cocok dengan CSS selector string yang diberikan.",
-      "A": "Opsi A benar karena querySelector adalah method standar W3C DOM selector.",
-      "B": "Opsi B salah karena bukan method DOM standar.",
-      "C": "Opsi C salah karena bukan method DOM standar.",
-      "D": "Opsi D salah karena bukan method DOM standar."
+      "correct": "Opsi `onEachFeature` adalah callback Leaflet yang dieksekusi untuk setiap feature saat diload ke layer, sangat ideal untuk menambahkan event listener atau mengaitkan popup (`bindPopup`).",
+      "A": "Benar. Callback onEachFeature membinding popup ke masing-masing layer fitur.",
+      "B": "Salah. Peta tetap utuh dan merender data spasial.",
+      "C": "Salah. onEachFeature tidak mengubah struktur koordinat GeoJSON.",
+      "D": "Salah. Masing-masing fitur tetap menjadi layer independen."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-022",
     "level": "beginner",
-    "topic": "JavaScript/TypeScript",
-    "question": "Bagaimana cara menangani error secara terstruktur pada asynchronous function berbasis async/await di JavaScript?",
+    "topic": "PostGIS ST_Intersects",
+    "questionType": "output",
+    "question": "Apa output dari fungsi ST_Intersects antara dua lingkaran/titik berikut?\n\n```sql\nSELECT ST_Intersects(\n  ST_MakePoint(0, 0),\n  ST_MakePoint(10, 10)\n);\n```",
+    "code": "SELECT ST_Intersects(\n  ST_MakePoint(0, 0),\n  ST_MakePoint(10, 10)\n);",
     "options": {
-      "A": "Membungkus pemanggilan await di dalam blok try { ... } catch (error) { ... }",
-      "B": "Menambahkan listener window.onerror di setiap baris kode",
-      "C": "Menggunakan perintah onError resume next",
-      "D": "Async/await otomatis kebal dari error tanpa perlu penanganan"
+      "A": "false",
+      "B": "true",
+      "C": "null",
+      "D": "0"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Async/await memungkinkan penanganan Promise rejection menggunakan sintaks sinkron standar blok try-catch yang intuitif dan mudah dibaca.",
-      "A": "Opsi A benar karena try-catch adalah standar penanganan error pada async/await.",
-      "B": "Opsi B salah karena window.onerror adalah fallback global, bukan penanganan terstruktur lokal.",
-      "C": "Opsi C salah karena itu sintaks Visual Basic lama.",
-      "D": "Opsi D salah karena Promise rejection yang tidak ditangani akan memicu UnhandledPromiseRejection warning/crash."
+      "correct": "Titik (0, 0) dan titik (10, 10) adalah dua lokasi yang terpisah dan tidak memiliki perpotongan atau kontak spasial sama sekali. ST_Intersects mengembalikan nilai boolean `false`.",
+      "A": "Benar. Kedua titik tidak bersinggungan sehingga hasilnya false.",
+      "B": "Salah. Koordinat kedua titik berbeda dan tidak beririsan.",
+      "C": "Salah. Fungsi mengembalikan boolean, bukan null.",
+      "D": "Salah. Nilai kembalian tipe SQL boolean adalah false, bukan integer 0."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-023",
     "level": "beginner",
-    "topic": "JavaScript/TypeScript",
-    "question": "Apa fungsi dari method JSON.parse() dan JSON.stringify() di JavaScript?",
+    "topic": "JavaScript Object Values",
+    "questionType": "output",
+    "question": "Apa output dari pengecekan koordinat valid berikut?\n\n```javascript\nfunction isValidLat(lat) {\n  return typeof lat === \"number\" && lat >= -90 && lat <= 90;\n}\nconsole.log(isValidLat(-95));\n```",
+    "code": "function isValidLat(lat) {\n  return typeof lat === \"number\" && lat >= -90 && lat <= 90;\n}\nconsole.log(isValidLat(-95));",
     "options": {
-      "A": "JSON.parse() mengonversi teks string JSON menjadi objek JavaScript, sedangkan JSON.stringify() mengonversi objek JavaScript menjadi string JSON",
-      "B": "JSON.parse() menyimpan data ke database, JSON.stringify() mengambilnya",
-      "C": "JSON.parse() mengenkripsi teks, JSON.stringify() mendekripsinya",
-      "D": "Keduanya persis sama dan dapat saling menggantikan"
+      "A": "false",
+      "B": "true",
+      "C": "RangeError",
+      "D": "undefined"
     },
     "answer": "A",
     "explanation": {
-      "correct": "JSON.parse mem-parse string berformat JSON menjadi objek data, sedangkan JSON.stringify men-serialisasi objek/array menjadi format string teks JSON.",
-      "A": "Opsi A benar karena mendefinisikan parser dan serializer JSON bawaan browser.",
-      "B": "Opsi B salah karena bukan operasi I/O database.",
-      "C": "Opsi C salah karena bukan modul kriptografi.",
-      "D": "Opsi D salah karena arah transformasinya berlawanan."
+      "correct": "Nilai latitude yang valid di bumi harus berada dalam rentang -90 derajat (Kutub Selatan) hingga +90 derajat (Kutub Utara). Karena -95 < -90, kondisi `lat >= -90` bernilai false.",
+      "A": "Benar. -95 berada di luar batas rentang latitude global [-90, +90].",
+      "B": "Salah. Latitude tidak boleh kurang dari -90 derajat.",
+      "C": "Salah. Fungsi menggunakan perbandingan matematika biasa, tidak melempar RangeError.",
+      "D": "Salah. Nilai kembalian boolean false."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-024",
     "level": "beginner",
-    "topic": "JavaScript/TypeScript",
-    "question": "Fitur TypeScript apakah yang mendefinisikan bentuk kontrak struktur data objek (shape of an object) tanpa menghasilkan kode JavaScript saat dikompilasi?",
+    "topic": "Leaflet Container",
+    "questionType": "debug",
+    "question": "Peta Leaflet tidak muncul di browser dan layar berwarna abu-abu kosong. Apa bug CSS yang paling sering menyebabkannya?\n\n```css\n/* CSS file */\n#map {\n  width: 100%;\n  /* Kenapa peta tidak tampil? */\n}\n```",
+    "code": "/* CSS file */\n#map {\n  width: 100%;\n  /* Kenapa peta tidak tampil? */\n}",
     "options": {
-      "A": "interface atau type alias",
-      "B": "class",
-      "C": "function",
-      "D": "enum"
+      "A": "Elemen #map tidak memiliki properti height (tinggi default 0px)",
+      "B": "Elemen #map harus memiliki display: inline",
+      "C": "CSS Leaflet dilarang di-import di head",
+      "D": "Browser tidak mendukung elemen div"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Interface dan type di TypeScript murni merupakan konstruksi waktu kompilasi (compile-time only) yang dihapus seluruhnya (erased) saat kompilasi ke file .js.",
-      "A": "Opsi A benar karena interface dan type tidak menghasilkan jejak runtime overhead di JavaScript.",
-      "B": "Opsi B salah karena class menghasilkan konstruktor fungsi dan prototype di file .js.",
-      "C": "Opsi C salah karena function menghasilkan kode runtime di file .js.",
-      "D": "Opsi D salah karena enum biasa menghasilkan objek JavaScript di file .js."
+      "correct": "Kontainer Leaflet (`#map`) wajib memiliki tinggi (`height`) eksplisit (misalnya `height: 100vh;` atau `height: 500px;`). Jika height tidak ditentukan, kontainer akan memiliki tinggi 0 pixel sehingga peta tidak terlihat.",
+      "A": "Benar. Kontainer peta wajib memiliki nilai height eksplisit agar viewport Leaflet dapat merender tile.",
+      "B": "Salah. Kontainer peta harus berupa block-level element, bukan inline.",
+      "C": "Salah. CSS Leaflet wajib di-import di head agar styling tile dan kontrol peta aktif.",
+      "D": "Salah. Tag <div> didukung oleh semua browser web modern."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-025",
     "level": "beginner",
-    "topic": "JavaScript/TypeScript",
-    "question": "Apa fungsi dari operator Spread (...) pada array di JavaScript (misal: const combined = [...arr1, ...arr2];)?",
+    "topic": "GeoJSON Coordinates Order",
+    "questionType": "debug",
+    "question": "Marker lokasi yang dimasukkan ke Leaflet muncul di Samudra Hindia dekat Antartika padahal lokasinya di Monas, Jakarta (-6.1754, 106.8272). Apa bugnya?\n\n```javascript\n// Data titik Monas:\nconst monas = {\n  type: \"Feature\",\n  geometry: {\n    type: \"Point\",\n    coordinates: [-6.1754, 106.8272] // BUG!\n  }\n};\n```",
+    "code": "// Data titik Monas:\nconst monas = {\n  type: \"Feature\",\n  geometry: {\n    type: \"Point\",\n    coordinates: [-6.1754, 106.8272] // BUG!\n  }\n};",
     "options": {
-      "A": "Membongkar (unpack) elemen-elemen dari arr1 dan arr2 ke dalam array baru yang datar",
-      "B": "Mengalikan semua angka di dalam array",
-      "C": "Menghapus elemen array yang bernilai nol",
-      "D": "Mengunci array agar tidak bisa dimodifikasi"
+      "A": "Urutan koordinat GeoJSON tertukar: harus [Longitude, Latitude] ([106.8272, -6.1754])",
+      "B": "Nilai koordinat harus bilangan bulat",
+      "C": "Type Point harus ditulis dengan huruf kecil 'point'",
+      "D": "Tanda minus pada latitude dilarang di GeoJSON"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Spread operator mengekstrak seluruh elemen array secara berurutan dan menyalinnya ke dalam penampung array baru secara shallow copy.",
-      "A": "Opsi A benar karena spread operator membongkar elemen iterabel.",
-      "B": "Opsi B salah karena bukan operasi matematika perkalian.",
-      "C": "Opsi C salah karena tidak memfilter elemen.",
-      "D": "Opsi D salah karena pembekuan array menggunakan Object.freeze()."
+      "correct": "Standar spesifikasi GeoJSON RFC 7946 mewajibkan urutan koordinat adalah `[Longitude, Latitude]`. Menuliskan `[-6.1754, 106.8272]` berarti Longitude -6.1754 dan Latitude 106.8272 (yang melebihi batas kutub utara 90 derajat atau tertukar ke belahan bumi lain).",
+      "A": "Benar. Standar GeoJSON adalah [X, Y] atau [Lon, Lat]; bukan [Lat, Lon].",
+      "B": "Salah. Koordinat GPS geografis selalu berupa bilangan desimal (float).",
+      "C": "Salah. Tipe GeoJSON adalah case-sensitive dan harus diawali huruf kapital ('Point').",
+      "D": "Salah. Tanda minus menunjukkan belahan bumi selatan/barat dan sangat sah."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-026",
     "level": "beginner",
-    "topic": "React atau Vue",
-    "question": "Hook dasar React apakah yang digunakan untuk menyimpan dan memperbarui data reaktif lokal di dalam komponen fungsional?",
+    "topic": "Spatial SQL",
+    "questionType": "debug",
+    "question": "Kueri PostGIS berikut melempar error 'Operation on mixed SRID geometries'. Apa penyebabnya?\n\n```sql\nSELECT ST_Distance(a.geom, b.geom)\nFROM layer_a a, layer_b b;\n-- layer_a memiliki SRID 4326, layer_b memiliki SRID 3857\n```",
+    "code": "SELECT ST_Distance(a.geom, b.geom)\nFROM layer_a a, layer_b b;\n-- layer_a memiliki SRID 4326, layer_b memiliki SRID 3857",
     "options": {
-      "A": "useState",
-      "B": "useEffect",
-      "C": "useRef",
-      "D": "useContext"
+      "A": "Kedua geometri memiliki sistem proyeksi (SRID) yang berbeda dan tidak bisa dihitung jaraknya tanpa transformasi",
+      "B": "Nama tabel a dan b harus sama",
+      "C": "Fungsi ST_Distance tidak mendukung dua argumen",
+      "D": "PostgreSQL tidak mendukung CROSS JOIN"
     },
     "answer": "A",
     "explanation": {
-      "correct": "useState adalah Hook inti yang mendeklarasikan variabel state lokal dan fungsi updater yang memicu re-render saat nilai diperbarui.",
-      "A": "Opsi A benar karena useState mengelola state lokal komponen.",
-      "B": "Opsi B salah karena useEffect menangani efek samping (side effects).",
-      "C": "Opsi C salah karena useRef menyimpan referensi objek yang mutasi nilainya tidak memicu re-render.",
-      "D": "Opsi D salah karena useContext membaca data dari Context API global."
+      "correct": "PostGIS melarang operasi spasial antara geometri yang memiliki SRID berbeda karena satuan dan bidang referensinya tidak cocok. Solusinya adalah mentransformasikan salah satu geometri menggunakan `ST_Transform(b.geom, 4326)`.",
+      "A": "Benar. Geometri harus memiliki SRID yang sama persis sebelum dilakukan operasi spasial.",
+      "B": "Salah. Tabel dapat berbeda dan umum dalam analisis spasial.",
+      "C": "Salah. ST_Distance memang menerima dua geometri sebagai parameter.",
+      "D": "Salah. PostgreSQL mendukung cross join dan explicit join secara penuh."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-027",
     "level": "beginner",
-    "topic": "React atau Vue",
-    "question": "Hook React apakah yang tepat digunakan untuk memuat data peta atau menginisialisasi map instance (seperti L.map) tepat setelah komponen selesai di-mount ke DOM?",
+    "topic": "Leaflet GeoJSON Parsing",
+    "questionType": "debug",
+    "question": "Kode fetch GeoJSON berikut melempar error 'Uncaught (in promise) SyntaxError: Unexpected token < in JSON at position 0'. Mengapa?\n\n```javascript\nfetch(\"/api/data.geojson\")\n  .then(res => res.json())\n  .then(data => L.geoJSON(data).addTo(map));\n```",
+    "code": "fetch(\"/api/data.geojson\")\n  .then(res => res.json())\n  .then(data => L.geoJSON(data).addTo(map));",
     "options": {
-      "A": "useEffect dengan dependency array kosong []",
-      "B": "useState",
-      "C": "useMemo",
-      "D": "useReducer"
+      "A": "Endpoint mengembalikan respon 404 HTML (<!DOCTYPE html...>) bukan payload JSON",
+      "B": "Leaflet tidak mendukung fungsi L.geoJSON",
+      "C": "res.json() harus diganti dengan res.text()",
+      "D": "addTo(map) harus dipanggil secara sinkron sebelum fetch"
     },
     "answer": "A",
     "explanation": {
-      "correct": "useEffect(() => { ... }, []) dieksekusi tepat satu kali setelah komponen pertama kali di-mount ke DOM, menjadikannya tempat ideal untuk inisialisasi library pihak ketiga seperti Leaflet.",
-      "A": "Opsi A benar karena dependency array kosong merepresentasikan componentDidMount.",
-      "B": "Opsi B salah karena useState tidak menangani efek samping inisialisasi DOM.",
-      "C": "Opsi C salah karena useMemo untuk memorisasi hasil kalkulasi murni saat render.",
-      "D": "Opsi D salah karena useReducer untuk manajemen state kompleks."
+      "correct": "Karakter '<' di awal respon menandakan server mengembalikan halaman HTML (biasanya halaman error 404 Not Found atau 500 Internal Server Error). Method `res.json()` gagal mem-parse teks HTML tersebut sebagai format JSON.",
+      "A": "Benar. Server mengembalikan halaman web HTML (dimulai dengan '<') alih-alih file data JSON.",
+      "B": "Salah. L.geoJSON adalah fitur inti Leaflet untuk memuat data GeoJSON.",
+      "C": "Salah. res.json() sudah benar untuk payload berformat JSON.",
+      "D": "Salah. Pemanggilan addTo setelah Promise resolve adalah alur asynchronous yang benar."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-028",
     "level": "beginner",
-    "topic": "React atau Vue",
-    "question": "Hook React apakah yang digunakan untuk menyimpan referensi langsung ke elemen HTML DOM (misal container <div id=\"map\">) tanpa memicu re-render?",
+    "topic": "PostGIS Polygon Construction",
+    "questionType": "debug",
+    "question": "Kueri berikut menghasilkan error 'polygon is not closed'. Apa penyebab kesalahan WKT-nya?\n\n```sql\nSELECT ST_GeomFromText('POLYGON((0 0, 10 0, 10 10, 0 10))');\n```",
+    "code": "SELECT ST_GeomFromText('POLYGON((0 0, 10 0, 10 10, 0 10))');",
     "options": {
-      "A": "useRef",
-      "B": "useState",
-      "C": "useCallback",
-      "D": "useId"
+      "A": "Vertex awal (0 0) tidak diulang di akhir poligon untuk menutup cincin batas (linear ring)",
+      "B": "Poligon tidak boleh memiliki 4 titik",
+      "C": "Harus menggunakan huruf kecil 'polygon'",
+      "D": "Koordinat harus dipisahkan oleh titik koma"
     },
     "answer": "A",
     "explanation": {
-      "correct": "useRef mengembalikan objek ref yang persisten di mana properti .current dapat langsung merujuk ke elemen DOM container peta.",
-      "A": "Opsi A benar karena useRef menyimpan referensi DOM node secara langsung.",
-      "B": "Opsi B salah karena mutasi useState memicu re-render komponen.",
-      "C": "Opsi C salah karena useCallback memoisasi fungsi callback.",
-      "D": "Opsi D salah karena useId menghasilkan ID string unik untuk aksesibilitas."
+      "correct": "Standar geometri WKT mengharuskan cincin luar (exterior ring) dari poligon tertutup secara matematis, artinya titik pertama dan titik terakhir harus bernilai sama persis: `POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))`.",
+      "A": "Benar. Titik pertama (0 0) wajib diulang di akhir agar membentuk cincin poligon tertutup.",
+      "B": "Salah. Poligon dapat memiliki berapa pun jumlah vertex asalkan minimal 4 titik (3 titik sudut + 1 penutup).",
+      "C": "Salah. Huruf kapital atau kecil pada keyword WKT diterima oleh parser PostGIS.",
+      "D": "Salah. Koordinat antar vertex dipisahkan oleh tanda koma, bukan titik koma."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-029",
     "level": "beginner",
-    "topic": "React atau Vue",
-    "question": "Dalam React, bagaimana aturan immutability saat memperbarui state bertipe objek (misal: user location { lat, lng })?",
+    "topic": "JavaScript Coordinate Array Mutation",
+    "questionType": "debug",
+    "question": "Fungsi berikut tidak sengaja memodifikasi array titik asal (mutasi data tidak diinginkan). Mengapa?\n\n```javascript\nfunction reverseCoords(point) {\n  const p = point;\n  return p.reverse();\n}\n```",
+    "code": "function reverseCoords(point) {\n  const p = point;\n  return p.reverse();\n}",
     "options": {
-      "A": "Membuat objek salinan baru menggunakan spread operator (setLoc(prev => ({ ...prev, lat: newLat })))",
-      "B": "Mengubah properti objek secara langsung (loc.lat = newLat) tanpa updater",
-      "C": "Menghapus objek dan me-refresh browser",
-      "D": "Menggunakan operator delete pada state"
+      "A": "Array.prototype.reverse() memutasi array asli di tempat (in-place) dan p mereferensikan objek array yang sama",
+      "B": "Variabel const melarang pemanggilan method reverse",
+      "C": "Array di JavaScript tidak memiliki method reverse",
+      "D": "Fungsi dilarang mengembalikan nilai array"
     },
     "answer": "A",
     "explanation": {
-      "correct": "React mengandalkan perbandingan referensi objek (shallow comparison). Memodifikasi objek state secara langsung tidak mengubah referensi objek sehingga React tidak mengetahui state telah berubah dan gagal me-render ulang UI.",
-      "A": "Opsi A benar karena salinan objek baru memastikan referensi berubah dan re-render terpicu.",
-      "B": "Opsi B salah karena mutasi langsung (mutation) merusak prinsip dasar React reaktif.",
-      "C": "Opsi C salah karena me-refresh browser menghilangkan semua state aplikasi.",
-      "D": "Opsi D salah karena operator delete memodifikasi objek langsung secara tidak aman."
+      "correct": "Assignment `const p = point` hanya menyalin referensi memori, bukan membuat klon array baru. Method `reverse()` mengubah elemen pada array asli secara in-place. Seharusnya gunakan `[...point].reverse()` atau `point.toReversed()`.",
+      "A": "Benar. Method reverse() memutasi memori array asli secara in-place.",
+      "B": "Salah. const hanya mencegah reassignment variabel, tidak mencegah mutasi isi array.",
+      "C": "Salah. Array JavaScript memiliki method reverse() bawaan.",
+      "D": "Salah. Fungsi bebas mengembalikan tipe data apa saja."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-030",
     "level": "beginner",
-    "topic": "React atau Vue",
-    "question": "Dalam Vue 3 Composition API, fungsi apakah yang digunakan untuk membuat variabel state reaktif untuk tipe data primitif (seperti angka zoom level atau string layer name)?",
+    "topic": "Spatial SQL Indexing",
+    "questionType": "debug",
+    "question": "Kueri spasial berikut lambat karena tidak memanfaatkan indeks GiST yang ada pada kolom `geom`. Apa penyebabnya?\n\n```sql\n-- Indeks: CREATE INDEX idx_places_geom ON places USING GIST(geom);\nSELECT * FROM places WHERE ST_Distance(geom, ST_MakePoint(106.8, -6.2)) < 0.05;\n```",
+    "code": "-- Indeks: CREATE INDEX idx_places_geom ON places USING GIST(geom);\nSELECT * FROM places WHERE ST_Distance(geom, ST_MakePoint(106.8, -6.2)) < 0.05;",
     "options": {
-      "A": "ref()",
-      "B": "reactive()",
-      "C": "computed()",
-      "D": "watch()"
+      "A": "ST_Distance dalam klausa WHERE tidak memanfaatkan indeks GiST; seharusnya gunakan ST_DWithin",
+      "B": "Indeks GiST hanya bekerja pada nama tabel berawalan 'tbl_'",
+      "C": "Kolom geom harus bertipe VARCHAR",
+      "D": "Jarak 0.05 terlalu kecil untuk query database"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ref() membungkus nilai primitif ke dalam objek reaktif dengan properti '.value' yang dilacak secara reaktif oleh engine Vue 3.",
-      "A": "Opsi A benar karena ref() adalah fungsi reaktivitas standar untuk nilai primitif di Vue 3.",
-      "B": "Opsi B salah karena reactive() dikhususkan untuk objek kompleks dan tidak mendukung primitif langsung.",
-      "C": "Opsi C salah karena computed() menghasilkan nilai turunan (derived state) read-only.",
-      "D": "Opsi D salah karena watch() memantau perubahan nilai."
+      "correct": "Klausa `ST_Distance(geom, ...) < N` menghitung jarak untuk setiap baris di tabel (sequential scan). Agar indeks GiST aktif, kueri harus menggunakan fungsi index-aware seperti `ST_DWithin(geom, point, distance)`.",
+      "A": "Benar. ST_DWithin menggunakan operator '&&' internal yang otomatis memanfaatkan indeks GiST.",
+      "B": "Salah. Penamaan tabel tidak berpengaruh pada perencana kueri (planner) PostgreSQL.",
+      "C": "Salah. Kolom spasial harus bertipe GEOMETRY atau GEOGRAPHY, bukan VARCHAR.",
+      "D": "Salah. Angka 0.05 derajat (~5.5 km) adalah filter numerik yang valid."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-031",
     "level": "beginner",
-    "topic": "React atau Vue",
-    "question": "Atribut khusus apakah yang wajib diberikan pada setiap elemen saat melakukan perulangan render list elemen di React (misal daftar marker koordinat)?",
+    "topic": "Leaflet Event Handling",
+    "questionType": "debug",
+    "question": "Klik pada marker selalu mencetak nama fitur terakhir yang diloop di array. Apa penyebab klasik bug ini?\n\n```javascript\nfor (var i = 0; i < features.length; i++) {\n  var f = features[i];\n  var marker = L.marker([f.lat, f.lng]);\n  marker.on(\"click\", function() { alert(f.name); });\n  marker.addTo(map);\n}\n```",
+    "code": "for (var i = 0; i < features.length; i++) {\n  var f = features[i];\n  var marker = L.marker([f.lat, f.lng]);\n  marker.on(\"click\", function() { alert(f.name); });\n  marker.addTo(map);\n}",
     "options": {
-      "A": "key (dengan nilai ID yang unik)",
-      "B": "id",
-      "C": "index-only",
-      "D": "data-index"
+      "A": "Keyword 'var' memiliki function-scope sehingga variabel 'f' tertimpa di setiap iterasi loop (closure issue)",
+      "B": "Leaflet melarang penggunaan event 'click'",
+      "C": "alert() tidak dapat menampilkan string di browser",
+      "D": "Loop harus berjalan mundur dari akhir ke awal"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Properti 'key' unik membantu algoritma rekonsiliasi React Virtual DOM mengidentifikasi item mana yang telah berubah, ditambah, atau dihapus secara efisien.",
-      "A": "Opsi A benar karena 'key' unik wajib disertakan pada elemen list React.",
-      "B": "Opsi B salah karena id adalah atribut HTML global biasa, bukan pengenal rekonsiliasi React.",
-      "C": "Opsi C salah karena index-only bukan atribut React.",
-      "D": "Opsi D salah karena data-index adalah data attribute HTML kustom."
+      "correct": "Karena variabel `var f` berakar pada scope fungsi yang sama, saat event listener 'click' dipicu belakangan, closure membaca nilai terakhir dari variabel `f`. Solusinya adalah mengganti `var` dengan block-scoped `let` atau `const`.",
+      "A": "Benar. var tidak memiliki block scope di dalam loop; ganti var dengan let/const.",
+      "B": "Salah. Event 'click' adalah event listener resmi dan umum pada marker Leaflet.",
+      "C": "Salah. alert() adalah fungsi bawaan browser untuk menampilkan dialog teks.",
+      "D": "Salah. Arah loop tidak menyelesaikan masalah scope var."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-032",
     "level": "beginner",
-    "topic": "React atau Vue",
-    "question": "Dalam React, apa fungsi dari proses pembersihan (cleanup function) yang di-return oleh useEffect?",
+    "topic": "SQL Geometry Validation",
+    "questionType": "debug",
+    "question": "Kueri berikut gagal saat menyimpan poligon yang garis batasnya berpotongan sendiri (self-intersecting seperti angka 8). Apa status geometri tersebut?\n\n```sql\nINSERT INTO zones (geom) VALUES (ST_GeomFromText('POLYGON((0 0, 2 2, 2 0, 0 2, 0 0))'));\n```",
+    "code": "INSERT INTO zones (geom) VALUES (ST_GeomFromText('POLYGON((0 0, 2 2, 2 0, 0 2, 0 0))'));",
     "options": {
-      "A": "Dijalankan saat komponen unmount atau sebelum efek dijalankan kembali, digunakan untuk menghapus instance peta (misal: map.remove()) atau event listener",
-      "B": "Menghapus seluruh file cookie di browser",
-      "C": "Menghapus cache local storage",
-      "D": "Mematikan server backend"
+      "A": "Geometri tidak valid (ST_IsValid = false) karena cincin batas memotong dirinya sendiri (self-intersection)",
+      "B": "SRID belum ditentukan sehingga ditolak database",
+      "C": "PostGIS hanya menerima poligon segitiga",
+      "D": "Nilai koordinat harus berupa bilangan negatif"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Cleanup function mencegah memory leak dan error 'Map container is already initialized' di Leaflet dengan membersihkan map instance saat komponen dibongkar (unmount).",
-      "A": "Opsi A benar karena membersihkan map instance dan listener saat unmount.",
-      "B": "Opsi B salah karena tidak menghapus cookie browser.",
-      "C": "Opsi C salah karena tidak mengosongkan localStorage.",
-      "D": "Opsi D salah karena berada di level siklus hidup frontend browser."
+      "correct": "Poligon yang memotong garis batasnya sendiri (bowtie / hourglass shape) melanggar aturan topologi OGC Simple Features sehingga dianggap invalid (`ST_IsValid` bernilai false). Solusinya dapat diperbaiki dengan `ST_MakeValid()`.",
+      "A": "Benar. Poligon dengan self-intersection berstatus invalid menurut aturan topologi OGC.",
+      "B": "Salah. SRID default bernilai 0 dan tidak membatalkan insert kecuali ada CHECK constraint.",
+      "C": "Salah. PostGIS mendukung poligon dengan jumlah sisi arbitrer.",
+      "D": "Salah. Koordinat positif sepenuhnya sah."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-033",
     "level": "beginner",
-    "topic": "React atau Vue",
-    "question": "Bagaimana cara melewatkan data dari komponen Parent ke komponen Child di React?",
+    "topic": "JavaScript GeoJSON Property Access",
+    "questionType": "debug",
+    "question": "Kode berikut melempar error 'Cannot read properties of undefined (reading city)' saat memproses fitur tanpa properti. Bagaimana memperbaikinya?\n\n```javascript\nfunction getCity(feature) {\n  return feature.properties.city;\n}\n```",
+    "code": "function getCity(feature) {\n  return feature.properties.city;\n}",
     "options": {
-      "A": "Melalui atribut Props (Properties)",
-      "B": "Melalui database SQL",
-      "C": "Melalui file cookie",
-      "D": "Melalui URL query string saja"
+      "A": "Menggunakan optional chaining: 'return feature.properties?.city'",
+      "B": "Mengubah fungsi menjadi async function",
+      "C": "Menghapus parameter feature",
+      "D": "Mengganti tanda titik dengan simbol @"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Props adalah mekanisme resmi satu arah (one-way data flow) di mana komponen induk memberikan data masukan ke komponen anak.",
-      "A": "Opsi A benar karena Props adalah saluran komunikasi parent-ke-child di React.",
-      "B": "Opsi B salah karena database adalah persistensi server.",
-      "C": "Opsi C salah karena cookie bukan saluran transfer data komponen.",
-      "D": "Opsi D salah karena query string hanya salah satu cara untuk routing URL, bukan komunikasi komponen standar."
+      "correct": "Jika objek `feature` tidak memiliki atribut `properties` (bernilai undefined), mengakses `.city` langsung akan melempar TypeError. Operator optional chaining `?.` mencegah crash dan mengembalikan undefined dengan aman.",
+      "A": "Benar. Optional chaining ?. melindungi kode dari unhandled TypeError saat properti bernilai undefined/null.",
+      "B": "Salah. Menjadikan fungsi async tidak mengatasi pembacaan properti undefined synchronous.",
+      "C": "Salah. Fungsi membutuhkan parameter feature untuk dianalisis.",
+      "D": "Salah. Simbol @ bukan sintaks akses properti JavaScript."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-034",
     "level": "beginner",
-    "topic": "React atau Vue",
-    "question": "Dalam Vue.js, direktif apakah yang digunakan untuk melakukan two-way data binding pada form input (seperti input koordinat latitude/longitude)?",
+    "topic": "Leaflet TileLayer URL",
+    "questionType": "debug",
+    "question": "Peta tile OSM tidak muncul dan console menampilkan banyak error 404 pada URL tile. Di mana kesalahan template URL berikut?\n\n```javascript\nL.tileLayer(\"https://tile.openstreetmap.org/{x}/{y}/{z}.png\").addTo(map);\n```",
+    "code": "L.tileLayer(\"https://tile.openstreetmap.org/{x}/{y}/{z}.png\").addTo(map);",
     "options": {
-      "A": "v-model",
-      "B": "v-bind",
-      "C": "v-on",
-      "D": "v-for"
+      "A": "Urutan template standar Leaflet harus {z}/{x}/{y}.png (Zoom dulu, baru X dan Y)",
+      "B": "Domain OpenStreetMap dilarang digunakan di web",
+      "C": "Ekstensi tile harus berupa .pdf bukan .png",
+      "D": "Protokol https harus diganti ftp"
     },
     "answer": "A",
     "explanation": {
-      "correct": "v-model menyinkronkan nilai input HTML secara dua arah otomatis dengan state variabel di skrip komponen Vue.",
-      "A": "Opsi A benar karena v-model adalah direktif two-way data binding resmi Vue.",
-      "B": "Opsi B salah karena v-bind adalah pengikatan satu arah (one-way binding).",
-      "C": "Opsi C salah karena v-on untuk mendengarkan event pengguna.",
-      "D": "Opsi D salah karena v-for untuk perulangan array."
+      "correct": "Standar Slippy Map tile URL menggunakan urutan `{z}/{x}/{y}.png` di mana `z` adalah zoom level, `x` adalah kolom horizontal tile, dan `y` adalah baris vertikal tile. Template `{x}/{y}/{z}.png` menghasilkan path yang salah total.",
+      "A": "Benar. Urutan tile layer standar Slippy Map adalah {z}/{x}/{y}.",
+      "B": "Salah. Tile OSM untuk keperluan riset/development terbuka dengan attribution yang tepat.",
+      "C": "Salah. Tile peta web berupa citra raster web (.png atau .jpg).",
+      "D": "Salah. Protokol web modern wajib HTTPS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-035",
     "level": "beginner",
-    "topic": "React atau Vue",
-    "question": "Hook React apakah yang digunakan untuk memoisasi (cache) hasil komputasi berat (seperti filter puluhan ribu poligon) agar tidak dihitung ulang di setiap re-render?",
+    "topic": "Spatial SQL ST_Contains",
+    "questionType": "debug",
+    "question": "Kueri berikut tidak mengembalikan titik yang berada tepat di garis batas poligon. Mengapa?\n\n```sql\nSELECT * FROM parcels p, points pt WHERE ST_Contains(p.geom, pt.geom);\n```",
+    "code": "SELECT * FROM parcels p, points pt WHERE ST_Contains(p.geom, pt.geom);",
     "options": {
-      "A": "useMemo",
-      "B": "useCallback",
-      "C": "useRef",
-      "D": "useEffect"
+      "A": "Definisi ST_Contains mensyaratkan titik berada di interior poligon; titik pada boundary (garis batas) tidak dianggap contained",
+      "B": "ST_Contains hanya bekerja untuk sesama titik",
+      "C": "Titik di database tidak boleh memiliki koordinat Z",
+      "D": "Tabel parcels harus memiliki tipe data TEXT"
     },
     "answer": "A",
     "explanation": {
-      "correct": "useMemo(() => computeHeavyGeoFilter(data), [data]) hanya mengeksekusi ulang kalkulasi jika nilai dalam array dependensinya berubah.",
-      "A": "Opsi A benar karena useMemo meng-cache hasil komputasi data murni.",
-      "B": "Opsi B salah karena useCallback memoisasi definisi instance fungsi callback, bukan nilai hasil komputasi.",
-      "C": "Opsi C salah karena useRef menyimpan objek referensi statis.",
-      "D": "Opsi D salah karena useEffect untuk efek samping, bukan kalkulasi nilai render murni."
+      "correct": "Menurut matriks DE-9IM OGC, `ST_Contains(A, B)` bernilai true hanya jika titik B berada sepenuhnya di dalam interior poligon A dan tidak ada bagian B yang berada di exterior A. Titik tepat di boundary poligon tidak memenuhi syarat ST_Contains; gunakan `ST_Covers` atau `ST_Intersects` jika ingin mencakup garis batas.",
+      "A": "Benar. ST_Contains mengecualikan boundary; gunakan ST_Covers atau ST_Intersects untuk menyertakan tepi batas.",
+      "B": "Salah. ST_Contains sangat umum digunakan untuk menguji poligon memuat titik.",
+      "C": "Salah. Dimensi koordinat 2D atau 3D didukung oleh PostGIS.",
+      "D": "Salah. Geometri harus bertipe GEOMETRY, bukan teks."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-036",
     "level": "beginner",
-    "topic": "React atau Vue",
-    "question": "Di Node.js, format sistem modul resmi apakah yang menggunakan sintaks 'import ... from ...' dan 'export default'?",
+    "topic": "JavaScript Async Fetch Loop",
+    "questionType": "debug",
+    "question": "Kode berikut melakukan fetch puluhan layer GeoJSON secara sekuensial yang lambat di dalam for-loop. Bagaimana cara menjalankannya secara paralel?\n\n```javascript\nfor (const url of urls) {\n  const res = await fetch(url);\n  const data = await res.json();\n  L.geoJSON(data).addTo(map);\n}\n```",
+    "code": "for (const url of urls) {\n  const res = await fetch(url);\n  const data = await res.json();\n  L.geoJSON(data).addTo(map);\n}",
     "options": {
-      "A": "ES Modules (ESM)",
-      "B": "CommonJS (CJS)",
-      "C": "AMD",
-      "D": "UMD"
+      "A": "Menggunakan Promise.all(urls.map(url => fetch(url).then(r => r.json())))",
+      "B": "Menghapus keyword async dari fungsi",
+      "C": "Menjalankan script di web worker tanpa fetch",
+      "D": "Menambahkan jeda setTimeout 1000ms pada setiap loop"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ES Modules (ESM) adalah standar resmi JavaScript modern yang diaktifkan di Node.js menggunakan ekstensi .mjs atau menambahkan '\"type\": \"module\"' di package.json.",
-      "A": "Opsi A benar karena import/export adalah sintaks standar ES Modules.",
-      "B": "Opsi B salah karena CommonJS menggunakan require() dan module.exports.",
-      "C": "Opsi C salah karena AMD menggunakan define() untuk browser lama.",
-      "D": "Opsi D salah karena UMD adalah pembungkus hybrid warisan lama."
+      "correct": "Penggunaan `await` di dalam perulangan `for` memaksa setiap HTTP request menunggu request sebelumnya selesai sebelum memulai request berikutnya (waterfall sekuensial). `Promise.all()` menjalankan seluruh fetch request secara paralel bersamaan.",
+      "A": "Benar. Promise.all mengeksekusi request konkuren paralel sehingga memangkas total waktu pemuatan.",
+      "B": "Salah. Menghapus async menyebabkan syntax error pada penggunaan await.",
+      "C": "Salah. Fetch tetap diperlukan untuk mengambil data dari server.",
+      "D": "Salah. Menambahkan setTimeout justru semakin memperlambat eksekusi."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-037",
     "level": "beginner",
-    "topic": "Node.js",
-    "question": "Framework web minimalis dan paling populer di ekosistem Node.js untuk membangun REST API dan backend GIS adalah:",
+    "topic": "PostGIS SRID Transformation",
+    "questionType": "debug",
+    "question": "Kueri berikut ingin menghitung buffer 500 meter di sekitar titik WGS 84, tetapi menghasilkan lingkaran raksasa yang menutupi seluruh bumi. Apa penyebabnya?\n\n```sql\nSELECT ST_Buffer(ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326), 500);\n```",
+    "code": "SELECT ST_Buffer(ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326), 500);",
     "options": {
-      "A": "Express.js",
-      "B": "Laravel",
-      "C": "Spring Cloud",
-      "D": "Ruby on Rails"
+      "A": "Parameter jarak pada ST_Buffer geometri 4326 diinterpretasikan sebagai 500 derajat sudut (1 derajat bumi ~ 111 km)",
+      "B": "Angka 500 dianggap sebagai 500 milimeter",
+      "C": "Titik 106.8, -6.2 tidak berada di bumi",
+      "D": "ST_Buffer melarang angka bulat"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Express.js adalah framework routing dan middleware standar de-facto untuk server backend berbasis Node.js.",
-      "A": "Opsi A benar karena Express.js adalah framework backend Node.js utama.",
-      "B": "Opsi B salah karena Laravel adalah framework bahasa PHP.",
-      "C": "Opsi C salah karena Spring Cloud adalah framework ekosistem Java.",
-      "D": "Opsi D salah karena Ruby on Rails adalah framework bahasa Ruby."
+      "correct": "Pada tipe `geometry` dengan SRID 4326 (WGS 84), unit satuannya adalah derajat (degree). Buffer 500 berarti radius 500 derajat busur (sedangkan keliling bumi hanya 360 derajat). Untuk buffer dalam meter, cast geometri ke tipe `geography`: `ST_Buffer(geom::geography, 500)`.",
+      "A": "Benar. Unit 4326 adalah derajat busur; gunakan tipe geography untuk buffer dengan satuan meter.",
+      "B": "Salah. Satuan bukan milimeter melainkan unit proyeksi (derajat).",
+      "C": "Salah. Koordinat tersebut adalah Jakarta, Indonesia.",
+      "D": "Salah. Angka integer 500 valid secara sintaksis."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-038",
     "level": "beginner",
-    "topic": "Node.js",
-    "question": "Dalam Express.js, apakah yang dimaksud dengan 'Middleware'?",
+    "topic": "Leaflet Clear Layers",
+    "questionType": "debug",
+    "question": "Data titik lama tidak terhapus saat filter dropdown diganti sehingga marker baru menumpuk di atas marker lama. Apa method yang seharusnya dipanggil sebelum menambah data baru?\n\n```javascript\n// Layer group penampung marker:\nconst markerGroup = L.layerGroup().addTo(map);\n// Ketika filter berubah:\n// Apa yang harus dipanggil pada markerGroup sebelum menambah data baru?\n```",
+    "code": "// Layer group penampung marker:\nconst markerGroup = L.layerGroup().addTo(map);\n// Ketika filter berubah:\n// Apa yang harus dipanggil pada markerGroup sebelum menambah data baru?",
     "options": {
-      "A": "Fungsi yang memiliki akses ke objek request (req), response (res), dan fungsi next() untuk memproses permintaan sebelum sampai ke route handler akhir",
-      "B": "Kabel fisik penghubung server dengan switch jaringan",
-      "C": "Program antivirus yang berjalan di database",
-      "D": "Tampilan visual CSS di browser"
+      "A": "markerGroup.clearLayers()",
+      "B": "markerGroup.delete()",
+      "C": "map.remove()",
+      "D": "markerGroup.reset()"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Middleware Express mengeksekusi logika perantara (seperti logging, autentikasi token, parsing JSON, atau CORS) dan memanggil next() untuk meneruskan alur ke middleware berikutnya.",
-      "A": "Opsi A benar karena mendefinisikan fungsi perantara req, res, next di Express.",
-      "B": "Opsi B salah karena bukan hardware jaringan.",
-      "C": "Opsi C salah karena bukan modul antivirus database.",
-      "D": "Opsi D salah karena middleware Express berjalan di server backend, bukan frontend browser."
+      "correct": "Method `layerGroup.clearLayers()` menghapus seluruh layer/marker anak yang ada di dalam grup tersebut dari peta, sehingga grup menjadi bersih dan siap diisi data hasil filter baru.",
+      "A": "Benar. clearLayers() membersihkan seluruh layer turunan pada LayerGroup.",
+      "B": "Salah. delete() bukan method dari L.LayerGroup.",
+      "C": "Salah. map.remove() akan menghancurkan dan mencopot seluruh instance peta dari halaman web.",
+      "D": "Salah. reset() bukan method bawaan Leaflet untuk LayerGroup."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-039",
     "level": "beginner",
-    "topic": "Node.js",
-    "question": "Middleware bawaan Express.js apakah yang digunakan untuk mem-parse incoming request body yang berformat JSON?",
+    "topic": "Leaflet Map Initialization",
+    "questionType": "completion",
+    "question": "Lengkapi baris inisialisasi peta Leaflet yang terhubung ke elemen div ber-id 'map-view':\n\n```javascript\nconst map = L.__(\"map-view\").setView([-7.25, 112.75], 12);\n```",
+    "code": "const map = L.__(\"map-view\").setView([-7.25, 112.75], 12);",
     "options": {
-      "A": "express.json()",
-      "B": "express.parseBody()",
-      "C": "express.multipart()",
-      "D": "express.urlencodedOnly()"
+      "A": "map",
+      "B": "createMap",
+      "C": "init",
+      "D": "view"
     },
     "answer": "A",
     "explanation": {
-      "correct": "app.use(express.json()) mem-parse payload JSON yang masuk dan menempatkan objek hasilnya di req.body.",
-      "A": "Opsi A benar karena express.json() adalah middleware parsing JSON standar.",
-      "B": "Opsi B salah karena bukan method bawaan Express.",
-      "C": "Opsi C salah karena bukan method bawaan Express.",
-      "D": "Opsi D salah karena bukan method Express."
+      "correct": "`L.map(id, options)` adalah method factory utama Leaflet untuk menginisialisasi objek peta pada elemen HTML DOM tertentu.",
+      "A": "Benar. L.map adalah constructor/factory resmi Leaflet untuk instansiasi peta.",
+      "B": "Salah. createMap bukan nama fungsi di Leaflet.",
+      "C": "Salah. init bukan method factory Leaflet.",
+      "D": "Salah. view bukan method untuk membuat objek peta."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-040",
     "level": "beginner",
-    "topic": "Node.js",
-    "question": "Objek apakah di Express.js yang digunakan untuk mengambil parameter dinamis dari URL path (contoh: endpoint '/api/features/:id')?",
+    "topic": "PostGIS ST_MakePoint",
+    "questionType": "completion",
+    "question": "Lengkapi kueri pembuatan titik geometri berikut dengan menetapkan SRID 4326 secara langsung:\n\n```sql\nSELECT ST_SetSRID(ST_MakePoint(___, ___), 4326);\n```",
+    "code": "SELECT ST_SetSRID(ST_MakePoint(___, ___), 4326);",
     "options": {
-      "A": "req.params.id",
-      "B": "req.query.id",
-      "C": "req.body.id",
-      "D": "req.headers.id"
+      "A": "longitude, latitude",
+      "B": "latitude, longitude",
+      "C": "srid, geometry",
+      "D": "altitude, radius"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Parameter path yang diawali dengan tanda titik dua (:id) otomatis dipetakan oleh Express ke dalam objek req.params.",
-      "A": "Opsi A benar karena req.params menampung route parameters.",
-      "B": "Opsi B salah karena req.query menampung query string (seperti ?id=10).",
-      "C": "Opsi C salah karena req.body menampung body payload POST/PUT.",
-      "D": "Opsi D salah karena req.headers menampung header HTTP."
+      "correct": "Fungsi `ST_MakePoint(x, y)` selalu menerima koordinat X (Longitude / Sumbu Horizontal Timur-Barat) terlebih dahulu, baru kemudian koordinat Y (Latitude / Sumbu Vertikal Utara-Selatan).",
+      "A": "Benar. Urutan parameter Cartesian X, Y berpadanan dengan Longitude lalu Latitude.",
+      "B": "Salah. Urutan latitude, longitude terbalik dari konvensi X, Y matematika.",
+      "C": "Salah. Parameter ST_MakePoint menerima nilai numerik koordinat, bukan srid/geometry.",
+      "D": "Salah. Parameter dasar 2D tidak menerima altitude dan radius."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-041",
     "level": "beginner",
-    "topic": "Node.js",
-    "question": "Package npm populer apakah yang digunakan di Express.js untuk mengizinkan permintaan lintas domain (Cross-Origin Resource Sharing) dari frontend web GIS?",
+    "topic": "Leaflet Add Marker",
+    "questionType": "completion",
+    "question": "Lengkapi kode berikut untuk menambahkan marker dengan posisi koordinat Bandung ke dalam peta:\n\n```javascript\nconst marker = L.marker([-6.9175, 107.6191]).___(map);\n```",
+    "code": "const marker = L.marker([-6.9175, 107.6191]).___(map);",
     "options": {
-      "A": "cors",
-      "B": "axios",
-      "C": "dotenv",
-      "D": "nodemon"
+      "A": "addTo",
+      "B": "attachTo",
+      "C": "append",
+      "D": "mount"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Package 'cors' menyediakan middleware Express siap pakai untuk mengonfigurasi header Access-Control-Allow-Origin.",
-      "A": "Opsi A benar karena cors adalah package resmi untuk penanganan CORS di Node.js.",
-      "B": "Opsi B salah karena axios adalah HTTP client untuk membuat request outbound.",
-      "C": "Opsi C salah karena dotenv untuk memuat file .env ke process.env.",
-      "D": "Opsi D salah karena nodemon adalah utility dev untuk auto-restart server saat kode berubah."
+      "correct": "Method berantai (chainable method) standar pada layer Leaflet untuk memasang komponen ke instance peta adalah `.addTo(map)`.",
+      "A": "Benar. .addTo(map) adalah method standar Leaflet untuk menambahkan layer ke peta.",
+      "B": "Salah. attachTo bukan method resmi Leaflet.",
+      "C": "Salah. append adalah method DOM, bukan method Layer Leaflet.",
+      "D": "Salah. mount digunakan di framework seperti React/Vue, bukan Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-042",
     "level": "beginner",
-    "topic": "Node.js",
-    "question": "Bagaimana cara membaca variabel lingkungan (Environment Variables) dari file .env di aplikasi Node.js?",
+    "topic": "Leaflet TileLayer OSM",
+    "questionType": "completion",
+    "question": "Lengkapi URL template tile OpenStreetMap standar berikut:\n\n```javascript\nL.tileLayer(\"https://tile.openstreetmap.org/{___}/{___}/{___}.png\", {\n  attribution: \"&copy; OpenStreetMap contributors\"\n}).addTo(map);\n```",
+    "code": "L.tileLayer(\"https://tile.openstreetmap.org/{___}/{___}/{___}.png\", {\n  attribution: \"&copy; OpenStreetMap contributors\"\n}).addTo(map);",
     "options": {
-      "A": "Menggunakan package 'dotenv' dan mengakses nilainya melalui 'process.env.NAMA_VARIABEL'",
-      "B": "Membuka file .env secara manual menggunakan FileReader browser",
-      "C": "Menggunakan perintah global window.getEnv()",
-      "D": "Menyimpan nilai variabel di dalam file HTML"
+      "A": "z, x, y",
+      "B": "x, y, z",
+      "C": "lat, lng, zoom",
+      "D": "zoom, lat, lng"
     },
     "answer": "A",
     "explanation": {
-      "correct": "dotenv membaca file .env saat startup dan memuat kuncinya ke dalam objek runtime global process.env.",
-      "A": "Opsi A benar karena process.env adalah interface standar environment variables di Node.js.",
-      "B": "Opsi B salah karena FileReader adalah API browser frontend, bukan backend Node.js.",
-      "C": "Opsi C salah karena window objek tidak ada di lingkungan backend Node.js.",
-      "D": "Opsi D salah karena tidak aman menyimpan kredensial di file HTML."
+      "correct": "URL Slippy Map tile format standar menggunakan variabel placeholder `{z}` untuk zoom level, `{x}` untuk indeks kolom tile, dan `{y}` untuk indeks baris tile.",
+      "A": "Benar. Template URL standar adalah {z}/{x}/{y}.",
+      "B": "Salah. x, y, z adalah urutan terbalik yang tidak cocok dengan struktur folder OSM.",
+      "C": "Salah. Leaflet tidak menggunakan placeholder {lat} atau {lng} untuk raster tile layer.",
+      "D": "Salah. Nama placeholder resmi adalah z, bukan zoom."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-043",
     "level": "beginner",
-    "topic": "Node.js",
-    "question": "Modul inti (core module) bawaan Node.js apakah yang digunakan untuk berinteraksi dengan file system komputer (membaca/menulis file GeoJSON/Shapefile)?",
+    "topic": "PostGIS Distance Sphere",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi PostGIS berikut untuk menghitung jarak akurat dalam satuan METER pada koordinat geografis WGS 84 tanpa perlu membuat tabel geografi:\n\n```sql\nSELECT ST____(ST_MakePoint(106.8, -6.2), ST_MakePoint(107.6, -6.9));\n```",
+    "code": "SELECT ST____(ST_MakePoint(106.8, -6.2), ST_MakePoint(107.6, -6.9));",
     "options": {
-      "A": "fs (atau fs/promises)",
-      "B": "http",
-      "C": "path",
-      "D": "os"
+      "A": "DistanceSphere",
+      "B": "LengthPlanar",
+      "C": "AreaDegrees",
+      "D": "CartesianMetric"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Modul 'fs' (File System) menyediakan fungsi membaca, menulis, dan memanipulasi file fisik di server.",
-      "A": "Opsi A benar karena fs adalah modul inti manipulasi file di Node.js.",
-      "B": "Opsi B salah karena http adalah modul server HTTP dasar.",
-      "C": "Opsi C salah karena path adalah utilitas resolusi string direktori.",
-      "D": "Opsi D salah karena os menyediakan informasi sistem operasi server."
+      "correct": "`ST_DistanceSphere(geom1, geom2)` menggunakan model aproksimasi bola bumi untuk menghitung jarak geodesik antar dua titik WGS 84 secara cepat dalam satuan meter.",
+      "A": "Benar. ST_DistanceSphere menghitung jarak permukaan bola bumi dalam meter.",
+      "B": "Salah. LengthPlanar menghitung panjang garis planar, bukan jarak dua titik di permukaan bumi.",
+      "C": "Salah. AreaDegrees menghitung luas bukan jarak.",
+      "D": "Salah. CartesianMetric bukan nama fungsi PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-044",
     "level": "beginner",
-    "topic": "Node.js",
-    "question": "Apa fungsi dari method 'res.status(404).json({ error: \"Not Found\" })' pada Express route handler?",
+    "topic": "Leaflet Popup Binding",
+    "questionType": "completion",
+    "question": "Lengkapi method berikut agar marker menampilkan teks popup saat diklik oleh pengguna:\n\n```javascript\nconst marker = L.marker([-6.2, 106.8]);\nmarker.___(\"<b>Halo Jakarta!</b>\").addTo(map);\n```",
+    "code": "const marker = L.marker([-6.2, 106.8]);\nmarker.___(\"<b>Halo Jakarta!</b>\").addTo(map);",
     "options": {
-      "A": "Mengatur HTTP status code response menjadi 404 dan mengirimkan response body berupa data berformat JSON",
-      "B": "Mematikan server Express seketika",
-      "C": "Menghapus database pada tabel yang bersangkutan",
-      "D": "Mengalihkan pengguna ke mesin pencari Google"
+      "A": "bindPopup",
+      "B": "setTooltip",
+      "C": "createAlert",
+      "D": "attachModal"
     },
     "answer": "A",
     "explanation": {
-      "correct": "res.status() menetapkan kode status respons, dan res.json() memformat objek JavaScript menjadi JSON serta menyetel header Content-Type application/json.",
-      "A": "Opsi A benar karena menjelaskan chaining status dan pengiriman body JSON di Express.",
-      "B": "Opsi B salah karena koneksi ditutup secara normal setelah respons terkirim tanpa mematikan server.",
-      "C": "Opsi C salah karena tidak mengubah isi database.",
-      "D": "Opsi D salah karena tidak melakukan pengalihan URL eksternal."
+      "correct": "Method `bindPopup(htmlContent)` mengaitkan dialog popup HTML yang otomatis terbuka ketika layer marker di-klik oleh user.",
+      "A": "Benar. bindPopup adalah API Leaflet resmi untuk membuat popup interaktif.",
+      "B": "Salah. setTooltip digunakan untuk tooltip hover ringan, bukan dialog popup standar.",
+      "C": "Salah. createAlert bukan method Leaflet.",
+      "D": "Salah. attachModal bukan method bawaan Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-045",
     "level": "beginner",
-    "topic": "Node.js",
-    "question": "Dalam Node.js, file apakah yang menyimpan metadata proyek seperti nama aplikasi, versi, dependensi library (dependencies), dan script build?",
+    "topic": "PostGIS ST_DWithin",
+    "questionType": "completion",
+    "question": "Lengkapi klausa WHERE berikut untuk mencari semua fasilitas yang berada dalam radius 1.000 meter dari titik pengguna menggunakan tipe `geography`:\n\n```sql\nSELECT name FROM facilities\nWHERE ST_DWithin(geom::geography, ST_MakePoint(106.8, -6.2)::geography, ___);\n```",
+    "code": "SELECT name FROM facilities\nWHERE ST_DWithin(geom::geography, ST_MakePoint(106.8, -6.2)::geography, ___);",
     "options": {
-      "A": "package.json",
-      "B": "tsconfig.json",
-      "C": "index.html",
-      "D": "node.config"
+      "A": "1000",
+      "B": "0.01",
+      "C": "1000000",
+      "D": "'1000m'"
     },
     "answer": "A",
     "explanation": {
-      "correct": "package.json adalah file manifest pusat untuk manajemen paket dan konfigurasi aplikasi berbasis Node.js.",
-      "A": "Opsi A benar karena package.json adalah manifest standar proyek Node.js.",
-      "B": "Opsi B salah karena tsconfig.json khusus untuk konfigurasi compiler TypeScript.",
-      "C": "Opsi C salah karena index.html adalah dokumen halaman web frontend.",
-      "D": "Opsi D salah karena node.config bukan file konfigurasi standar."
+      "correct": "Saat menggunakan tipe `geography`, parameter ketiga dari `ST_DWithin` secara default dihitung dalam satuan METER. Untuk radius 1.000 meter cukup masukkan angka 1000.",
+      "A": "Benar. ST_DWithin pada tipe geography mengukur radius dalam satuan meter langsung.",
+      "B": "Salah. 0.01 derajat digunakan jika bertipe geometry planar, bukan geography.",
+      "C": "Salah. 1000000 adalah 1.000 kilometer.",
+      "D": "Salah. Parameter jarak menerima nilai numerik (double precision), bukan string berakhiran 'm'."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-046",
     "level": "beginner",
-    "topic": "Node.js",
-    "question": "Package npm middleware apakah yang paling umum digunakan di Express.js untuk menangani upload file multipart (seperti upload file zip Shapefile atau file GeoTIFF)?",
+    "topic": "Leaflet GeoJSON Styling",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi style GeoJSON berikut agar batas poligon berwarna merah dengan ketebalan 2 pixel:\n\n```javascript\nL.geoJSON(data, {\n  style: function(feature) {\n    return {\n      ___: \"red\",\n      weight: 2\n    };\n  }\n}).addTo(map);\n```",
+    "code": "L.geoJSON(data, {\n  style: function(feature) {\n    return {\n      ___: \"red\",\n      weight: 2\n    };\n  }\n}).addTo(map);",
     "options": {
-      "A": "multer",
-      "B": "bcrypt",
-      "C": "jsonwebtoken",
-      "D": "helmet"
+      "A": "color",
+      "B": "strokeColor",
+      "C": "border",
+      "D": "linePaint"
     },
     "answer": "A",
     "explanation": {
-      "correct": "'multer' adalah middleware Node.js untuk menangani data bertipe 'multipart/form-data', terutama digunakan untuk mengunggah file ke server atau memori buffer.",
-      "A": "Opsi A benar karena multer adalah library standar de-facto penanganan upload file di Express.",
-      "B": "Opsi B salah karena bcrypt untuk hashing password.",
-      "C": "Opsi C salah karena jsonwebtoken untuk membuat dan memverifikasi token JWT.",
-      "D": "Opsi D salah karena helmet untuk mengamankan HTTP headers."
+      "correct": "Di Leaflet Path Options, opsi `color` mendefinisikan warna garis tepi/stroke (stroke color), sedangkan `fillColor` mendefinisikan warna isian bidang poligon.",
+      "A": "Benar. color adalah opsi resmi Leaflet untuk warna outline garis tepi.",
+      "B": "Salah. strokeColor bukan nama properti opsi Leaflet Path.",
+      "C": "Salah. border adalah properti CSS, bukan opsi Leaflet Path.",
+      "D": "Salah. linePaint adalah format MapLibre/Mapbox GL, bukan Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-047",
     "level": "beginner",
-    "topic": "React atau Vue",
-    "question": "Dalam Vue.js, direktif apakah yang digunakan untuk menampilkan atau menyembunyikan elemen HTML secara kondisional dengan menambahkan/menghapus elemen dari DOM?",
+    "topic": "PostGIS Spatial Column Addition",
+    "questionType": "completion",
+    "question": "Lengkapi perintah SQL berikut untuk menambahkan kolom spasial titik 2D dengan SRID 4326 pada tabel yang sudah ada:\n\n```sql\nALTER TABLE stores ADD COLUMN geom geometry(Point, ___);\n```",
+    "code": "ALTER TABLE stores ADD COLUMN geom geometry(Point, ___);",
     "options": {
-      "A": "v-if",
-      "B": "v-show",
-      "C": "v-display",
-      "D": "v-hide"
+      "A": "4326",
+      "B": "3857",
+      "C": "WGS84",
+      "D": "EPSG"
     },
     "answer": "A",
     "explanation": {
-      "correct": "v-if me-render atau menghancurkan elemen langsung dari DOM secara kondisional, sedangkan v-show hanya memanipulasi properti CSS display: none.",
-      "A": "Opsi A benar karena v-if menyisipkan/menghapus elemen dari pohon DOM.",
-      "B": "Opsi B salah karena v-show hanya menyembunyikan secara visual dengan CSS display: none.",
-      "C": "Opsi C salah karena v-display bukan direktif Vue yang valid.",
-      "D": "Opsi D salah karena v-hide bukan direktif Vue yang valid."
+      "correct": "Tipe kolom geometri PostGIS berparameter menerima tipe primitif dan integer SRID, misalnya `geometry(Point, 4326)`.",
+      "A": "Benar. 4326 adalah integer SRID standar WGS 84 GPS global.",
+      "B": "Salah. 3857 adalah Web Mercator (satuan meter), bukan koordinat GPS geografis lon/lat.",
+      "C": "Salah. Tipe kolom membutuhkan angka integer SRID, bukan string 'WGS84'.",
+      "D": "Salah. 'EPSG' adalah nama organisasi/registrasi otoritas, bukan nomor SRID."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-048",
     "level": "beginner",
-    "topic": "React atau Vue",
-    "question": "Fitur state management terpusat resmi apakah yang direkomendasikan untuk aplikasi React modern pengganti vanilla Redux boilerplate lama?",
+    "topic": "Leaflet Custom Icon",
+    "questionType": "completion",
+    "question": "Lengkapi pembuatan custom marker icon di Leaflet berikut:\n\n```javascript\nconst customIcon = L.___({\n  iconUrl: \"/icons/hospital.png\",\n  iconSize: [32, 32],\n  iconAnchor: [16, 32]\n});\n```",
+    "code": "const customIcon = L.___({\n  iconUrl: \"/icons/hospital.png\",\n  iconSize: [32, 32],\n  iconAnchor: [16, 32]\n});",
     "options": {
-      "A": "Redux Toolkit (RTK) atau Zustand",
-      "B": "jQuery Global State",
-      "C": "DOM Storage Variable",
-      "D": "Static Window Object"
+      "A": "icon",
+      "B": "createIcon",
+      "C": "customMarker",
+      "D": "symbol"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Redux Toolkit (RTK) dan Zustand menyediakan state management global yang ringkas, immutable, dan menghilangkan boilerplate rumit Redux tradisional.",
-      "A": "Opsi A benar karena RTK dan Zustand adalah standar industri modern state management React.",
-      "B": "Opsi B salah karena jQuery sudah usang dan bukan state manager komponen.",
-      "C": "Opsi C salah karena DOM storage lambat dan hanya untuk serialisasi string.",
-      "D": "Opsi D salah karena window global variable melanggar reaktivitas dan enkapsulasi."
+      "correct": "`L.icon(options)` adalah factory method Leaflet untuk mendefinisikan custom marker icon dengan gambar eksternal dan titik anchor.",
+      "A": "Benar. L.icon adalah method pembuat objek icon kustom.",
+      "B": "Salah. createIcon bukan method factory utama Leaflet.",
+      "C": "Salah. customMarker bukan class bawaan Leaflet.",
+      "D": "Salah. symbol bukan method icon Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-049",
     "level": "beginner",
-    "topic": "Node.js",
-    "question": "Perintah npm apakah yang digunakan untuk menginstal package library dan secara otomatis mencatatnya ke dalam 'devDependencies' di package.json?",
+    "topic": "PostGIS ST_AsGeoJSON",
+    "questionType": "completion",
+    "question": "Lengkapi kueri SQL berikut agar data geometri dikonversi langsung menjadi format string GeoJSON oleh database:\n\n```sql\nSELECT id, name, ST____(geom) as geojson FROM parks;\n```",
+    "code": "SELECT id, name, ST____(geom) as geojson FROM parks;",
     "options": {
-      "A": "npm install <nama-package> --save-dev (atau -D)",
-      "B": "npm install <nama-package> --prod",
-      "C": "npm get <nama-package>",
-      "D": "npm download-dev <nama-package>"
+      "A": "AsGeoJSON",
+      "B": "ToGeoJSON",
+      "C": "FormatJSON",
+      "D": "ExportGeoJSON"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Flag --save-dev (-D) memisahkan paket yang hanya dibutuhkan saat development (seperti TypeScript, Vite, atau ESLint) dari runtime production dependencies.",
-      "A": "Opsi A benar karena flag -D mencatat ke devDependencies.",
-      "B": "Opsi B salah karena --prod mengabaikan devDependencies saat instalasi produksi.",
-      "C": "Opsi C salah karena 'npm get' untuk membaca konfigurasi npm config.",
-      "D": "Opsi D salah karena bukan perintah npm yang valid."
+      "correct": "`ST_AsGeoJSON(geom)` adalah fungsi bawaan PostGIS yang mengubah geometri database menjadi string JSON standar GeoJSON RFC 7946.",
+      "A": "Benar. ST_AsGeoJSON adalah fungsi standar PostGIS untuk ekspor GeoJSON.",
+      "B": "Salah. ToGeoJSON bukan fungsi PostGIS yang valid.",
+      "C": "Salah. FormatJSON bukan fungsi spasial PostGIS.",
+      "D": "Salah. ExportGeoJSON bukan nama fungsi resmi PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-050",
     "level": "beginner",
-    "topic": "Node.js",
-    "question": "Apa output dari perintah 'node -v' di terminal command line?",
+    "topic": "Leaflet Fit Bounds",
+    "questionType": "completion",
+    "question": "Lengkapi pemanggilan method berikut agar viewport peta otomatis mengarah dan menyesuaikan zoom ke seluruh cakupan data layer:\n\n```javascript\nconst geoLayer = L.geoJSON(data).addTo(map);\nmap.___(geoLayer.getBounds());\n```",
+    "code": "const geoLayer = L.geoJSON(data).addTo(map);\nmap.___(geoLayer.getBounds());",
     "options": {
-      "A": "Menampilkan versi runtime Node.js yang sedang terinstal di sistem",
-      "B": "Membuat proyek Node.js baru",
-      "C": "Menghapus Node.js dari komputer",
-      "D": "Menjalankan file index.js"
+      "A": "fitBounds",
+      "B": "zoomTo",
+      "C": "centerOn",
+      "D": "setExtent"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Flag -v (atau --version) adalah perintah diagnostik CLI standar untuk mengecek nomor versi Node.js yang aktif.",
-      "A": "Opsi A benar karena menampilkan string versi Node.js.",
-      "B": "Opsi B salah karena membuat proyek baru menggunakan npm init.",
-      "C": "Opsi C salah karena uninstal dilakukan melalui package manager OS.",
-      "D": "Opsi D salah karena menjalankan file menggunakan 'node <nama-file>'."
+      "correct": "Method `map.fitBounds(bounds)` secara cerdas menghitung titik tengah (center) dan level zoom optimal agar seluruh area bounding box yang diberikan terlihat penuh di layar.",
+      "A": "Benar. map.fitBounds() menyesuaikan center dan zoom otomatis sesuai bounds.",
+      "B": "Salah. zoomTo bukan method resmi Leaflet untuk LatLngBounds.",
+      "C": "Salah. centerOn bukan nama method Leaflet.",
+      "D": "Salah. setExtent adalah istilah di ArcGIS/OpenLayers lama, bukan Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-051",
     "level": "beginner",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Framework backend modern Python apakah yang dirancang untuk performa tinggi berbasis Starlette dan Pydantic serta otomatis menghasilkan dokumentasi Swagger / OpenAPI?",
+    "topic": "PostGIS Spatial Index Creation",
+    "questionType": "completion",
+    "question": "Lengkapi perintah SQL berikut untuk membuat indeks spasial berkecepatan tinggi pada kolom geometri:\n\n```sql\nCREATE INDEX idx_roads_geom ON roads USING ___(geom);\n```",
+    "code": "CREATE INDEX idx_roads_geom ON roads USING ___(geom);",
     "options": {
-      "A": "FastAPI",
-      "B": "Flask",
-      "C": "Tornado",
-      "D": "Bottle"
+      "A": "GIST",
+      "B": "BTREE",
+      "C": "HASH",
+      "D": "GIN"
     },
     "answer": "A",
     "explanation": {
-      "correct": "FastAPI memanfaatkan type hints standar Python untuk validasi data otomatis via Pydantic dan menghasilkan interactive API docs (/docs) secara bawaan.",
-      "A": "Opsi A benar karena FastAPI adalah framework async modern dengan otomatisasi OpenAPI.",
-      "B": "Opsi B salah karena Flask tidak memiliki validasi Pydantic atau auto-Swagger bawaan tanpa ekstensi eksternal.",
-      "C": "Opsi C salah karena Tornado adalah web framework async lama.",
-      "D": "Opsi D salah karena Bottle adalah micro-framework minimalis satu file."
+      "correct": "Indeks `GIST` (Generalized Search Tree) adalah tipe indeks standar dan paling esensial di PostGIS untuk mempercepat query spasial berbasis bounding box (seperti `&&`, `ST_Intersects`, `ST_DWithin`).",
+      "A": "Benar. Indeks GiST mengorganisir data geometri dengan struktur R-Tree spasial.",
+      "B": "Salah. BTREE hanya untuk data skalar terurut satu dimensi, tidak efisien untuk data spasial multi-dimensi.",
+      "C": "Salah. HASH hanya mendukung pencocokan nilai eksak kesetaraan (=).",
+      "D": "Salah. GIN digunakan untuk array atau teks pencarian full-text, bukan tipe geometri standar."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-052",
     "level": "beginner",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam FastAPI, kelas pustaka apakah yang digunakan untuk mendefinisikan skema data validasi DTO (Data Transfer Object) request dan response?",
+    "topic": "JavaScript Distance Haversine Formula",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi konversi derajat ke radian yang dibutuhkan pada formula Haversine:\n\n```javascript\nfunction toRad(deg) {\n  return deg * (Math.PI / ___);\n}\n```",
+    "code": "function toRad(deg) {\n  return deg * (Math.PI / ___);\n}",
     "options": {
-      "A": "pydantic.BaseModel",
-      "B": "django.db.models.Model",
-      "C": "dataclasses.dataclass",
-      "D": "marshmallow.Schema"
+      "A": "180",
+      "B": "360",
+      "C": "90",
+      "D": "270"
     },
     "answer": "A",
     "explanation": {
-      "correct": "FastAPI mengandalkan Pydantic BaseModel untuk memvalidasi tipe data JSON payload dan mengonversi otomatis ke objek Python yang strongly-typed.",
-      "A": "Opsi A benar karena Pydantic BaseModel adalah basis deklarasi skema FastAPI.",
-      "B": "Opsi B salah karena django.db.models.Model adalah ORM Django untuk tabel database.",
-      "C": "Opsi C salah karena dataclass bawaan Python tidak memiliki fitur parsing dan validasi error otomatis selengkap Pydantic.",
-      "D": "Opsi D salah karena Marshmallow adalah library serialisasi independen lama."
+      "correct": "Rumus matematika konversi sudut derajat ke radian adalah `radian = derajat * (pi / 180)` karena 180 derajat setara dengan pi radian.",
+      "A": "Benar. 180 derajat setara dengan Math.PI radian.",
+      "B": "Salah. 360 setara dengan 2 * Math.PI.",
+      "C": "Salah. 90 derajat setara dengan Math.PI / 2.",
+      "D": "Salah. 270 derajat setara dengan 3 * Math.PI / 2."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-053",
     "level": "beginner",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Bagaimana cara mendefinisikan endpoint GET pada aplikasi FastAPI?",
+    "topic": "Leaflet GeoJSON Filter",
+    "questionType": "completion",
+    "question": "Lengkapi opsi filter pada L.geoJSON agar hanya menampilkan fitur yang bertipe properti 'Sekolah':\n\n```javascript\nL.geoJSON(data, {\n  filter: function(feature) {\n    return feature.properties.tipe === \"___\";\n  }\n}).addTo(map);\n```",
+    "code": "L.geoJSON(data, {\n  filter: function(feature) {\n    return feature.properties.tipe === \"___\";\n  }\n}).addTo(map);",
     "options": {
-      "A": "@app.get(\"/api/v1/layers\")",
-      "B": "@app.route(\"/api/v1/layers\", method=\"GET\")",
-      "C": "@app.endpoint(GET=\"/api/v1/layers\")",
-      "D": "@router.create(\"/api/v1/layers\")"
+      "A": "Sekolah",
+      "B": "Polygon",
+      "C": "Feature",
+      "D": "Point"
     },
     "answer": "A",
     "explanation": {
-      "correct": "FastAPI menggunakan decorator dekoratif berbasis HTTP method langsung seperti @app.get(), @app.post(), @app.put(), dan @app.delete().",
-      "A": "Opsi A benar karena @app.get() adalah sintaks resmi FastAPI.",
-      "B": "Opsi B salah karena itu sintaks decorator milik Flask.",
-      "C": "Opsi C salah karena bukan sintaks FastAPI.",
-      "D": "Opsi D salah karena bukan method FastAPI APIRouter."
+      "correct": "Opsi `filter` menerima callback yang mengembalikan boolean. Evaluasi `feature.properties.tipe === 'Sekolah'` akan menyaring dan hanya merender fitur sekolah.",
+      "A": "Benar. Menyaring nilai atribut pada objek feature.properties.",
+      "B": "Salah. 'Polygon' adalah tipe geometri, bukan nilai atribut properti tipe.",
+      "C": "Salah. 'Feature' adalah tipe objek GeoJSON.",
+      "D": "Salah. 'Point' adalah tipe geometri."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-054",
     "level": "beginner",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Pustaka Python populer apakah yang memperluas kemampuan Pandas DataFrame untuk menangani data geospasial dan operasi geometri vektor?",
+    "topic": "GeoJSON Performance",
+    "questionType": "best-practice",
+    "question": "Jika Anda perlu menampilkan 20.000 titik lokasi di peta browser menggunakan Leaflet, pendekatan manakah yang paling direkomendasikan agar browser tidak lag?\n\n```javascript\n// Kasus: Merender 20.000 titik koordinat di browser klien.\n```",
+    "code": "// Kasus: Merender 20.000 titik koordinat di browser klien.",
     "options": {
-      "A": "GeoPandas",
-      "B": "NumPy",
-      "C": "SciPy",
-      "D": "Matplotlib"
+      "A": "Menggunakan plugin clustering seperti Leaflet.markercluster atau beralih ke Vector Tiles / Canvas rendering",
+      "B": "Membuat 20.000 elemen DOM SVG L.marker satu per satu secara langsung",
+      "C": "Menyimpan seluruh data di localStorage dan merefresh halaman setiap detik",
+      "D": "Memperbesar ukuran gambar icon marker menjadi 4K"
     },
     "answer": "A",
     "explanation": {
-      "correct": "GeoPandas menyediakan struktur data GeoDataFrame yang memiliki kolom khusus 'geometry' untuk membaca, memanipulasi, dan memproyeksikan fitur spasial vektor.",
-      "A": "Opsi A benar karena GeoPandas adalah library manipulasi tabel spasial utama di Python.",
-      "B": "Opsi B salah karena NumPy untuk komputasi array numerik multidimensi murni.",
-      "C": "Opsi C salah karena SciPy untuk algoritma komputasi ilmiah.",
-      "D": "Opsi D salah karena Matplotlib adalah library visualisasi grafik 2D."
+      "correct": "Membuat 20.000 objek DOM marker langsung di browser akan menghancurkan performa rendering (FPS drop drastis karena overload DOM). Clustering mengelompokkan titik yang berdekatan menjadi satu representasi cluster, atau menggunakan Canvas layer untuk performa 60 FPS.",
+      "A": "Benar. Clustering dan Canvas rendering mengeliminasi beban puluhan ribu node DOM di browser.",
+      "B": "Salah. Puluhan ribu elemen DOM individual menyebabkan browser mengalami out of memory dan freeze.",
+      "C": "Salah. LocalStorage dan refresh tidak membantu efisiensi rendering grafis browser.",
+      "D": "Salah. Gambar resolusi tinggi justru memboroskan bandwidth dan GPU fillrate."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-055",
     "level": "beginner",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Pustaka Python apakah yang menjadi standar untuk memanipulasi geometri spasial 2D (seperti membuat titik, buffer poligon, dan intersection) berbasis library GEOS?",
+    "topic": "Database Spatial Storage",
+    "questionType": "best-practice",
+    "question": "Tipe data PostGIS manakah yang paling direkomendasikan untuk menyimpan data lintang/bujur GPS global jika Anda sering melakukan kalkulasi jarak nyata di muka bumi?\n\n```sql\n-- Pemilihan tipe data kolom lokasi pengguna:\n```",
+    "code": "-- Pemilihan tipe data kolom lokasi pengguna:",
     "options": {
-      "A": "Shapely",
-      "B": "Requests",
-      "C": "Pillow",
-      "D": "BeautifulSoup"
+      "A": "geography(Point, 4326)",
+      "B": "VARCHAR(255) menyimpan string 'lat,lng'",
+      "C": "DOUBLE PRECISION dua kolom terpisah tanpa ekstensi spasial",
+      "D": "BYTEA mentah"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Shapely membungkus pustaka C++ GEOS untuk manipulasi dan analisis geometri geometris planar (Point, LineString, Polygon).",
-      "A": "Opsi A benar karena Shapely adalah library dasar analisis geometri vektor di Python.",
-      "B": "Opsi B salah karena Requests adalah HTTP client library.",
-      "C": "Opsi C salah karena Pillow untuk pengolahan gambar bitmap biasa.",
-      "D": "Opsi D salah karena BeautifulSoup untuk web scraping HTML."
+      "correct": "Tipe `geography(Point, 4326)` secara native memperlakukan koordinat di permukaan lengkung bola bumi (great-circle geodesic), sehingga ST_Distance otomatis menghasilkan jarak dalam satuan meter tanpa distorsi proyeksi.",
+      "A": "Benar. Tipe geography otomatis menggunakan kalkulasi sferis permukaan bumi dalam satuan meter.",
+      "B": "Salah. VARCHAR tidak mendukung operasi geometri dan indeks spasial GiST.",
+      "C": "Salah. Dua kolom numerik biasa tidak bisa memanfaatkan fungsi spasial dan indeks spasial PostGIS.",
+      "D": "Salah. BYTEA tidak memiliki metadata spasial."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-056",
     "level": "beginner",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Pustaka Python apakah yang menjadi standar industri untuk membaca, menulis, dan memanipulasi data citra satelit dan grid Raster (GeoTIFF)?",
+    "topic": "API Payload Optimization",
+    "questionType": "best-practice",
+    "question": "Dalam mentransmisikan data GeoJSON dari backend Spring Boot ke frontend React, apa praktik terbaik terkait presisi angka desimal koordinat GPS?\n\n```javascript\n// Contoh koordinat: 106.8456128472918472 vs 106.845613\n```",
+    "code": "// Contoh koordinat: 106.8456128472918472 vs 106.845613",
     "options": {
-      "A": "Rasterio",
-      "B": "Fiona",
-      "C": "PyPDF2",
-      "D": "Flask-RESTful"
+      "A": "Membulatkan koordinat hingga 5 atau 6 tempat desimal (~1 meter atau ~10 cm presisi) untuk memangkas ukuran payload JSON hingga 50%",
+      "B": "Menyimpan hingga 20 angka desimal di belakang koma untuk akurasi nanometer",
+      "C": "Menghapus tanda titik desimal dan mengubahnya menjadi string hex",
+      "D": "Mengirim seluruh koordinat dalam format file gambar BMP"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Rasterio membungkus pustaka GDAL dalam antarmuka idiomatik Python untuk membaca metadata georeferensi, koordinat piksel, dan band citra raster.",
-      "A": "Opsi A benar karena Rasterio adalah library Python utama untuk pemrosesan raster satelit.",
-      "B": "Opsi B salah karena Fiona dikhususkan untuk membaca/menulis data vektor spasial (Shapefile, GeoJSON).",
-      "C": "Opsi C salah karena PyPDF2 untuk manipulasi dokumen PDF.",
-      "D": "Opsi D salah karena Flask-RESTful adalah ekstensi API untuk Flask."
+      "correct": "Presisi 6 angka desimal pada derajat GPS sudah setara dengan akurasi ~11 centimeter, yang lebih dari cukup untuk navigasi sipil. Memangkas angka desimal tak berguna (misal dari 15 digit ke 6 digit) secara dramatis mereduksi ukuran file JSON dan mempercepat transfer jaringan.",
+      "A": "Benar. 5-6 angka desimal memberikan akurasi tingkat meter/desimeter sekaligus menghemat bandwidth secara masif.",
+      "B": "Salah. Presisi 20 digit tidak memiliki arti fisik pada perangkat GPS ponsel dan membuang memori.",
+      "C": "Salah. Konversi custom hex menyulitkan parsing standar RFC GeoJSON di frontend.",
+      "D": "Salah. Format gambar BMP tidak efisien untuk transmisi data vektor."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-057",
     "level": "beginner",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Modul bawaan resmi Django apakah yang menyediakan fitur pemetaan spasial dan dukungan PostGIS di level ORM?",
+    "topic": "Map Usability & UX",
+    "questionType": "best-practice",
+    "question": "Mengapa sangat disarankan menonaktifkan zoom peta dengan scroll mouse (`scrollWheelZoom: false`) saat peta disematkan di tengah-tengah halaman artikel web panjang?\n\n```javascript\n// Konfigurasi Leaflet pada embed landing page:\nconst map = L.map(\"map\", { scrollWheelZoom: false });\n```",
+    "code": "// Konfigurasi Leaflet pada embed landing page:\nconst map = L.map(\"map\", { scrollWheelZoom: false });",
     "options": {
-      "A": "django.contrib.gis (GeoDjango)",
-      "B": "django.contrib.admin",
-      "C": "django.contrib.auth",
-      "D": "django.contrib.sessions"
+      "A": "Mencegah 'scroll trap' di mana pengguna yang ingin menggulir halaman ke bawah secara tidak sengaja terperangkap zooming peta",
+      "B": "Scroll mouse dapat merusak sensor perangkat keras mouse",
+      "C": "Leaflet melarang scroll mouse pada semua website komersial",
+      "D": "Browser Chromium mematikan event wheel secara otomatis"
     },
     "answer": "A",
     "explanation": {
-      "correct": "GeoDjango (django.contrib.gis) adalah ekstensi bawaan kelas dunia di Django yang menambahkan field spasial (PointField, PolygonField) dan fungsi spasial database.",
-      "A": "Opsi A benar karena GeoDjango adalah modul spasial resmi Django.",
-      "B": "Opsi B salah karena admin untuk antarmuka manajemen data internal.",
-      "C": "Opsi C salah karena auth untuk otentikasi user dasar.",
-      "D": "Opsi D salah karena sessions untuk manajemen sesi HTTP."
+      "correct": "Fenomena 'scroll trap' terjadi ketika pengguna menggeser scroll wheel untuk membaca halaman artikel, tetapi kursor melewati wadah peta sehingga scrolling halaman berhenti dan peta malah melakukan zoom in/out tak diinginkan.",
+      "A": "Benar. Mencegah scroll trap menjaga kenyamanan navigasi pengguna pada halaman web panjang.",
+      "B": "Salah. Scroll wheel tidak merusak perangkat keras.",
+      "C": "Salah. Leaflet mengizinkan scrollWheelZoom dan mengaktifkannya secara default.",
+      "D": "Salah. Browser tidak mematikan wheel event."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-058",
     "level": "beginner",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Web server ASGI (Asynchronous Server Gateway Interface) berkecepatan tinggi apakah yang lazim digunakan untuk menjalankan aplikasi FastAPI di lingkungan produksi?",
+    "topic": "Leaflet Cleanup & Memory Leaks",
+    "questionType": "best-practice",
+    "question": "Pada Single Page Application (SPA) seperti React atau Vue, apa yang wajib dilakukan saat komponen peta di-unmount?\n\n```javascript\n// React useEffect cleanup:\nuseEffect(() => {\n  const map = L.map(\"mapId\");\n  return () => {\n    // Apa yang wajib dipanggil di sini?\n  };\n}, []);\n```",
+    "code": "// React useEffect cleanup:\nuseEffect(() => {\n  const map = L.map(\"mapId\");\n  return () => {\n    // Apa yang wajib dipanggil di sini?\n  };\n}, []);",
     "options": {
-      "A": "Uvicorn",
-      "B": "Gunicorn murni tanpa worker class",
-      "C": "Apache mod_php",
-      "D": "Tomcat"
+      "A": "map.remove()",
+      "B": "map.close()",
+      "C": "delete window.L",
+      "D": "map = null"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Uvicorn adalah implementasi web server ASGI berbasis uvloop dan httptools yang mampu mengeksekusi asynchronous I/O Python dengan kecepatan sangat tinggi.",
-      "A": "Opsi A benar karena Uvicorn adalah server ASGI standar untuk FastAPI.",
-      "B": "Opsi B salah karena Gunicorn murni berbasis WSGI sinkron (harus dipasangkan dengan worker class uvicorn.workers.UvicornWorker).",
-      "C": "Opsi C salah karena mod_php khusus untuk bahasa PHP di server Apache.",
-      "D": "Opsi D salah karena Tomcat adalah servlet container untuk aplikasi Java."
+      "correct": "Method `map.remove()` mencopot seluruh event listener, membersihkan layer dari memori DOM, dan menghancurkan instance internal Leaflet. Tanpa `map.remove()`, akan terjadi memory leak dan error 'Map container is already initialized' saat komponen dibuka kembali.",
+      "A": "Benar. map.remove() membersihkan listener dan DOM untuk mencegah memory leak pada SPA.",
+      "B": "Salah. close() bukan method penghancur instance peta.",
+      "C": "Salah. Menghapus objek global window.L merusak pustaka Leaflet untuk komponen lain.",
+      "D": "Salah. Hanya meng-assign null tidak mencopot event listener yang sudah terdaftar di window/DOM."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-059",
     "level": "beginner",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Perintah pip apakah yang digunakan untuk menyimpan seluruh daftar dependensi library Python proyek ke dalam file teks?",
+    "topic": "Spatial Projection EPSG",
+    "questionType": "best-practice",
+    "question": "Sistem proyeksi manakah yang menjadi standar internasional untuk tile peta web interaktif (Google Maps, OSM, Leaflet, Mapbox)?\n\n```sql\n// Web Mapping Projection Standard:\n```",
+    "code": "// Web Mapping Projection Standard:",
     "options": {
-      "A": "pip freeze > requirements.txt",
-      "B": "pip save -all",
-      "C": "pip export packages.json",
-      "D": "pip lock"
+      "A": "EPSG:3857 (Web Mercator / Pseudo-Mercator)",
+      "B": "EPSG:4326 (Unprojected Plate Carree murni)",
+      "C": "EPSG:23830 (DGN95 Indonesia UTM Zone 48S)",
+      "D": "EPSG:32649 (WGS 84 UTM Zone 49N)"
     },
     "answer": "A",
     "explanation": {
-      "correct": "'pip freeze' mencetak semua paket yang terinstal beserta versinya secara presisi, yang dialihkan ke file requirements.txt untuk reproduktibilitas lingkungan.",
-      "A": "Opsi A benar karena merupakan perintah resmi freeze dependensi pip.",
-      "B": "Opsi B salah karena bukan opsi perintah pip.",
-      "C": "Opsi C salah karena bukan sintaks pip standar.",
-      "D": "Opsi D salah karena pip lock bukan perintah pip bawaan (itu milik pipenv)."
+      "correct": "EPSG:3857 (Web Mercator) adalah standar de facto untuk web tile maps karena memproyeksikan bumi ke dalam bidang datar persegi sempurna yang mudah dipotong menjadi grid tile berukuran 256x256 atau 512x512 pixel.",
+      "A": "Benar. EPSG:3857 adalah standar proyeksi tile peta web dunia.",
+      "B": "Salah. EPSG:4326 adalah koordinat elipsoid geografis (derajat), bukan proyeksi bidang datar tile web.",
+      "C": "Salah. UTM Zone 48S adalah proyeksi lokal regional Indonesia bagian barat.",
+      "D": "Salah. UTM Zone 49N adalah proyeksi lokal belahan bumi utara."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-060",
     "level": "beginner",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam Django REST Framework (DRF), komponen apakah yang bertugas mengonversi objek model database kompleks menjadi format JSON dan sebaliknya?",
+    "topic": "Spatial Queries Pagination",
+    "questionType": "best-practice",
+    "question": "Bagaimana cara terbaik membatasi jumlah data spasial yang dikembalikan ke web map saat pengguna melakukan pan/zoom?\n\n```sql\n-- Endpoint: GET /api/features?bbox=minX,minY,maxX,maxY\n```",
+    "code": "-- Endpoint: GET /api/features?bbox=minX,minY,maxX,maxY",
     "options": {
-      "A": "Serializer",
-      "B": "Viewset",
-      "C": "Router",
-      "D": "Middleware"
+      "A": "Hanya mengambil data yang berada di dalam Bounding Box tampilan layar (BBOX filter) menggunakan ST_MakeEnvelope",
+      "B": "Mengambil seluruh 1.000.000 baris tabel database ke frontend lalu memfilternya di browser",
+      "C": "Mengembalikan semua baris tetapi tanpa koordinat",
+      "D": "Mematikan fitur pan dan zoom di frontend"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Serializer di DRF menangani serialisasi data model ke tipe data Python/JSON serta memvalidasi data masukan sebelum disimpan kembali ke database.",
-      "A": "Opsi A benar karena Serializer mengontrol serialisasi dan validasi data DRF.",
-      "B": "Opsi B salah karena Viewset mengontrol logika penanganan HTTP request dan action.",
-      "C": "Opsi C salah karena Router secara otomatis mengonfigurasi pola URL untuk Viewset.",
-      "D": "Opsi D salah karena Middleware adalah pemrosesan request/response global."
+      "correct": "Teknik BBOX query (`WHERE ST_Intersects(geom, ST_MakeEnvelope(minX, minY, maxX, maxY, 4326))`) memastikan database hanya mengirimkan fitur yang saat itu benar-benar terlihat di layar pengguna, meminimalisir bandwidth dan CPU secara drastis.",
+      "A": "Benar. BBOX filter memanfaatkan indeks spasial dan hanya mentransfer data yang terlihat di layar.",
+      "B": "Salah. Mengunduh 1 juta baris ke browser akan membuat koneksi timeout dan browser crash.",
+      "C": "Salah. Data spasial tanpa koordinat tidak dapat dirender di peta.",
+      "D": "Salah. Mematikan pan/zoom merusak interaktivitas dasar peta web."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-061",
     "level": "beginner",
-    "topic": "PostgreSQL/MySQL",
-    "question": "Tipe database apakah PostgreSQL dan MySQL?",
+    "topic": "GeoJSON Validation",
+    "questionType": "best-practice",
+    "question": "Sebelum memproses file GeoJSON yang diunggah oleh pengguna ke server, apa langkah pengujian keamanan dan validasi terbaik?\n\n```javascript\n// Validasi upload GeoJSON di backend:\n```",
+    "code": "// Validasi upload GeoJSON di backend:",
     "options": {
-      "A": "RDBMS (Relational Database Management System)",
-      "B": "Graph Database",
-      "C": "Key-Value Store murni",
-      "D": "Document Database murni"
+      "A": "Memvalidasi skema JSON terhadap standar RFC 7946, membatasi ukuran file, dan memverifikasi batas koordinat valid (-180 s/d 180 lon, -90 s/d 90 lat)",
+      "B": "Langsung menyisipkan isi file ke string kueri database tanpa sanitasi",
+      "C": "Mengizinkan file berukuran tak terbatas tanpa batas kuota memori",
+      "D": "Hanya mengecek ekstensi nama file .geojson tanpa memeriksa isinya"
     },
     "answer": "A",
     "explanation": {
-      "correct": "PostgreSQL dan MySQL adalah sistem manajemen basis data relasional yang menyimpan data dalam tabel dengan baris dan kolom yang terikat oleh relasi skema.",
-      "A": "Opsi A benar karena keduanya adalah RDBMS terkemuka di dunia.",
-      "B": "Opsi B salah karena Graph Database (seperti Neo4j) berpusat pada node dan relasi graf.",
-      "C": "Opsi C salah karena Key-Value Store (seperti Redis) menyimpan pasangan kunci-nilai sederhana.",
-      "D": "Opsi D salah karena Document Database (seperti MongoDB) menyimpan dokumen JSON/BSON tanpa skema kaku."
+      "correct": "Validasi ketat skema RFC 7946 memastikan integritas data, mencegah serangan Denial of Service (DoS) dari file raksasa (Zip Bomb / GeoJSON raksasa), dan mencegah SQL Injection atau malformed geometry di database.",
+      "A": "Benar. Validasi skema, ukuran batas, dan range koordinat menjamin keamanan dan stabilitas server.",
+      "B": "Salah. Menempelkan data mentah langsung memicu kerentanan SQL Injection.",
+      "C": "Salah. File tak terbatas membuka celah serangan kehabisan memori server (OOM DoS).",
+      "D": "Salah. Ekstensi file sangat mudah dipalsukan."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-062",
     "level": "beginner",
-    "topic": "PostgreSQL/MySQL",
-    "question": "Tipe data khusus apakah di PostgreSQL yang sangat efisien untuk menyimpan dan mengindeks dokumen semi-terstruktur JSON biner (seperti properti atribut GeoJSON)?",
+    "topic": "Leaflet Attribution",
+    "questionType": "best-practice",
+    "question": "Mengapa menyertakan atribusi (attribution) hak cipta saat menggunakan tile OpenStreetMap atau CartoDB di Leaflet bersifat wajib?\n\n```javascript\n// Opsi attribution di L.tileLayer:\n```",
+    "code": "// Opsi attribution di L.tileLayer:",
     "options": {
-      "A": "JSONB",
-      "B": "TEXT",
-      "C": "VARCHAR(255)",
-      "D": "BLOB"
+      "A": "Merupakan syarat lisensi hukum (Open Data Commons / CC-BY-SA) dan menghormati kontributor komunitas pembuat data",
+      "B": "Jika attribution tidak ditulis, browser akan mematikan koneksi internet pengguna",
+      "C": "Server tile akan mengenakan denda finansial otomatis melalui cookie browser",
+      "D": "Leaflet akan melempar fatal exception di console"
     },
     "answer": "A",
     "explanation": {
-      "correct": "JSONB menyimpan data JSON dalam format biner terurai yang mendukung operasi kueri mendalam dan pengindeksan GIN (Generalized Inverted Index) berkecepatan tinggi.",
-      "A": "Opsi A benar karena JSONB adalah tipe data dokumen biner berperforma tinggi di PostgreSQL.",
-      "B": "Opsi B salah karena TEXT menyimpan string teks biasa yang harus di-parse ulang setiap kali kueri.",
-      "C": "Opsi C salah karena VARCHAR terbatas panjang karakter dan tidak memiliki operator JSON.",
-      "D": "Opsi D salah karena BLOB untuk data biner mentah tanpa pemahaman struktur JSON."
+      "correct": "Data OpenStreetMap dilisensikan di bawah ODbL yang secara legal mewajibkan atribusi pencantuman sumber data ('© OpenStreetMap contributors'). Menghapus atribusi melanggar lisensi penggunaan layanan gratis mereka.",
+      "A": "Benar. Wajib hukum sesuai lisensi lisensi ODbL / Creative Commons.",
+      "B": "Salah. Browser tidak mematikan koneksi internet karena hilangnya atribusi.",
+      "C": "Salah. Tidak ada mekanisme denda via cookie browser.",
+      "D": "Salah. Leaflet tidak melempar fatal exception, tetapi melanggar etika dan lisensi."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-063",
     "level": "beginner",
-    "topic": "PostgreSQL/MySQL",
-    "question": "Perintah SQL apakah yang digunakan untuk membuat database baru?",
+    "topic": "Spatial Table Vacuuming",
+    "questionType": "best-practice",
+    "question": "Mengapa tabel PostgreSQL/PostGIS yang sering mengalami operasi UPDATE/DELETE data spasial secara massal membutuhkan `VACUUM ANALYZE` secara berkala?\n\n```sql\n-- Pemeliharaan database spasial:\nVACUUM ANALYZE spatial_table;\n```",
+    "code": "-- Pemeliharaan database spasial:\nVACUUM ANALYZE spatial_table;",
     "options": {
-      "A": "CREATE DATABASE nama_db;",
-      "B": "MAKE DATABASE nama_db;",
-      "C": "NEW DATABASE nama_db;",
-      "D": "INIT DATABASE nama_db;"
+      "A": "Membersihkan dead tuples (bloat) dan memperbarui statistik sebaran spasial agar query planner memilih indeks GiST yang tepat",
+      "B": "Mengubah seluruh koordinat 2D menjadi 3D secara otomatis",
+      "C": "Menghapus seluruh tabel dan membuat ulang struktur dari nol",
+      "D": "Mengunci database secara permanen agar tidak bisa diakses hacker"
     },
     "answer": "A",
     "explanation": {
-      "correct": "CREATE DATABASE adalah sintaks DDL standar ANSI SQL untuk menginisialisasi database baru.",
-      "A": "Opsi A benar karena CREATE DATABASE adalah perintah resmi SQL.",
-      "B": "Opsi B salah karena bukan perintah SQL.",
-      "C": "Opsi C salah karena bukan perintah SQL.",
-      "D": "Opsi D salah karena bukan perintah SQL."
+      "correct": "PostgreSQL menggunakan MVCC di mana update/delete meninggalkan dead tuple. Tanpa VACUUM, indeks GiST membesar (bloat) dan lambat. ANALYZE memperbarui histogram statistik distribusi geometri sehingga perencana kueri mengambil indeks terbaik.",
+      "A": "Benar. Membersihkan ruang kosong (dead tuples) dan memperbarui statistik perencana kueri spasial.",
+      "B": "Salah. VACUUM tidak mengubah dimensi data koordinat.",
+      "C": "Salah. VACUUM tidak menghapus tabel.",
+      "D": "Salah. VACUUM adalah proses pemeliharaan rutin tanpa mengunci permanen."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-064",
     "level": "beginner",
-    "topic": "PostgreSQL/MySQL",
-    "question": "Perintah SQL apakah yang digunakan untuk menghapus tabel secara permanen beserta seluruh skema dan datanya?",
+    "topic": "Client-side Styling Separation",
+    "questionType": "best-practice",
+    "question": "Pendekatan manakah yang paling bersih (clean architecture) untuk mengatur style warna layer GeoJSON berdasarkan kategori propertinya di frontend?\n\n```javascript\n// Pemisahan konfigurasi styling kategori:\n```",
+    "code": "// Pemisahan konfigurasi styling kategori:",
     "options": {
-      "A": "DROP TABLE nama_tabel;",
-      "B": "DELETE TABLE nama_tabel;",
-      "C": "REMOVE TABLE nama_tabel;",
-      "D": "CLEAR TABLE nama_tabel;"
+      "A": "Mendefinisikan dictionary/peta warna terpisah (misal: COLOR_MAP = { RS: 'red', Sekolah: 'blue' }) dan mengaksesnya di fungsi style",
+      "B": "Menulis if-else bertingkat 50 baris di dalam file HTML langsung",
+      "C": "Menyimpan kode warna heksadesimal langsung di kolom database untuk setiap baris",
+      "D": "Menggunakan warna acak Math.random() setiap kali peta digeser"
     },
     "answer": "A",
     "explanation": {
-      "correct": "DROP TABLE adalah perintah DDL untuk membuang tabel dari skema database secara permanen.",
-      "A": "Opsi A benar karena DROP TABLE menghapus objek tabel seutuhnya.",
-      "B": "Opsi B salah karena DELETE hanya menghapus baris data (DML), bukan struktur tabel.",
-      "C": "Opsi C salah karena REMOVE bukan perintah SQL.",
-      "D": "Opsi D salah karena CLEAR bukan perintah SQL."
+      "correct": "Memisahkan aturan gaya ke dalam lookup object/dictionary (`COLOR_MAP`) menjaga kode tetap modular, mudah dikonfigurasi ulang (maintainable), dan tidak mencemari layer presentasi dengan hardcoded logic berlebih.",
+      "A": "Benar. Lookup dictionary memisahkan aturan bisnis styling dari fungsi render layer.",
+      "B": "Salah. If-else raksasa menyulitkan pengujian dan refactoring.",
+      "C": "Salah. Menyimpan styling di database mencampuradukkan data murni dengan representasi tampilan klien.",
+      "D": "Salah. Warna acak membuat visualisasi tidak konsisten dan membingungkan pengguna."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-065",
     "level": "beginner",
-    "topic": "PostgreSQL/MySQL",
-    "question": "Apa fungsi dari perintah SQL 'TRUNCATE TABLE nama_tabel;' dibandingkan 'DELETE FROM nama_tabel;'?",
+    "topic": "CRS / SRID Selection",
+    "questionType": "best-practice",
+    "question": "Jika Anda membangun aplikasi GIS khusus pemetaan kota DKI Jakarta dengan kebutuhan pengukuran luas persil tanah yang presisi hingga sentimeter, CRS manakah yang paling tepat?\n\n```sql\n// Pemilihan CRS untuk analisis bidang tanah di Jakarta:\n```",
+    "code": "// Pemilihan CRS untuk analisis bidang tanah di Jakarta:",
     "options": {
-      "A": "TRUNCATE mengosongkan seluruh isi tabel dengan sangat cepat melalui deallokasi halaman data tanpa memindai baris satu per satu (operasi DDL), sedangkan DELETE menghapus baris demi baris (DML)",
-      "B": "TRUNCATE menghapus struktur tabel dan kolomnya",
-      "C": "TRUNCATE hanya menghapus 1 baris pertama",
-      "D": "Keduanya memiliki kecepatan yang persis sama"
+      "A": "DGN95 / Indonesia TM-3 zone 48.2 (atau UTM Zone 48S / EPSG:32748)",
+      "B": "WGS 84 Unprojected (EPSG:4326)",
+      "C": "Web Mercator (EPSG:3857)",
+      "D": "Proyeksi Kutub Utara (EPSG:3413)"
     },
     "answer": "A",
     "explanation": {
-      "correct": "TRUNCATE adalah operasi DDL yang me-reset tabel dan counter auto-increment tanpa mencatat penghapusan setiap baris ke rollback log transaksi secara individual, menjadikannya jauh lebih cepat untuk pengosongan data massal.",
-      "A": "Opsi A benar karena membedakan efisiensi deallokasi halaman vs pemindaian baris bertransaksi.",
-      "B": "Opsi B salah karena struktur skema tabel tetap utuh.",
-      "C": "Opsi C salah karena TRUNCATE mengosongkan semua baris data tabel.",
-      "D": "Opsi D salah karena TRUNCATE jauh lebih cepat daripada DELETE tanpa WHERE."
+      "correct": "Untuk perhitungan jarak dan luas kadastral tanah yang akurat tanpa distorsi proyeksi global, wajib menggunakan sistem proyeksi conformal lokal terproyeksi planar seperti UTM Zone 48S (EPSG:32748) atau TM-3 BPN, yang memiliki satuan meter riil.",
+      "A": "Benar. Proyeksi grid lokal UTM Zone 48S meminimalisir distorsi skala untuk wilayah Jakarta.",
+      "B": "Salah. EPSG:4326 bersatuan derajat sudut dan tidak cocok untuk kalkulasi kadastral planar langsung.",
+      "C": "Salah. Web Mercator mengalami distorsi skala yang cukup signifikan di garis lintang tertentu.",
+      "D": "Salah. Proyeksi Kutub Utara tidak relevan untuk wilayah khatulistiwa Indonesia."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-066",
     "level": "beginner",
-    "topic": "PostgreSQL/MySQL",
-    "question": "Klausa SQL manakah yang digunakan untuk membatasi jumlah baris hasil query yang dikembalikan oleh server database (misal hanya 10 data pertama)?",
+    "topic": "Leaflet Responsive Map Viewport",
+    "questionType": "best-practice",
+    "question": "Saat ukuran layar browser berubah (misalnya resize jendela atau rotasi layar smartphone), method peta apa yang harus dipanggil agar Leaflet mengkalkulasi ulang ukuran view-nya?\n\n```javascript\nwindow.addEventListener(\"resize\", () => {\n  // Method apa yang perlu dipanggil pada instance map?\n  map.___();\n});\n```",
+    "code": "window.addEventListener(\"resize\", () => {\n  // Method apa yang perlu dipanggil pada instance map?\n  map.___();\n});",
     "options": {
-      "A": "LIMIT",
-      "B": "MAX",
-      "C": "TOP (hanya di PostgreSQL)",
-      "D": "RESTRICT"
+      "A": "invalidateSize",
+      "B": "recalculate",
+      "C": "updateViewport",
+      "D": "refreshBounds"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Klausa LIMIT (misal: SELECT * FROM points LIMIT 10) digunakan di PostgreSQL dan MySQL untuk membatasi jumlah record yang dikembalikan.",
-      "A": "Opsi A benar karena LIMIT adalah klausa pembatasan baris standar di PostgreSQL/MySQL.",
-      "B": "Opsi B salah karena MAX adalah fungsi agregat untuk mencari nilai tertinggi.",
-      "C": "Opsi C salah karena TOP adalah dialek Microsoft SQL Server, bukan PostgreSQL.",
-      "D": "Opsi D salah karena RESTRICT adalah opsi pada foreign key cascade."
+      "correct": "Method `map.invalidateSize()` memeriksa dimensi kontainer DOM saat ini dan memuat tile/merender ulang area yang baru terbuka, mencegah tampilan peta terpotong atau berwarna abu-abu saat container di-resize.",
+      "A": "Benar. invalidateSize() memerintahkan Leaflet membaca ulang ukuran container DOM.",
+      "B": "Salah. recalculate bukan method Leaflet.",
+      "C": "Salah. updateViewport bukan method resmi Leaflet.",
+      "D": "Salah. refreshBounds bukan method bawaan Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-067",
     "level": "beginner",
-    "topic": "PostgreSQL/MySQL",
-    "question": "Apa fungsi dari batasan 'NOT NULL' pada definisi kolom tabel database?",
+    "topic": "Spatial SQL Index Usage",
+    "questionType": "best-practice",
+    "question": "Untuk memeriksa keberadaan titik di dalam area poligon pada tabel berisi 500.000 poligon, penulisan kueri manakah yang paling optimal memanfaatkan indeks GiST?\n\n```sql\n-- Mencari poligon yang melingkupi titik p:\n```",
+    "code": "-- Mencari poligon yang melingkupi titik p:",
     "options": {
-      "A": "Memastikan bahwa kolom tersebut tidak boleh bernilai kosong (NULL) saat proses insert atau update data",
-      "B": "Membuat nilai kolom otomatis bernilai nol (0)",
-      "C": "Menjadikan kolom sebagai primary key otomatis",
-      "D": "Mengizinkan semua jenis karakter"
+      "A": "SELECT id FROM parcels WHERE geom && ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326) AND ST_Contains(geom, ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326));",
+      "B": "SELECT id FROM parcels WHERE ST_Distance(geom, ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326)) = 0;",
+      "C": "SELECT id FROM parcels WHERE geom::text LIKE '%106.8%';",
+      "D": "SELECT id FROM parcels ORDER BY id;"
     },
     "answer": "A",
     "explanation": {
-      "correct": "NOT NULL constraint mencegah penyimpanan nilai yang tidak terdefinisi (missing/null values) untuk menjamin kelengkapan data kolom.",
-      "A": "Opsi A benar karena menjamin integritas kehadiran data pada kolom.",
-      "B": "Opsi B salah karena nilai default harus ditentukan eksplisit dengan DEFAULT 0 jika ingin nol.",
-      "C": "Opsi C salah karena primary key membutuhkan kombinasi NOT NULL dan UNIQUE.",
-      "D": "Opsi D salah karena tipe data kolom yang membatasi karakter, bukan constraint NOT NULL."
+      "correct": "Menggunakan operator bounding box `&&` terlebih dahulu (atau fungsi `ST_Contains` yang secara internal sudah mengintegrasikan `&&`) menyaring 99.9% kandidat poligon secara instan melalui indeks GiST sebelum mengevaluasi kalkulasi geometrik eksak.",
+      "A": "Benar. Filter BBOX (&&) mengeliminasi sebagian besar poligon non-kandidat dengan kecepatan indeks O(log N).",
+      "B": "Salah. ST_Distance = 0 melakukan sequential scan penuh tanpa memanfaatkan indeks spasial secara optimal.",
+      "C": "Salah. Konversi ke text dengan LIKE merusak makna topologi spasial dan sangat lambat.",
+      "D": "Salah. Tidak melakukan penyaringan lokasi spasial sama sekali."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-068",
     "level": "beginner",
-    "topic": "PostgreSQL/MySQL",
-    "question": "Fungsi agregat SQL manakah yang digunakan untuk menghitung jumlah total baris rekaman data yang memenuhi kriteria query?",
+    "topic": "GeoJSON Layer ID & Keying",
+    "questionType": "best-practice",
+    "question": "Saat mengelola layer GeoJSON dinamis di frontend, mengapa setiap fitur GeoJSON sangat disarankan memiliki properti `id` unik pada level root feature (`feature.id`)?\n\n```javascript\n// Contoh: { type: \"Feature\", id: \"poi-101\", geometry: {...}, properties: {...} }\n```",
+    "code": "// Contoh: { type: \"Feature\", id: \"poi-101\", geometry: {...}, properties: {...} }",
     "options": {
-      "A": "COUNT()",
-      "B": "SUM()",
-      "C": "TOTAL()",
-      "D": "NUMBER()"
+      "A": "Mempermudah pembaruan state per fitur (seperti setFeatureState di vector tiles), caching efisien, dan manipulasi layer individual",
+      "B": "Jika feature tidak memiliki id, Leaflet akan menghapus data tersebut",
+      "C": "Browser tidak mengizinkan pengiriman JSON tanpa properti id",
+      "D": "Agar ukuran file menjadi lebih besar"
     },
     "answer": "A",
     "explanation": {
-      "correct": "COUNT(*) menghitung jumlah seluruh baris data yang dihasilkan oleh kueri.",
-      "A": "Opsi A benar karena COUNT adalah fungsi agregat penghitung baris standar SQL.",
-      "B": "Opsi B salah karena SUM menjumlahkan nilai numerik dari kolom.",
-      "C": "Opsi C salah karena TOTAL bukan fungsi agregat standar SQL (kecuali di SQLite).",
-      "D": "Opsi D salah karena NUMBER bukan fungsi SQL."
+      "correct": "Menyediakan `id` unik di level feature memungkinkan library peta memetakan layer secara instan (O(1) lookup), melakukan update atribut tanpa me-reload seluruh dataset, serta mengelola hover state secara reaktif.",
+      "A": "Benar. ID unik memfasilitasi pelacakan state dan seleksi fitur individual secara efisien.",
+      "B": "Salah. Leaflet tetap merender feature meskipun tanpa id, namun manipulasi selektif menjadi sulit.",
+      "C": "Salah. JSON standar tidak mewajibkan properti id.",
+      "D": "Salah. Menambah ukuran file bukan tujuan arsitektural."
     },
     "jobId": "fullstack-gis"
   },
@@ -1433,6 +1569,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-069",
     "level": "beginner",
     "topic": "PostgreSQL/MySQL",
+    "questionType": "concept",
     "question": "Klausa SQL manakah yang digunakan untuk mengurutkan hasil query dari nilai terbesar ke terkecil (menurun)?",
     "options": {
       "A": "ORDER BY kolom DESC",
@@ -1454,6 +1591,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-070",
     "level": "beginner",
     "topic": "PostgreSQL/MySQL",
+    "questionType": "concept",
     "question": "Dalam database PostgreSQL, utilitas GUI desktop resmi apakah yang paling populer digunakan untuk mengelola basis data dan query SQL?",
     "options": {
       "A": "pgAdmin (atau DBeaver)",
@@ -1475,6 +1613,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-071",
     "level": "beginner",
     "topic": "PostgreSQL/MySQL",
+    "questionType": "concept",
     "question": "Port jaringan TCP default apakah yang digunakan oleh database server PostgreSQL?",
     "options": {
       "A": "5432",
@@ -1496,6 +1635,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-072",
     "level": "beginner",
     "topic": "PostgreSQL/MySQL",
+    "questionType": "concept",
     "question": "Perintah CLI apakah yang digunakan untuk masuk ke console interaktif database PostgreSQL di terminal?",
     "options": {
       "A": "psql -U username -d database_name",
@@ -1517,6 +1657,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-073",
     "level": "beginner",
     "topic": "Python (FastAPI atau Django)",
+    "questionType": "concept",
     "question": "Dalam FastAPI, bagaimana cara mendefinisikan parameter query yang bersifat opsional (contoh: parameter batas pencarian radius)?",
     "options": {
       "A": "def get_layers(radius: Optional[float] = None):",
@@ -1538,6 +1679,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-074",
     "level": "beginner",
     "topic": "Python (FastAPI atau Django)",
+    "questionType": "concept",
     "question": "Apa fungsi dari file '__init__.py' di dalam sebuah folder pada proyek Python?",
     "options": {
       "A": "Menandai direktori tersebut sebagai package Python sehingga modul di dalamnya dapat diimpor oleh file lain",
@@ -1559,6 +1701,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-075",
     "level": "beginner",
     "topic": "PostgreSQL/MySQL",
+    "questionType": "concept",
     "question": "Perintah SQL apakah yang digunakan untuk menambahkan kolom baru ke dalam tabel yang sudah ada?",
     "options": {
       "A": "ALTER TABLE nama_tabel ADD COLUMN nama_kolom tipe_data;",
@@ -1580,6 +1723,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-076",
     "level": "beginner",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Perintah SQL apakah yang digunakan untuk mengaktifkan ekstensi spasial PostGIS di database PostgreSQL?",
     "options": {
       "A": "CREATE EXTENSION postgis;",
@@ -1601,6 +1745,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-077",
     "level": "beginner",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk mengonversi data geometri spasial menjadi format string teks JSON standar GeoJSON?",
     "options": {
       "A": "ST_AsGeoJSON(geom)",
@@ -1622,6 +1767,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-078",
     "level": "beginner",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk membuat objek geometri titik (Point) 2D dari koordinat bujur (longitude/X) dan lintang (latitude/Y)?",
     "options": {
       "A": "ST_Point(longitude, latitude) atau ST_MakePoint(longitude, latitude)",
@@ -1643,6 +1789,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-079",
     "level": "beginner",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk menetapkan kode SRID (Spatial Reference System Identifier, misal 4326 untuk WGS84) pada sebuah geometri tanpa mengubah koordinat fisiknya?",
     "options": {
       "A": "ST_SetSRID(geom, 4326)",
@@ -1664,6 +1811,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-080",
     "level": "beginner",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk mengubah (reproject) koordinat geometri dari satu sistem proyeksi ke sistem proyeksi lain (misal dari EPSG:4326 ke EPSG:3857)?",
     "options": {
       "A": "ST_Transform(geom, 3857)",
@@ -1685,6 +1833,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-081",
     "level": "beginner",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Tipe indeks apakah di PostgreSQL yang digunakan untuk mengindeks kolom geometri spasial PostGIS berbasis struktur R-Tree seimbang?",
     "options": {
       "A": "GIST (Generalized Search Tree)",
@@ -1706,6 +1855,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-082",
     "level": "beginner",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Format teks standar apakah yang digunakan untuk merepresentasikan bentuk geometri dalam string seperti 'POINT(106.8 -6.2)' atau 'LINESTRING(...) '?",
     "options": {
       "A": "WKT (Well-Known Text)",
@@ -1727,6 +1877,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-083",
     "level": "beginner",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang mengembalikan nilai luas area dari sebuah poligon (Polygon atau MultiPolygon)?",
     "options": {
       "A": "ST_Area(geom)",
@@ -1748,6 +1899,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-084",
     "level": "beginner",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk membuat zona penyangga (buffer zone) di sekitar geometri dengan jarak radius tertentu?",
     "options": {
       "A": "ST_Buffer(geom, radius)",
@@ -1769,6 +1921,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-085",
     "level": "beginner",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi predikat spasial PostGIS apakah yang mengembalikan boolean TRUE jika dua geometri saling bersentuhan atau beririsan (memiliki minimal satu titik ruang bersama)?",
     "options": {
       "A": "ST_Intersects(geomA, geomB)",
@@ -1790,6 +1943,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-086",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Apa perbedaan paling mendasar antara model data Vektor dan model data Raster dalam Sistem Informasi Geografis (GIS)?",
     "options": {
       "A": "Vektor merepresentasikan fitur diskrit menggunakan titik (Point), garis (LineString), dan poligon (Polygon), sedangkan Raster merepresentasikan data kontinu menggunakan kisi-kisi piksel/grid (seperti citra satelit atau DEM)",
@@ -1811,6 +1965,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-087",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Kode EPSG berapakah yang mewakili Geographic Coordinate System WGS84 standar global (lintang/bujur dalam satuan derajat desimal) yang digunakan oleh sistem GPS dunia?",
     "options": {
       "A": "EPSG:4326",
@@ -1832,6 +1987,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-088",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Kode EPSG berapakah yang digunakan oleh peta ubin online (Web Mercator) seperti Google Maps, OpenStreetMap, dan Mapbox dalam satuan meter planar?",
     "options": {
       "A": "EPSG:3857",
@@ -1853,6 +2009,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-089",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Mengapa proyeksi peta Web Mercator (EPSG:3857) mengalami distorsi luas yang sangat ekstrem di wilayah kutub (seperti Greenland yang tampak sebesar benua Afrika)?",
     "options": {
       "A": "Karena proyeksi Mercator mempertahankan bentuk sudut lokal (conformal projection) dengan merenggangkan skala jarak secara eksponensial ke arah kutub utara dan selatan",
@@ -1874,6 +2031,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-090",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Dalam sistem data spasial, apakah yang dimaksud dengan 'Bounding Box' (BBOX)?",
     "options": {
       "A": "Kotak persegi panjang minimum (didefinisikan oleh minX, minY, maxX, maxY) yang membungkus seluruh luasan suatu geometri spasial atau viewport peta",
@@ -1895,6 +2053,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-091",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Format file spasial vektor open standar berbasis JSON (JavaScript Object Notation) yang distandarisasi oleh IETF RFC 7946 adalah:",
     "options": {
       "A": "GeoJSON",
@@ -1916,6 +2075,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-092",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Dalam format GeoJSON, di dalam properti apakah informasi atribut non-spasial (seperti nama kota, populasi, provinsi) disimpan pada sebuah Feature?",
     "options": {
       "A": "\"properties\": { ... }",
@@ -1937,6 +2097,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-093",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Kumpulan ekstensi file apakah yang membentuk satu paket lengkap format spasial ESRI Shapefile (.shp) agar dapat dibuka dengan benar di software GIS?",
     "options": {
       "A": ".shp (geometri), .shx (indeks bentuk), dan .dbf (tabel atribut dBASE)",
@@ -1958,6 +2119,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-094",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Apakah yang dimaksud dengan 'DEM' (Digital Elevation Model) dalam Remote Sensing dan GIS?",
     "options": {
       "A": "Representasi model raster 3D yang menyimpan nilai ketinggian elevasi permukaan bumi pada setiap sel pikselnya",
@@ -1979,6 +2141,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-095",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Indeks vegetasi citra satelit paling populer apakah yang dihitung dari band Near-Infrared (NIR) dan Red dengan rumus: (NIR - Red) / (NIR + Red)?",
     "options": {
       "A": "NDVI (Normalized Difference Vegetation Index)",
@@ -2000,6 +2163,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-096",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Citra satelit optik penginderaan jauh bebas biaya (open access) apakah yang diluncurkan oleh European Space Agency (ESA) dengan resolusi spasial hingga 10 meter?",
     "options": {
       "A": "Sentinel-2",
@@ -2021,6 +2185,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-097",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Apakah perbedaan antara 'Resolusi Spasial' dan 'Resolusi Temporal' dalam penginderaan jauh satelit?",
     "options": {
       "A": "Resolusi Spasial mengacu pada ukuran area fisik bumi yang diwakili oleh satu sel piksel (misal 10m x 10m), sedangkan Resolusi Temporal mengacu pada frekuensi interval waktu satelit merekam area yang sama kembali (revisit time)",
@@ -2042,6 +2207,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-098",
     "level": "beginner",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk menghitung jarak minimum terpendek antara dua geometri spasial?",
     "options": {
       "A": "ST_Distance(geomA, geomB)",
@@ -2063,6 +2229,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-099",
     "level": "beginner",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Tipe geometri dasar OGC manakah yang merepresentasikan fitur garis yang menghubungkan dua titik atau lebih (seperti jalur sungai atau rel kereta api)?",
     "options": {
       "A": "LineString",
@@ -2084,6 +2251,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-100",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Software desktop GIS open-source paling populer di dunia yang sering digunakan analis untuk membuat, mengedit, dan memvisualisasikan layer peta spasial adalah:",
     "options": {
       "A": "QGIS",
@@ -2105,6 +2273,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-101",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Bagaimana cara menginisialisasi peta baru pada elemen HTML ber-id 'map' dan mengatur titik pusat serta tingkat zoom awal di Leaflet.js?",
     "options": {
       "A": "const map = L.map('map').setView([-6.2, 106.8], 13);",
@@ -2126,6 +2295,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-102",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Template URL format apakah yang digunakan oleh L.tileLayer di Leaflet untuk memuat ubin peta ubin raster (Slippy Map Tiles) dari server OpenStreetMap?",
     "options": {
       "A": "'https://tile.openstreetmap.org/{z}/{x}/{y}.png'",
@@ -2147,6 +2317,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-103",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Method Leaflet apakah yang digunakan untuk menambahkan marker titik pada koordinat tertentu dan menampilkannya di peta?",
     "options": {
       "A": "L.marker([lat, lng]).addTo(map);",
@@ -2168,6 +2339,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-104",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Bagaimana cara menampilkan kotak popup informasi teks atau HTML ketika sebuah marker di Leaflet diklik oleh pengguna?",
     "options": {
       "A": "marker.bindPopup('<b>Halo Dunia!</b>').openPopup();",
@@ -2189,6 +2361,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-105",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Method Leaflet apakah yang secara otomatis memuat dan merender sekumpulan data spasial berformat objek GeoJSON ke atas peta?",
     "options": {
       "A": "L.geoJSON(geojsonData).addTo(map);",
@@ -2210,6 +2383,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-106",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Bagaimana urutan pasangan koordinat di Leaflet.js dibandingkan dengan standar urutan koordinat GeoJSON (RFC 7946)?",
     "options": {
       "A": "Leaflet menggunakan urutan [Latitude, Longitude], sedangkan GeoJSON menggunakan urutan [Longitude, Latitude]",
@@ -2231,6 +2405,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-107",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Method peta Leaflet apakah yang digunakan untuk memusatkan dan memperbesar viewport peta secara otomatis agar seluruh geometri layer terlihat pas di layar?",
     "options": {
       "A": "map.fitBounds(layer.getBounds());",
@@ -2252,6 +2427,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-108",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Dalam OpenLayers, objek apakah yang bertanggung jawab mengelola proyeksi peta, titik pusat, dan tingkat resolusi zoom?",
     "options": {
       "A": "ol.View",
@@ -2273,6 +2449,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-109",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Dalam Leaflet, event listener apakah yang dipicu ketika pengguna selesai menggeser atau memindahkan tampilan peta?",
     "options": {
       "A": "map.on('moveend', function() { ... });",
@@ -2294,6 +2471,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-110",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Standar protokol web service OGC apakah yang digunakan untuk menyajikan data fitur spasial vektor mentah (dalam format GeoJSON atau GML) dari server GIS?",
     "options": {
       "A": "WFS (Web Feature Service)",
@@ -2315,6 +2493,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-111",
     "level": "beginner",
     "topic": "REST API & HTTP",
+    "questionType": "concept",
     "question": "Standar OGC Web Services apakah yang merender lapisan peta menjadi gambar raster statis (misal gambar PNG transparan) di sisi server sebelum dikirim ke klien?",
     "options": {
       "A": "WMS (Web Map Service)",
@@ -2336,6 +2515,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-112",
     "level": "beginner",
     "topic": "REST API & HTTP",
+    "questionType": "concept",
     "question": "MIME Type (Content-Type) resmi apakah yang digunakan untuk dokumen GeoJSON sesuai spesifikasi RFC 7946?",
     "options": {
       "A": "application/geo+json",
@@ -2357,6 +2537,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-113",
     "level": "beginner",
     "topic": "REST API & HTTP",
+    "questionType": "concept",
     "question": "Parameter query string apakah yang paling lazim digunakan oleh aplikasi peta web untuk meminta hanya fitur spasial yang berada di dalam area layar saat ini?",
     "options": {
       "A": "?bbox=minX,minY,maxX,maxY",
@@ -2378,6 +2559,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-114",
     "level": "beginner",
     "topic": "REST API & HTTP",
+    "questionType": "concept",
     "question": "HTTP Status Code manakah yang menandakan bahwa server menolak permintaan karena klien tidak memiliki wewenang atau hak akses ke layer peta tersebut (Forbidden)?",
     "options": {
       "A": "403 Forbidden",
@@ -2399,6 +2581,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-115",
     "level": "beginner",
     "topic": "REST API & HTTP",
+    "questionType": "concept",
     "question": "Dalam arsitektur REST API, apa karakteristik utama dari sifat 'Stateless'?",
     "options": {
       "A": "Setiap permintaan dari klien ke server harus memuat semua informasi yang diperlukan untuk memahami dan memproses request, tanpa mengandalkan sesi state yang disimpan di server",
@@ -2420,6 +2603,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-116",
     "level": "beginner",
     "topic": "REST API & HTTP",
+    "questionType": "concept",
     "question": "Metode HTTP apakah yang paling tepat digunakan untuk memperbarui seluruh atribut dari sebuah fitur poligon yang sudah ada di database?",
     "options": {
       "A": "PUT",
@@ -2441,6 +2625,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-117",
     "level": "beginner",
     "topic": "REST API & HTTP",
+    "questionType": "concept",
     "question": "Header HTTP apakah yang dikirimkan oleh browser pada request preflight CORS untuk menanyakan method apa saja yang diizinkan oleh server?",
     "options": {
       "A": "OPTIONS",
@@ -2462,6 +2647,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-118",
     "level": "beginner",
     "topic": "REST API & HTTP",
+    "questionType": "concept",
     "question": "Dalam protokol HTTP, apa perbedaan antara status code 502 Bad Gateway dan 504 Gateway Timeout?",
     "options": {
       "A": "502 menandakan server gateway/proxy menerima respons tidak valid dari server upstream, sedangkan 504 menandakan server gateway/proxy tidak menerima respons tepat waktu (timeout) dari server upstream",
@@ -2483,6 +2669,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-119",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Bagaimana cara menghapus layer marker tertentu dari peta di Leaflet.js?",
     "options": {
       "A": "map.removeLayer(marker); atau marker.remove();",
@@ -2504,6 +2691,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-120",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Class Leaflet apakah yang digunakan untuk membuat ikon kustom berbasis elemen HTML biasa (misal icon dengan CSS kustom atau teks badge)?",
     "options": {
       "A": "L.divIcon({ className: 'my-custom-icon', html: '...' })",
@@ -2525,6 +2713,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-121",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Class layer apakah di Leaflet yang digunakan untuk menggambar bentuk lingkaran geometris dengan radius fisik dalam satuan meter di peta?",
     "options": {
       "A": "L.circle([lat, lng], { radius: 500 })",
@@ -2546,6 +2735,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-122",
     "level": "beginner",
     "topic": "REST API & HTTP",
+    "questionType": "concept",
     "question": "Dalam format GeoJSON standar (RFC 7946), nilai tipe (type) apakah yang digunakan untuk membungkus kumpulan dari beberapa Feature spasial sekaligus?",
     "options": {
       "A": "\"FeatureCollection\"",
@@ -2567,6 +2757,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-123",
     "level": "beginner",
     "topic": "REST API & HTTP",
+    "questionType": "concept",
     "question": "Apakah batas nilai rentang koordinat Latitude (Lintang) dan Longitude (Bujur) yang valid pada sistem koordinat WGS84?",
     "options": {
       "A": "Latitude: -90 hingga +90 derajat; Longitude: -180 hingga +180 derajat",
@@ -2588,6 +2779,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-124",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Apa fungsi dari library plugin 'Leaflet.markercluster' pada peta web?",
     "options": {
       "A": "Mengelompokkan ribuan marker yang saling berdekatan menjadi satu lingkaran cluster penanda ringkasan untuk menjaga performa browser dan menghindari tumpukan visual yang berantakan",
@@ -2609,6 +2801,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-125",
     "level": "beginner",
     "topic": "REST API & HTTP",
+    "questionType": "concept",
     "question": "Dalam arsitektur API GIS, apakah yang dimaksud dengan 'Tile Server' (seperti GeoServer atau MapServer)?",
     "options": {
       "A": "Server backend yang bertugas merender atau memotong data geospasial menjadi kotak-kotak ubin peta (tiles) ukuran 256x256 piksel atau vektor MVT untuk disajikan cepat ke klien web",
@@ -2630,6 +2823,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-126",
     "level": "beginner",
     "topic": "Git & SDLC",
+    "questionType": "concept",
     "question": "Perintah Git manakah yang digunakan untuk merekam perubahan yang sudah di-stage ke dalam riwayat repositori lokal beserta pesan penjelasnya?",
     "options": {
       "A": "git commit -m \"Pesan commit deskriptif\"",
@@ -2651,6 +2845,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-127",
     "level": "beginner",
     "topic": "Git & SDLC",
+    "questionType": "concept",
     "question": "File apakah yang diletakkan di root repositori Git untuk memberi tahu Git file atau folder mana saja yang harus diabaikan (seperti node_modules, file .env, atau dataset citra raksasa)?",
     "options": {
       "A": ".gitignore",
@@ -2672,6 +2867,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-128",
     "level": "beginner",
     "topic": "Git & SDLC",
+    "questionType": "concept",
     "question": "Perintah Git manakah yang digunakan untuk mengambil perubahan terbaru dari remote repository dan langsung menggabungkannya ke branch lokal saat ini?",
     "options": {
       "A": "git pull",
@@ -2693,6 +2889,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-129",
     "level": "beginner",
     "topic": "Git & SDLC",
+    "questionType": "concept",
     "question": "Ekstensi Git apakah yang dirancang khusus untuk mengelola file biner berukuran sangat besar (seperti file dataset spasial GeoTIFF atau Shapefile ratusan megabyte) agar repositori Git tidak membengkak?",
     "options": {
       "A": "Git LFS (Large File Storage)",
@@ -2714,6 +2911,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-130",
     "level": "beginner",
     "topic": "Git & SDLC",
+    "questionType": "concept",
     "question": "Tahapan apakah dalam CI/CD (Continuous Integration / Continuous Deployment) pipeline yang bertugas menjalankan unit test dan linting secara otomatis setiap kali ada kode baru di-push?",
     "options": {
       "A": "Continuous Integration (CI)",
@@ -2735,6 +2933,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-131",
     "level": "beginner",
     "topic": "Web Performance",
+    "questionType": "concept",
     "question": "Teknik optimasi web apakah yang menunda pemuatan gambar ubin peta atau komponen berat hingga benar-benar mendekati area pandang (viewport) pengguna?",
     "options": {
       "A": "Lazy Loading",
@@ -2756,6 +2955,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-132",
     "level": "beginner",
     "topic": "Web Performance",
+    "questionType": "concept",
     "question": "Mengapa file JavaScript dan CSS produksi di aplikasi web GIS selalu melalui proses Minifikasi (Minification) dan Bundling?",
     "options": {
       "A": "Untuk menghapus spasi, baris baru, komentar, dan memperpendek nama variabel sehingga ukuran file berkurang drastis dan mempercepat download di jaringan",
@@ -2777,6 +2977,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-133",
     "level": "beginner",
     "topic": "Web Performance",
+    "questionType": "concept",
     "question": "Header HTTP apakah yang digunakan oleh server tile peta untuk memberi tahu browser bahwa ubin peta statis dapat disimpan di cache lokal selama satu bulan?",
     "options": {
       "A": "Cache-Control: public, max-age=2592000",
@@ -2798,6 +2999,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-134",
     "level": "beginner",
     "topic": "Web Performance",
+    "questionType": "concept",
     "question": "Algoritma kompresi teks modern apakah yang didukung oleh browser dan server web modern yang memberikan rasio kompresi data JSON/JS lebih tinggi daripada Gzip?",
     "options": {
       "A": "Brotli (br)",
@@ -2819,6 +3021,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-135",
     "level": "beginner",
     "topic": "Web Performance",
+    "questionType": "concept",
     "question": "Format gambar citra raster modern apakah yang menyediakan kompresi superior (baik lossy maupun lossless) untuk ubin peta dibandingkan format PNG dan JPEG tradisional?",
     "options": {
       "A": "WebP (atau AVIF)",
@@ -2840,6 +3043,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-136",
     "level": "beginner",
     "topic": "HTML & CSS",
+    "questionType": "concept",
     "question": "Satuan CSS relatif apakah yang proporsional terhadap ukuran font (font-size) dari elemen root dokumen (tag <html>)?",
     "options": {
       "A": "rem (Root EM)",
@@ -2861,6 +3065,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-137",
     "level": "beginner",
     "topic": "JavaScript/TypeScript",
+    "questionType": "concept",
     "question": "Metode penanganan event (event handling) di mana satu event listener dipasang pada elemen parent untuk menangani event dari banyak elemen child menggunakan event bubbling disebut:",
     "options": {
       "A": "Event Delegation",
@@ -2882,6 +3087,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-138",
     "level": "beginner",
     "topic": "React atau Vue",
+    "questionType": "concept",
     "question": "Dalam arsitektur React, apakah yang dimaksud dengan komponen 'Uncontrolled Component'?",
     "options": {
       "A": "Komponen form di mana data input dikelola langsung oleh DOM itu sendiri menggunakan Ref, bukan dikontrol oleh state React",
@@ -2903,6 +3109,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-139",
     "level": "beginner",
     "topic": "Node.js",
+    "questionType": "concept",
     "question": "Apa fungsi dari method 'process.exit(0)' di Node.js?",
     "options": {
       "A": "Mengakhiri eksekusi proses Node.js secara langsung dengan kode status sukses (0)",
@@ -2924,6 +3131,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-140",
     "level": "beginner",
     "topic": "Python (FastAPI atau Django)",
+    "questionType": "concept",
     "question": "Tipe data bawaan Python apakah yang bersifat berurutan (ordered), dapat diubah (mutable), dan ditulis menggunakan tanda kurung siku []?",
     "options": {
       "A": "list",
@@ -2945,6 +3153,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-141",
     "level": "beginner",
     "topic": "PostgreSQL/MySQL",
+    "questionType": "concept",
     "question": "Perintah SQL apakah yang digunakan untuk membatalkan seluruh perubahan yang dilakukan di dalam transaksi database yang sedang berjalan?",
     "options": {
       "A": "ROLLBACK;",
@@ -2966,6 +3175,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-142",
     "level": "beginner",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Tipe data PostGIS apakah yang digunakan untuk merepresentasikan data spasial dalam sistem koordinat bola bumi bulat (spheroid/ellipsoidal) dengan perhitungan jarak otomatis dalam satuan meter?",
     "options": {
       "A": "geography",
@@ -2987,6 +3197,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-143",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Sistem Satelit Navigasi Global (GNSS) milik Amerika Serikat yang paling dikenal luas oleh masyarakat dunia adalah:",
     "options": {
       "A": "GPS (Global Positioning System)",
@@ -3008,6 +3219,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-144",
     "level": "beginner",
     "topic": "Leaflet.js / OpenLayers",
+    "questionType": "concept",
     "question": "Dalam Leaflet, opsi apakah pada L.tileLayer yang wajib diisi untuk memberikan atribusi hak cipta data peta (misal kredit OpenStreetMap)?",
     "options": {
       "A": "attribution: '&copy; OpenStreetMap contributors'",
@@ -3029,6 +3241,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-145",
     "level": "beginner",
     "topic": "REST API & HTTP",
+    "questionType": "concept",
     "question": "Dalam protokol HTTP, apa perbedaan antara URL dan URI?",
     "options": {
       "A": "URI (Uniform Resource Identifier) adalah pengidentifikasi abstrak untuk sebuah resource, sedangkan URL (Uniform Resource Locator) adalah jenis URI spesifik yang juga memberitahukan cara/lokasi mengaksesnya (seperti https://...)",
@@ -3050,6 +3263,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-146",
     "level": "beginner",
     "topic": "Git & SDLC",
+    "questionType": "concept",
     "question": "Perintah Git manakah yang digunakan untuk menampilkan riwayat log commit secara ringkas dalam satu baris per commit?",
     "options": {
       "A": "git log --oneline",
@@ -3071,6 +3285,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-147",
     "level": "beginner",
     "topic": "Web Performance",
+    "questionType": "concept",
     "question": "Metrik performa web modern (Core Web Vitals) apakah yang mengukur waktu yang dibutuhkan untuk merender elemen konten visual terbesar di layar pengguna?",
     "options": {
       "A": "LCP (Largest Contentful Paint)",
@@ -3092,6 +3307,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-148",
     "level": "beginner",
     "topic": "HTML & CSS",
+    "questionType": "concept",
     "question": "Dalam CSS Box Model, urutan layer box dari lapisan paling dalam ke lapisan paling luar adalah:",
     "options": {
       "A": "Content -> Padding -> Border -> Margin",
@@ -3113,6 +3329,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-149",
     "level": "beginner",
     "topic": "JavaScript/TypeScript",
+    "questionType": "concept",
     "question": "Method JavaScript apakah yang digunakan untuk menjadwalkan eksekusi sebuah fungsi tepat satu kali setelah batas waktu delay milidetik tertentu?",
     "options": {
       "A": "setTimeout(callback, delay)",
@@ -3134,6 +3351,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-150",
     "level": "beginner",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Organisasi konsorsium internasional nirlaba apakah yang menetapkan standar terbuka untuk interoperabilitas data dan layanan geospasial di seluruh dunia (seperti standar WMS, WFS, WKT, dan GeoTIFF)?",
     "options": {
       "A": "OGC (Open Geospatial Consortium)",
@@ -3154,1890 +3372,2070 @@ export const GIS_QUESTIONS: Question[] = [
   {
     "id": "GIS-151",
     "level": "intermediate",
-    "topic": "HTML & CSS",
-    "question": "Bagaimana cara mengisolasi konteks penumpukan (stacking context) pada container peta HTML agar popup dan marker di dalamnya tidak bocor atau tertutup oleh navigasi fixed header luar?",
+    "topic": "Turf.js Spatial Analysis",
+    "questionType": "output",
+    "question": "Apa output dari fungsi turf.booleanPointInPolygon berikut?\n\n```javascript\nconst pt = turf.point([106.8272, -6.1754]); // Titik Monas\nconst poly = turf.polygon([[ \n  [106.82, -6.18], [106.84, -6.18], [106.84, -6.17], [106.82, -6.17], [106.82, -6.18] \n]]);\nconsole.log(turf.booleanPointInPolygon(pt, poly));\n```",
+    "code": "const pt = turf.point([106.8272, -6.1754]); // Titik Monas\nconst poly = turf.polygon([[ \n  [106.82, -6.18], [106.84, -6.18], [106.84, -6.17], [106.82, -6.17], [106.82, -6.18] \n]]);\nconsole.log(turf.booleanPointInPolygon(pt, poly));",
     "options": {
-      "A": "Menerapkan properti 'isolation: isolate' atau 'position: relative; z-index: 0' pada elemen pembungkus peta",
-      "B": "Menghapus semua file CSS eksternal",
-      "C": "Menjadikan seluruh elemen HTML berposisi static",
-      "D": "Menggunakan tag <embed> untuk peta"
+      "A": "true",
+      "B": "false",
+      "C": "undefined",
+      "D": "null"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Properti 'isolation: isolate' membuat stacking context baru secara bersih tanpa efek samping, memastikan hierarki z-index di dalam elemen peta tidak bersaing dengan z-index di luar container.",
-      "A": "Opsi A benar karena isolation: isolate menciptakan root stacking context baru yang terisolasi.",
-      "B": "Opsi B salah karena menghapus CSS merusak tampilan antarmuka.",
-      "C": "Opsi C salah karena position static menonaktifkan z-index.",
-      "D": "Opsi D salah karena tag embed usang untuk web mapping modern."
+      "correct": "Titik Monas (106.8272, -6.1754) berada di dalam bounding box poligon [106.82 s/d 106.84 lon] dan [-6.18 s/d -6.17 lat]. Sehingga turf.booleanPointInPolygon mengembalikan true.",
+      "A": "Benar. Koordinat titik berada di dalam interior cincin koordinat poligon.",
+      "B": "Salah. Titik terletak di dalam poligon.",
+      "C": "Salah. Turf.js mengembalikan nilai boolean murni.",
+      "D": "Salah. Fungsi tidak mengembalikan nilai null."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-152",
     "level": "intermediate",
-    "topic": "HTML & CSS",
-    "question": "Dalam rendering grafis <canvas> 2D untuk data raster geospasial, mengapa gambar sering terlihat buram (blurry) pada layar resolusi tinggi (Retina Display) dan bagaimana solusinya?",
+    "topic": "Spatial SQL ST_Intersection",
+    "questionType": "output",
+    "question": "Apa geometri yang dihasilkan dari perpotongan dua poligon persegi berikut?\n\n```sql\nSELECT ST_AsText(ST_Intersection(\n  ST_GeomFromText('POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))'),\n  ST_GeomFromText('POLYGON((1 0, 3 0, 3 2, 1 2, 1 0))')\n));\n```",
+    "code": "SELECT ST_AsText(ST_Intersection(\n  ST_GeomFromText('POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))'),\n  ST_GeomFromText('POLYGON((1 0, 3 0, 3 2, 1 2, 1 0))')\n));",
     "options": {
-      "A": "Resolusi internal canvas harus dikalikan dengan window.devicePixelRatio dan di-scale kembali dengan CSS width/height",
-      "B": "Format canvas harus diubah menjadi file GIF",
-      "C": "GPU browser harus dimatikan secara paksa",
-      "D": "Browser harus di-zoom ke 500%"
+      "A": "POLYGON((1 0, 2 0, 2 2, 1 2, 1 0))",
+      "B": "POINT(1 1)",
+      "C": "LINESTRING(1 0, 2 2)",
+      "D": "GEOMETRYCOLLECTION EMPTY"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Layar Retina memiliki kerapatan piksel fisik lebih tinggi (devicePixelRatio >= 2). Canvas perlu mengatur canvas.width = cssWidth * dpr dan ctx.scale(dpr, dpr) agar setiap piksel fisik terpetakan tajam.",
-      "A": "Opsi A benar karena penyesuaian devicePixelRatio adalah standar rendering canvas tajam di layar HiDPI.",
-      "B": "Opsi B salah karena GIF hanya mendukung 256 warna dan bukan format canvas.",
-      "C": "Opsi C salah karena mematikan akselerasi GPU justru memperlambat performa render.",
-      "D": "Opsi D salah karena zoom manual merusak layout UI."
+      "correct": "Kedua poligon bertumpukan pada rentang X antara 1 dan 2, serta Y antara 0 dan 2. Hasil perpotongannya adalah poligon persegi panjang baru: POLYGON((1 0, 2 0, 2 2, 1 2, 1 0)).",
+      "A": "Benar. Irisan dua poligon yang overlap membentuk poligon baru.",
+      "B": "Salah. Irisan memiliki luas area dua dimensi, bukan single point.",
+      "C": "Salah. Irisan bukan berupa garis satu dimensi.",
+      "D": "Salah. Kedua geometri saling bertumpukan sehingga tidak empty."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-153",
     "level": "intermediate",
-    "topic": "HTML & CSS",
-    "question": "Fitur CSS Container Queries (@container) sangat berguna dalam komponen web GIS modular untuk:",
+    "topic": "Leaflet pointToLayer",
+    "questionType": "output",
+    "question": "Di Leaflet, apa elemen visual default yang dirender saat opsi pointToLayer mengembalikan L.circleMarker?\n\n```javascript\nconst layer = L.geoJSON(geojsonPoints, {\n  pointToLayer: (feature, latlng) => L.circleMarker(latlng, { radius: 8 })\n});\n```",
+    "code": "const layer = L.geoJSON(geojsonPoints, {\n  pointToLayer: (feature, latlng) => L.circleMarker(latlng, { radius: 8 })\n});",
     "options": {
-      "A": "Menerapkan gaya responsif pada widget layer atau legenda peta berdasarkan ukuran lebar container pembungkusnya sendiri, bukan berdasarkan lebar viewport layar global",
-      "B": "Menyimpan file GeoJSON ke dalam container Docker",
-      "C": "Menghubungkan container frontend ke database PostGIS",
-      "D": "Mengompresi data raster citra satelit"
+      "A": "Elemen lingkaran vektor SVG/Canvas yang ukurannya tetap dalam pixel di layar terlepas dari level zoom",
+      "B": "Gambar pin marker PNG standar yang membesar saat di-zoom",
+      "C": "Poligon persegi panjang 3D",
+      "D": "Teks label tanpa simbol grafis"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Container Queries (@container) memungkinkan widget GIS (seperti komponen legenda atau koordinat tracker) beradaptasi fleksibel baik saat diletakkan di sidebar sempit (300px) maupun di modal popup lebar (800px).",
-      "A": "Opsi A benar karena menjelaskan fungsi responsivitas berbasis ukuran container elemen.",
-      "B": "Opsi B salah karena CSS tidak berhubungan dengan Docker backend.",
-      "C": "Opsi C salah karena CSS tidak berkomunikasi langsung dengan database.",
-      "D": "Opsi D salah karena CSS tidak melakukan kompresi citra raster."
+      "correct": "L.circleMarker merender lingkaran berbasis piksel tetap di layar browser (radius: 8px). Ukurannya tidak berubah membesar/mengecil saat zoom peta berubah, berbeda dengan L.circle yang radiusnya dalam satuan meter.",
+      "A": "Benar. CircleMarker berukuran pixel konstan di layar dan dirender sebagai layer vektor.",
+      "B": "Salah. CircleMarker tidak menggunakan gambar icon pin PNG.",
+      "C": "Salah. Bentuk geometri yang dirender adalah lingkaran, bukan persegi panjang 3D.",
+      "D": "Salah. CircleMarker adalah simbol vektor grafis, bukan sekadar teks."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-154",
     "level": "intermediate",
-    "topic": "HTML & CSS",
-    "question": "Properti CSS apakah yang digunakan untuk mengaktifkan akselerasi perangkat keras GPU pada lapisan tile peta atau overlay animasi guna mencegah layout repaint di CPU?",
+    "topic": "Spatial SQL Aggregate ST_Union",
+    "questionType": "output",
+    "question": "Apa hasil dari ST_Union pada dua poligon yang bersentuhan pada sisinya berikut?\n\n```sql\nSELECT ST_AsText(ST_Union(\n  ST_GeomFromText('POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))'),\n  ST_GeomFromText('POLYGON((1 0, 2 0, 2 1, 1 1, 1 0))')\n));\n```",
+    "code": "SELECT ST_AsText(ST_Union(\n  ST_GeomFromText('POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))'),\n  ST_GeomFromText('POLYGON((1 0, 2 0, 2 1, 1 1, 1 0))')\n));",
     "options": {
-      "A": "transform: translateZ(0) atau will-change: transform",
-      "B": "display: gpu-accelerated",
-      "C": "render-engine: directx",
-      "D": "hardware-layer: true"
+      "A": "POLYGON((0 0, 2 0, 2 1, 0 1, 0 0))",
+      "B": "MULTIPOLYGON(((0 0, 1 0, 1 1, 0 1, 0 0)), ((1 0, 2 0, 2 1, 1 1, 1 0)))",
+      "C": "LINESTRING(1 0, 1 1)",
+      "D": "POINT(1 0.5)"
     },
     "answer": "A",
     "explanation": {
-      "correct": "translateZ(0) atau will-change: transform mempromosikan elemen DOM menjadi compositing layer tersendiri di memori VRAM GPU, sehingga animasi geser/zoom diproses oleh GPU tanpa memicu layout repaint CPU yang berat.",
-      "A": "Opsi A benar karena merupakan teknik standar promosi GPU layer di CSS.",
-      "B": "Opsi B salah karena bukan nilai properti CSS yang valid.",
-      "C": "Opsi C salah karena bukan sintaks CSS.",
-      "D": "Opsi D salah karena bukan properti CSS yang valid."
+      "correct": "Dua persegi satuan berdampingan yang berbagi garis sisi dari (1,0) ke (1,1) akan dilebur (dissolved) oleh ST_Union menjadi satu poligon persegi panjang berukuran 2x1.",
+      "A": "Benar. Sisi bersama dilebur menjadi poligon utuh berukuran 2x1.",
+      "B": "Salah. Karena keduanya bersentuhan pada sisi, ST_Union menyatukannya menjadi single polygon, bukan multipolygon.",
+      "C": "Salah. ST_Union menggabungkan seluruh area poligon, bukan hanya batas sisinya.",
+      "D": "Salah. Hasilnya adalah poligon 2D, bukan titik 0D."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-155",
     "level": "intermediate",
-    "topic": "HTML & CSS",
-    "question": "Bagaimana cara membuat efek blending visual (seperti Multiply atau Overlay) pada layer citra satelit di atas peta kontur topografi menggunakan CSS?",
+    "topic": "JavaScript Coordinate Reprojection with Proj4js",
+    "questionType": "output",
+    "question": "Apa output dari transformasi koordinat menggunakan proj4js berikut?\n\n```javascript\n// Proj4: EPSG:4326 to EPSG:3857 (Web Mercator)\nconst [x, y] = proj4(\"EPSG:4326\", \"EPSG:3857\", [0, 0]);\nconsole.log(`${Math.round(x)}, ${Math.round(y)}`);\n```",
+    "code": "// Proj4: EPSG:4326 to EPSG:3857 (Web Mercator)\nconst [x, y] = proj4(\"EPSG:4326\", \"EPSG:3857\", [0, 0]);\nconsole.log(`${Math.round(x)}, ${Math.round(y)}`);",
     "options": {
-      "A": "Menerapkan properti 'mix-blend-mode: multiply' pada elemen gambar layer satelit",
-      "B": "Menambahkan filter: grayscale(100%)",
-      "C": "Menggunakan display: blend",
-      "D": "Mengubah tag <img> menjadi <picture>"
+      "A": "0, 0",
+      "B": "100000, 100000",
+      "C": "20037508, 20037508",
+      "D": "NaN, NaN"
     },
     "answer": "A",
     "explanation": {
-      "correct": "mix-blend-mode menentukan bagaimana konten suatu elemen bercampur dengan konten elemen di bawahnya, sangat berguna untuk overlay peta tematik multi-layer di web GIS.",
-      "A": "Opsi A benar karena mix-blend-mode menghasilkan efek blending visual multi-layer.",
-      "B": "Opsi B salah karena grayscale hanya mengubah warna menjadi abu-abu tanpa blending tumpuk.",
-      "C": "Opsi C salah karena display: blend bukan sintaks CSS.",
-      "D": "Opsi D salah karena tag picture untuk art-direction responsif, bukan blending grafis."
+      "correct": "Titik (0, 0) geografis (pertemuan garis khatulistiwa dan meridian utama / Null Island) adalah titik origin (0, 0) pada proyeksi Web Mercator EPSG:3857.",
+      "A": "Benar. Origin (0, 0) pada WGS 84 tepat berada di origin (0, 0) Web Mercator.",
+      "B": "Salah. Koordinat titik pusat tidak digeser menjadi 100.000 meter.",
+      "C": "Salah. 20037508 meter adalah batas maksimum sumbu X/Y di kutub/antimeridian.",
+      "D": "Salah. Transformasi koordinat valid dan menghasilkan angka numerik."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-156",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Bagaimanakah arsitektur Event Loop di JavaScript membedakan eksekusi tugas antara 'Microtask Queue' (Promise.then, queueMicrotask) dan 'Macrotask Queue' (setTimeout, setInterval, I/O)?",
+    "topic": "Spatial SQL ST_Buffer",
+    "questionType": "output",
+    "question": "Apa tipe geometri yang dihasilkan oleh ST_Buffer pada sebuah titik (Point)?\n\n```sql\nSELECT ST_GeometryType(ST_Buffer(ST_MakePoint(100, 0), 10));\n```",
+    "code": "SELECT ST_GeometryType(ST_Buffer(ST_MakePoint(100, 0), 10));",
     "options": {
-      "A": "Seluruh antrean Microtask selalu dieksekusi sampai tuntas (drained) tepat setelah call stack kosong dan SEBELUM browser mengambil Macrotask berikutnya atau melakukan rendering layar",
-      "B": "Macrotask selalu dieksekusi lebih dulu daripada Microtask",
-      "C": "Microtask dan Macrotask dieksekusi secara acak",
-      "D": "Microtask hanya berjalan di Web Workers terpisah"
+      "A": "ST_Polygon",
+      "B": "ST_Point",
+      "C": "ST_MultiPoint",
+      "D": "ST_LineString"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Aturan Event Loop menentukan prioritas: setelah satu macrotask selesai dieksekusi dan stack kosong, runtime akan menghabiskan seluruh antrean microtasks sebelum melanjutkan ke macrotask berikutnya atau me-repaint layar.",
-      "A": "Opsi A benar karena merangkum prioritas absolut Microtask queue di Event Loop.",
-      "B": "Opsi B salah karena Microtask memiliki prioritas lebih tinggi daripada Macrotask.",
-      "C": "Opsi C salah karena urutan eksekusi Event Loop bersifat deterministik.",
-      "D": "Opsi D salah karena Microtask berjalan di thread JavaScript utama."
+      "correct": "Operasi buffer pada objek berdimensi apa pun (titik, garis, atau poligon) selalu menghasilkan area bidang tertutup dua dimensi, yaitu tipe `ST_Polygon`.",
+      "A": "Benar. Buffer memperluas geometri menjadi area poligon tertutup.",
+      "B": "Salah. Buffer menghasilkan area, bukan titik.",
+      "C": "Salah. Hasilnya bukan kumpulan titik diskrit.",
+      "D": "Salah. Buffer menghasilkan poligon berongga/padat, bukan garis."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-157",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Mengapa Web Workers sangat penting digunakan saat melakukan analisis geospasial berat (seperti buffering poligon kompleks atau kalkulasi Delaunay triangulation) di browser?",
+    "topic": "Leaflet LayerGroup vs FeatureGroup",
+    "questionType": "output",
+    "question": "Apa keunggulan utama `L.featureGroup` dibandingkan `L.layerGroup` saat ingin melakukan zoom ke seluruh layer?\n\n```javascript\nconst fg = L.featureGroup([marker1, marker2]).addTo(map);\nmap.fitBounds(fg.getBounds());\n```",
+    "code": "const fg = L.featureGroup([marker1, marker2]).addTo(map);\nmap.fitBounds(fg.getBounds());",
     "options": {
-      "A": "Web Workers mengeksekusi komputasi berat di thread latar belakang terpisah, sehingga tidak memblokir Main Thread dan UI peta tetap responsif tanpa mengalami frame freeze (60 FPS)",
-      "B": "Web Workers dapat memanipulasi elemen DOM secara langsung tanpa batas",
-      "C": "Web Workers otomatis mempercepat koneksi Wi-Fi",
-      "D": "Web Workers menonaktifkan memori garbage collection"
+      "A": "L.featureGroup menyediakan method getBounds() dan event handling gabungan, sedangkan L.layerGroup tidak memiliki getBounds()",
+      "B": "L.featureGroup mematikan rendering WebGL",
+      "C": "L.layerGroup tidak bisa menambahkan marker",
+      "D": "L.featureGroup hanya bekerja pada sistem operasi Android"
     },
     "answer": "A",
     "explanation": {
-      "correct": "JavaScript browser bersifat single-threaded. Komputasi CPU-bound berat di main thread membekukan animasi dan interaksi drag/zoom peta. Web Workers memindahkan komputasi tersebut ke thread OS independen.",
-      "A": "Opsi A benar karena membebaskan Main Thread dari komputasi spasial berat.",
-      "B": "Opsi B salah karena Web Workers tidak memiliki akses langsung ke DOM tree browser.",
-      "C": "Opsi C salah karena tidak mengubah kecepatan transmisi jaringan fisik.",
-      "D": "Opsi D salah karena GC tetap berjalan normal di setiap context worker."
+      "correct": "`L.featureGroup` memperluas `L.layerGroup` dengan menambahkan kemampuan penghitungan bounding box (`getBounds()`) dan event propagation terpusat (klik pada layer anak otomatis terpicu pada featureGroup).",
+      "A": "Benar. featureGroup memiliki method getBounds() yang esensial untuk map.fitBounds().",
+      "B": "Salah. featureGroup tidak berhubungan dengan WebGL internal.",
+      "C": "Salah. L.layerGroup dapat menambahkan marker dan layer apa saja.",
+      "D": "Salah. Leaflet adalah library browser yang kompatibel lintas platform."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-158",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Apa perbedaan mendasar antara Promise.all() dan Promise.allSettled() saat memuat beberapa layer data spasial secara paralel?",
+    "topic": "PostGIS ST_Transform",
+    "questionType": "output",
+    "question": "Berapa SRID hasil transformasi geometri berikut?\n\n```sql\nSELECT ST_SRID(ST_Transform(ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326), 3857));\n```",
+    "code": "SELECT ST_SRID(ST_Transform(ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326), 3857));",
     "options": {
-      "A": "Promise.all() akan langsung reject seketika jika ada satu saja layer yang gagal dimuat (fail-fast), sedangkan Promise.allSettled() selalu menunggu seluruh permintaan selesai dan mengembalikan status (fulfilled/rejected) untuk setiap layer",
-      "B": "Promise.allSettled() menghapus error secara otomatis",
-      "C": "Promise.all() hanya bisa memuat maksimal 2 request",
-      "D": "Keduanya persis sama tanpa perbedaan perilaku"
+      "A": "3857",
+      "B": "4326",
+      "C": "0",
+      "D": "NULL"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Untuk peta web dengan banyak layer independen, Promise.allSettled() jauh lebih ramah pengguna karena kegagalan satu layer cuaca tidak menggagalkan penampilan layer batas wilayah lainnya.",
-      "A": "Opsi A benar karena membedakan mekanisme short-circuit reject vs status pelaporan komprehensif tiap promise.",
-      "B": "Opsi B salah karena detail alasan rejection tetap tersimpan dalam objek status.",
-      "C": "Opsi C salah karena Promise.all mendukung array iterabel tak terbatas.",
-      "D": "Opsi D salah karena penanganan kegagalan parsial keduanya bertolak belakang."
+      "correct": "Fungsi `ST_Transform(geom, target_srid)` mereproyeksi koordinat geometri dan secara otomatis memperbarui metadata SRID-nya menjadi SRID target, yaitu 3857.",
+      "A": "Benar. Geometri hasil transformasi memiliki SRID target 3857.",
+      "B": "Salah. 4326 adalah SRID asal sebelum transformasi.",
+      "C": "Salah. ST_Transform menetapkan SRID target valid, bukan 0.",
+      "D": "Salah. SRID bernilai integer valid, bukan NULL."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-159",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Pustaka JavaScript open source berkecepatan tinggi apakah yang menjadi standar untuk spatial index 2D berbasis R-Tree di browser guna mencari titik terdekat (nearest neighbor) dan BBOX intersection?",
+    "topic": "JavaScript GeoJSON Bounding Box",
+    "questionType": "output",
+    "question": "Berapa indeks panjang array bbox pada FeatureCollection standar GeoJSON 2D?\n\n```javascript\nconst fc = {\n  type: \"FeatureCollection\",\n  bbox: [100.0, -10.0, 110.0, 5.0],\n  features: []\n};\nconsole.log(fc.bbox.length);\n```",
+    "code": "const fc = {\n  type: \"FeatureCollection\",\n  bbox: [100.0, -10.0, 110.0, 5.0],\n  features: []\n};\nconsole.log(fc.bbox.length);",
     "options": {
-      "A": "RBush (atau Flatbush)",
-      "B": "Lodash",
-      "C": "Moment.js",
-      "D": "Axios"
+      "A": "4",
+      "B": "2",
+      "C": "6",
+      "D": "8"
     },
     "answer": "A",
     "explanation": {
-      "correct": "RBush adalah library JavaScript 2D spatial index berbasis R-Tree seimbang yang sangat cepat untuk indexing puluhan ribu poligon atau titik di sisi frontend klien.",
-      "A": "Opsi A benar karena RBush adalah standar spatial index R-tree di JavaScript browser.",
-      "B": "Opsi B salah karena Lodash adalah utility library manipulasi data umum.",
-      "C": "Opsi C salah karena Moment.js adalah library tanggal yang sudah legacy.",
-      "D": "Opsi D salah karena Axios adalah HTTP client."
+      "correct": "Sesuai RFC 7946, array `bbox` 2D memiliki 4 elemen dengan urutan [minX, minY, maxX, maxY] (atau [minLon, minLat, maxLon, maxLat]).",
+      "A": "Benar. BBOX 2D memiliki 4 elemen [minX, minY, maxX, maxY].",
+      "B": "Salah. 2 hanya merepresentasikan satu titik koordinat.",
+      "C": "Salah. 6 adalah panjang untuk 3D bounding box [minX, minY, minZ, maxX, maxY, maxZ].",
+      "D": "Salah. Format standar GeoJSON tidak menggunakan 8 elemen."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-160",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Pustaka JavaScript modern apakah yang paling populer untuk melakukan analisis dan manipulasi geometri spasial (seperti buffer, area, distance, centroid) langsung di frontend berbasis format GeoJSON?",
+    "topic": "Spatial SQL ST_DWithin vs ST_Distance",
+    "questionType": "output",
+    "question": "Mengapa kueri menggunakan ST_DWithin dapat memanfaatkan indeks GiST sedangkan klausa 'ST_Distance(...) < N' sering kali tidak?\n\n```sql\n-- Query A: WHERE ST_DWithin(geom, target, 100)\n-- Query B: WHERE ST_Distance(geom, target) < 100\n```",
+    "code": "-- Query A: WHERE ST_DWithin(geom, target, 100)\n-- Query B: WHERE ST_Distance(geom, target) < 100",
     "options": {
-      "A": "Turf.js (@turf/turf)",
-      "B": "Chart.js",
-      "C": "D3.js murni",
-      "D": "Three.js"
+      "A": "ST_DWithin secara implisit menyertakan bounding box expansion operator '&&' yang dapat dicari oleh indeks GiST",
+      "B": "ST_Distance dilarang dijalankan di PostgreSQL",
+      "C": "ST_DWithin hanya bekerja pada tabel kosong",
+      "D": "Indeks GiST tidak mendukung angka 100"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Turf.js adalah pustaka analisis spasial modular berbasis GeoJSON terkemuka di ekosistem JavaScript (menyediakan turf.buffer, turf.area, turf.booleanPointInPolygon).",
-      "A": "Opsi A benar karena Turf.js adalah toolbox analisis spasial utama di JavaScript.",
-      "B": "Opsi B salah karena Chart.js adalah library diagram grafik bisnis.",
-      "C": "Opsi C salah karena D3.js berfokus pada data visualization umum.",
-      "D": "Opsi D salah karena Three.js berfokus pada 3D rendering WebGL."
+      "correct": "`ST_DWithin(A, B, dist)` otomatis mengevaluasi `A && ST_Expand(B, dist)` terlebih dahulu, memungkinkan PostgreSQL memfilter baris via indeks spasial sebelum kalkulasi jarak presisi dilakukan.",
+      "A": "Benar. ST_DWithin mengintegrasikan bounding box expand (&&) sehingga fully index-accelerated.",
+      "B": "Salah. ST_Distance adalah fungsi resmi PostGIS yang valid.",
+      "C": "Salah. ST_DWithin bekerja pada tabel dengan jutaan baris data.",
+      "D": "Salah. Indeks GiST mendukung rentang jarak angka desimal apa pun."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-161",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Dalam TypeScript, bagaimana cara mendefinisikan 'Discriminated Union' untuk membedakan tipe geometri GeoJSON secara aman (type-safe)?",
+    "topic": "Turf.js Distance Calculation",
+    "questionType": "output",
+    "question": "Satuan default apakah yang dikembalikan oleh fungsi `turf.distance(point1, point2)` jika tidak ada opsi units yang ditentukan?\n\n```javascript\nconst d = turf.distance(turf.point([106.8, -6.2]), turf.point([107.6, -6.9]));\n// Satuan apa yang dikembalikan d?\n```",
+    "code": "const d = turf.distance(turf.point([106.8, -6.2]), turf.point([107.6, -6.9]));\n// Satuan apa yang dikembalikan d?",
     "options": {
-      "A": "Menggunakan properti literal pembeda yang sama (seperti 'type: \"Point\"' vs 'type: \"Polygon\"') pada setiap tipe objek dalam union",
-      "B": "Menghubungkan tipe dengan tanda ampersand (&)",
-      "C": "Menggunakan keyword dynamic type",
-      "D": "Mengubah semua tipe menjadi any"
+      "A": "Kilometers",
+      "B": "Meters",
+      "C": "Miles",
+      "D": "Degrees"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Discriminated Union menggunakan properti diskriminator umum (misal geom.type). TypeScript compiler secara cerdas menyempitkan (narrow) tipe data koordinat di dalam blok switch(geom.type).",
-      "A": "Opsi A benar karena properti pembeda literal adalah mekanisme Discriminated Union TypeScript.",
-      "B": "Opsi B salah karena tanda & menghasilkan Intersection Type, bukan Union.",
-      "C": "Opsi C salah karena bukan fitur TypeScript.",
-      "D": "Opsi D salah karena any menghilangkan manfaat type checking compiler."
+      "correct": "Secara default, pustaka analisis spasial Turf.js mengembalikan jarak dalam satuan kilometer ('kilometers'), kecuali opsi units ditentukan (seperti `{ units: 'meters' }`).",
+      "A": "Benar. Default unit pada turf.distance adalah kilometers.",
+      "B": "Salah. Meter harus ditentukan secara eksplisit dengan { units: 'meters' }.",
+      "C": "Salah. Miles bukan default unit Turf.js.",
+      "D": "Salah. Turf.js menghitung jarak geosentris permukaan bumi, bukan derajat."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-162",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Apa fungsi dari 'Custom Type Guard' di TypeScript dengan return type 'pet is Fish' (misal: 'function isPoint(g: Geometry): g is Point')?",
+    "topic": "Leaflet GeoJSON Style Data-Driven",
+    "questionType": "output",
+    "question": "Warna apa yang akan diberikan pada poligon zona risiko berikut jika feature memiliki level = 3?\n\n```javascript\nfunction getRiskColor(level) {\n  return level >= 4 ? \"red\" : level >= 2 ? \"orange\" : \"green\";\n}\nconst style = { color: getRiskColor(3) };\nconsole.log(style.color);\n```",
+    "code": "function getRiskColor(level) {\n  return level >= 4 ? \"red\" : level >= 2 ? \"orange\" : \"green\";\n}\nconst style = { color: getRiskColor(3) };\nconsole.log(style.color);",
     "options": {
-      "A": "Memberitahu compiler TypeScript bahwa jika fungsi tersebut mengembalikan nilai true, tipe variabel 'g' di dalam blok kondisi tersebut secara pasti dipersempit menjadi 'Point'",
-      "B": "Membuat objek Point baru secara otomatis",
-      "C": "Menghapus properti poligon dari memori",
-      "D": "Memvalidasi koordinat melalui query database"
+      "A": "orange",
+      "B": "red",
+      "C": "green",
+      "D": "undefined"
     },
     "answer": "A",
     "explanation": {
-      "correct": "User-Defined Type Guards menggunakan predikat tipe 'param is Type' untuk memberikan kepastian tipe pada compiler pasca evaluasi runtime kondisional.",
-      "A": "Opsi A benar karena menjelaskan mekanisme type narrowing dengan custom type guard predicate.",
-      "B": "Opsi B salah karena fungsi guard hanya memeriksa tipe, bukan menginstansiasi objek.",
-      "C": "Opsi C salah karena tidak memodifikasi objek di memori.",
-      "D": "Opsi D salah karena type guard berjalan secara lokal di JavaScript runtime."
+      "correct": "level 3 < 4 (false), lalu 3 >= 2 (true). Nilai kembaliannya adalah 'orange'.",
+      "A": "Benar. Nilai 3 masuk ke dalam rentang [2, 4) sehingga menghasilkan warna 'orange'.",
+      "B": "Salah. Level 3 belum mencapai batas level 4.",
+      "C": "Salah. 'green' hanya diberikan untuk level < 2.",
+      "D": "Salah. Fungsi mengembalikan string warna valid."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-163",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Dalam pemrograman asynchronous, teknik apakah yang menunda eksekusi fungsi pencarian koordinat (geocoding) hingga pengguna berhenti mengetik selama jeda waktu tertentu (misal 300ms)?",
+    "topic": "PostGIS ST_ConvexHull",
+    "questionType": "output",
+    "question": "Apa output dari fungsi ST_ConvexHull pada sekumpulan titik?\n\n```sql\nSELECT ST_GeometryType(ST_ConvexHull(ST_Collect(geom))) FROM sensor_nodes;\n```",
+    "code": "SELECT ST_GeometryType(ST_ConvexHull(ST_Collect(geom))) FROM sensor_nodes;",
     "options": {
-      "A": "Debounce",
-      "B": "Throttle",
-      "C": "Currying",
-      "D": "Memoization"
+      "A": "ST_Polygon (selubung cembung terkecil yang membungkus semua titik)",
+      "B": "ST_Point",
+      "C": "ST_LineString lurus tak terhingga",
+      "D": "Raster Band"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Debouncing mengelompokkan panggilan beruntun yang cepat menjadi satu panggilan tunggal setelah masa jeda ketenangan (silence period) tercapai, mencegah spam request API ke geocoding server.",
-      "A": "Opsi A benar karena debounce menunda eksekusi hingga aksi berhenti sejenak.",
-      "B": "Opsi B salah karena throttle membatasi frekuensi eksekusi maksimal satu kali per interval waktu tetap.",
-      "C": "Opsi C salah karena currying adalah teknik transformasi fungsi multi-argumen menjadi fungsi berantai.",
-      "D": "Opsi D salah karena memoization adalah pencatatan cache hasil return berdasarkan argumen input."
+      "correct": "Convex Hull adalah poligon cembung terkecil (seperti karet gelang yang dilepaskan mengelilingi paku) yang membungkus seluruh titik di dalamnya, bertipe `ST_Polygon` (atau LineString jika collinear).",
+      "A": "Benar. Convex Hull membungkus sebaran titik menjadi poligon batas cembung terluar.",
+      "B": "Salah. Convex hull dari sebaran titik 2D menghasilkan poligon penutup.",
+      "C": "Salah. Hasilnya adalah poligon tertutup, bukan garis lurus terbuka.",
+      "D": "Salah. Convex hull adalah operasi vektor, bukan raster."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-164",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Apa perbedaan utama antara teknik 'Debounce' dan 'Throttle' pada event listener pergerakan peta (map move / zoom)?",
+    "topic": "Leaflet Event Target",
+    "questionType": "output",
+    "question": "Dalam event listener klik Leaflet, bagaimana cara mengakses objek layer marker yang sedang diklik?\n\n```javascript\nmarker.on(\"click\", function(e) {\n  // Bagaimana cara mengakses layer yang memicu event?\n  console.log(e.___.getLatLng());\n});\n```",
+    "code": "marker.on(\"click\", function(e) {\n  // Bagaimana cara mengakses layer yang memicu event?\n  console.log(e.___.getLatLng());\n});",
     "options": {
-      "A": "Debounce hanya mengeksekusi fungsi setelah event berhenti ditembakkan selama N milidetik, sedangkan Throttle mengeksekusi fungsi secara teratur maksimal satu kali setiap N milidetik selama event terus berlangsung",
-      "B": "Throttle hanya bekerja di malam hari",
-      "C": "Debounce menghapus semua event listener",
-      "D": "Keduanya persis sama tanpa perbedaan"
+      "A": "target",
+      "B": "source",
+      "C": "layerId",
+      "D": "domNode"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Throttle ideal untuk memperbarui koordinat kursor mouse saat bergerak (misal tiap 100ms), sedangkan Debounce ideal untuk memuat ulang data query API saat user selesai menggeser peta (moveend/pan stop).",
-      "A": "Opsi A benar karena membedakan penundaan pasca henti vs pembatasan frekuensi berkala.",
-      "B": "Opsi B salah karena tidak ada kaitan dengan waktu astronomi.",
-      "C": "Opsi C salah karena tidak mencabut listener.",
-      "D": "Opsi D salah karena interval eksekusinya berbeda secara fundamental."
+      "correct": "Objek event Leaflet (`LeafletEvent`) menyematkan referensi ke layer yang memancarkan event pada properti `e.target`.",
+      "A": "Benar. e.target adalah referensi langsung ke layer pemicu event.",
+      "B": "Salah. source bukan properti standar event Leaflet.",
+      "C": "Salah. layerId adalah integer internal Leaflet, bukan objek layer itu sendiri.",
+      "D": "Salah. domNode bukan properti event Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-165",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Konsep apakah dalam JavaScript di mana sebuah fungsi inner mempertahankan akses ke variabel-variabel di scope fungsi pembungkus luarnya bahkan setelah fungsi luar tersebut selesai dieksekusi?",
+    "topic": "Spatial SQL ST_Length",
+    "questionType": "output",
+    "question": "Apa hasil ST_Length untuk LINESTRING(0 0, 3 4) pada koordinat Cartesian?\n\n```sql\nSELECT ST_Length(ST_GeomFromText('LINESTRING(0 0, 3 4)'));\n```",
+    "code": "SELECT ST_Length(ST_GeomFromText('LINESTRING(0 0, 3 4)'));",
     "options": {
-      "A": "Closure",
-      "B": "Hoisting",
-      "C": "Recursion",
-      "D": "Polymorphism"
+      "A": "5",
+      "B": "7",
+      "C": "25",
+      "D": "12"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Closure terbentuk ketika fungsi inner menyimpan referensi leksikal (lexical environment) ke variabel scope luarnya, merupakan fondasi pabrik fungsi, enkapsulasi data private, dan custom hooks.",
-      "A": "Opsi A benar karena mendefinisikan mekanisme Closure di JavaScript.",
-      "B": "Opsi B salah karena hoisting adalah pengangkatan deklarasi variabel/fungsi ke atas scope saat kompilasi.",
-      "C": "Opsi C salah karena recursion adalah fungsi yang memanggil dirinya sendiri.",
-      "D": "Opsi D salah karena polymorphism adalah konsep OOP pemanfaatan antarmuka yang sama untuk berbagai tipe."
+      "correct": "Berdasarkan teorema Pythagoras: akar kuadrat dari ((3 - 0)^2 + (4 - 0)^2) = akar(9 + 16) = akar(25) = 5.",
+      "A": "Benar. Panjang hipotenusa segitiga 3-4-5 adalah 5.",
+      "B": "Salah. 7 adalah hasil penjumlahan langsung dx + dy.",
+      "C": "Salah. 25 adalah kuadrat panjang garis.",
+      "D": "Salah. 12 bukan nilai panjang Euclidean garis tersebut."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-166",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Tipe utilitas bawaan TypeScript apakah yang membuat seluruh properti dari sebuah interface FeatureProperties menjadi opsional (optional)?",
+    "topic": "Leaflet GeoJSON Custom Filter",
+    "questionType": "output",
+    "question": "Berapa jumlah fitur yang berhasil dirender ke peta pada kode berikut?\n\n```javascript\nconst data = {\n  type: \"FeatureCollection\",\n  features: [\n    { type: \"Feature\", properties: { active: true }, geometry: { type: \"Point\", coordinates: [0, 0] } },\n    { type: \"Feature\", properties: { active: false }, geometry: { type: \"Point\", coordinates: [1, 1] } },\n    { type: \"Feature\", properties: { active: true }, geometry: { type: \"Point\", coordinates: [2, 2] } }\n  ]\n};\nconst layer = L.geoJSON(data, { filter: f => f.properties.active });\nconsole.log(layer.getLayers().length);\n```",
+    "code": "const data = {\n  type: \"FeatureCollection\",\n  features: [\n    { type: \"Feature\", properties: { active: true }, geometry: { type: \"Point\", coordinates: [0, 0] } },\n    { type: \"Feature\", properties: { active: false }, geometry: { type: \"Point\", coordinates: [1, 1] } },\n    { type: \"Feature\", properties: { active: true }, geometry: { type: \"Point\", coordinates: [2, 2] } }\n  ]\n};\nconst layer = L.geoJSON(data, { filter: f => f.properties.active });\nconsole.log(layer.getLayers().length);",
     "options": {
-      "A": "Partial<T>",
-      "B": "Required<T>",
-      "C": "Readonly<T>",
-      "D": "Pick<T, K>"
+      "A": "2",
+      "B": "3",
+      "C": "1",
+      "D": "0"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Partial<T> mengubah semua atribut properti T menjadi opsional (ditambahkan tanda ?), sangat berguna untuk endpoint PATCH atau operasi update parsial.",
-      "A": "Opsi A benar karena Partial<T> mengubah seluruh properti menjadi opsional.",
-      "B": "Opsi B salah karena Required<T> justru mewajibkan seluruh properti.",
-      "C": "Opsi C salah karena Readonly<T> membekukan properti agar tidak dapat di-reassign.",
-      "D": "Opsi D salah karena Pick<T, K> memilih subset properti tertentu saja."
+      "correct": "Opsi filter hanya menyaring fitur dengan `f.properties.active === true`. Ada 2 fitur yang bernilai true, sehingga `layer.getLayers().length` bernilai 2.",
+      "A": "Benar. Fitur kedua disaring keluar karena active = false, menyisakan 2 fitur.",
+      "B": "Salah. 3 adalah total seluruh fitur tanpa filter.",
+      "C": "Salah. Ada 2 fitur aktif, bukan hanya 1.",
+      "D": "Salah. Fitur aktif berhasil dimuat."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-167",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Tipe utilitas TypeScript apakah yang memilih hanya beberapa properti tertentu dari suatu tipe (misal hanya mengambil 'id' dan 'coordinates' dari sebuah Feature)?",
+    "topic": "Spatial SQL ST_Disjoint",
+    "questionType": "output",
+    "question": "Apa arti nilai kembalian true dari ST_Disjoint(A, B)?\n\n```sql\nSELECT ST_Disjoint(geom_a, geom_b); -- mengembalikan true\n```",
+    "code": "SELECT ST_Disjoint(geom_a, geom_b); -- mengembalikan true",
     "options": {
-      "A": "Pick<T, K>",
-      "B": "Omit<T, K>",
-      "C": "Record<K, T>",
-      "D": "Exclude<T, U>"
+      "A": "Kedua geometri saling lepas sepenuhnya dan tidak berbagi titik temu apa pun",
+      "B": "Kedua geometri beririsan sebagian",
+      "C": "Geometri A berada di dalam geometri B",
+      "D": "Kedua geometri identik persis"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Pick<Feature, 'id' | 'geometry'> membuat tipe baru yang hanya terdiri dari properti yang dipilih dari tipe sumber.",
-      "A": "Opsi A benar karena Pick memilih properti yang ditentukan.",
-      "B": "Opsi B salah karena Omit justru mengecualikan/membuang properti yang ditentukan.",
-      "C": "Opsi C salah karena Record membuat tipe pemetaan key-value.",
-      "D": "Opsi D salah karena Exclude membuang tipe dari union."
+      "correct": "`ST_Disjoint` adalah kebalikan mutlak dari `ST_Intersects`. Mengembalikan true jika perpotongan kedua geometri adalah himpunan kosong (tidak bersentuhan sama sekali).",
+      "A": "Benar. Disjoint berarti saling lepas tanpa perpotongan ruang sama sekali.",
+      "B": "Salah. Jika beririsan, ST_Disjoint mengembalikan false.",
+      "C": "Salah. Kondisi di dalam didefinisikan oleh ST_Within / ST_Contains.",
+      "D": "Salah. Geometri identik dievaluasi oleh ST_Equals."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-168",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Metode penanganan memori browser apakah yang digunakan oleh library pemetaan untuk mencegah kebocoran memori (memory leak) dari objek referensi yang tidak lagi terpakai?",
+    "topic": "JavaScript Turf.js Buffer",
+    "questionType": "output",
+    "question": "Apa yang dihasilkan oleh turf.buffer pada sebuah Feature GeoJSON?\n\n```javascript\nconst buffered = turf.buffer(myPointFeature, 5, { units: \"kilometers\" });\nconsole.log(buffered.geometry.type);\n```",
+    "code": "const buffered = turf.buffer(myPointFeature, 5, { units: \"kilometers\" });\nconsole.log(buffered.geometry.type);",
     "options": {
-      "A": "WeakMap atau WeakSet",
-      "B": "Map biasa",
-      "C": "Array global",
-      "D": "window.cache"
+      "A": "Polygon",
+      "B": "Point",
+      "C": "LineString",
+      "D": "MultiPoint"
     },
     "answer": "A",
     "explanation": {
-      "correct": "WeakMap memegang referensi ke objek target secara lemah (weak reference). Jika objek target sudah tidak memiliki referensi aktif lain, objek tersebut bebas dibersihkan oleh Garbage Collector tanpa tertahan oleh WeakMap.",
-      "A": "Opsi A benar karena WeakMap mencegah memory leak dengan referensi lemah.",
-      "B": "Opsi B salah karena Map biasa memegang strong reference yang mencegah GC membersihkan objek.",
-      "C": "Opsi C salah karena Array global menahan objek selamanya di memori.",
-      "D": "Opsi D salah karena window.cache menahan referensi di global scope."
+      "correct": "Buffer sejauh 5 kilometer di sekitar titik akan menghasilkan poligon sirkular yang membungkus titik tersebut, sehingga bertipe 'Polygon'.",
+      "A": "Benar. turf.buffer menghasilkan geometri Polygon.",
+      "B": "Salah. Hasil buffer adalah bidang luasan, bukan Point.",
+      "C": "Salah. Buffer menghasilkan area tertutup, bukan LineString.",
+      "D": "Salah. Bukan berupa MultiPoint."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-169",
     "level": "intermediate",
-    "topic": "HTML & CSS",
-    "question": "Dalam format SVG untuk peta vektor web, atribut apakah yang menentukan sistem koordinat internal viewBox untuk penskalaan responsif?",
+    "topic": "Spatial SQL ST_Dump",
+    "questionType": "output",
+    "question": "Fungsi apa yang dilakukan oleh ST_Dump pada geometri bertipe MULTIPOLYGON?\n\n```sql\nSELECT (ST_Dump(multi_geom)).geom FROM multi_table;\n```",
+    "code": "SELECT (ST_Dump(multi_geom)).geom FROM multi_table;",
     "options": {
-      "A": "viewBox=\"minX minY width height\"",
-      "B": "coords=\"x y w h\"",
-      "C": "scale=\"auto\"",
-      "D": "bounds=\"0 0 100 100\""
+      "A": "Memecah geometri multi-bagian (MULTIPOLYGON) menjadi baris-baris poligon individual (POLYGON)",
+      "B": "Menghapus geometri dari database secara permanen",
+      "C": "Menyimpan geometri ke file teks .txt di server",
+      "D": "Mengonversi poligon menjadi format raster"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Atribut viewBox pada elemen <svg> mendefinisikan posisi dan dimensi sistem koordinat internal user space yang otomatis diskalakan mengikuti ukuran container CSS.",
-      "A": "Opsi A benar karena viewBox=\"minX minY width height\" adalah sintaks resmi W3C SVG.",
-      "B": "Opsi B salah karena bukan atribut SVG.",
-      "C": "Opsi C salah karena bukan atribut SVG standard.",
-      "D": "Opsi D salah karena bukan atribut SVG viewBox."
+      "correct": "`ST_Dump` mengembalikan set tipe data `geometry_dump` (path integer[] dan geom geometry) yang memecah komponen-komponen penyusun geometri multi-part menjadi baris-baris record terpisah.",
+      "A": "Benar. ST_Dump memecah multi-geometri menjadi single geometri individual per baris.",
+      "B": "Salah. ST_Dump tidak melakukan operasi penghapusan (DELETE).",
+      "C": "Salah. ST_Dump bekerja di memori SQL, bukan file dump teks.",
+      "D": "Salah. Konversi raster dilakukan oleh ST_AsRaster."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-170",
     "level": "intermediate",
-    "topic": "HTML & CSS",
-    "question": "Properti CSS apakah yang digunakan untuk mencegah elemen kontrol peta memicu seleksi teks biru saat pengguna melakukan double-click zoom pada peta?",
+    "topic": "Leaflet GeoJSON bringToFront",
+    "questionType": "output",
+    "question": "Apa fungsi dari pemanggilan `layer.bringToFront()` pada layer vektor poligon Leaflet?\n\n```javascript\npolygonLayer.bringToFront();\n```",
+    "code": "polygonLayer.bringToFront();",
     "options": {
-      "A": "user-select: none",
-      "B": "pointer-events: none",
-      "C": "touch-action: none",
-      "D": "cursor: default"
+      "A": "Menaikkan z-index visual layer sehingga poligon dirender di atas layer vektor lainnya",
+      "B": "Menghapus poligon dari peta",
+      "C": "Melakukan zoom in otomatis ke poligon",
+      "D": "Mengubah warna poligon menjadi transparan"
     },
     "answer": "A",
     "explanation": {
-      "correct": "user-select: none menonaktifkan kemampuan pengguna untuk menyorot teks pada kontrol peta, memberikan pengalaman pengguna layaknya aplikasi native.",
-      "A": "Opsi A benar karena user-select: none mencegah seleksi highlight teks.",
-      "B": "Opsi B salah karena pointer-events: none membuat elemen transparan terhadap semua klik mouse.",
-      "C": "Opsi C salah karena touch-action mengatur gesture sentuh layar.",
-      "D": "Opsi D salah karena cursor hanya mengatur bentuk kursor visual."
+      "correct": "Di Leaflet, `bringToFront()` menata ulang urutan elemen SVG/Canvas di DOM agar layer tersebut berada di tumpukan paling atas dan tidak tertutup layer poligon lain.",
+      "A": "Benar. bringToFront() menaikkan urutan visual layer ke tumpukan terdepan.",
+      "B": "Salah. bringToFront() tidak menghapus layer.",
+      "C": "Salah. Operasi zoom dilakukan oleh map.fitBounds(), bukan bringToFront.",
+      "D": "Salah. Opacity layer tidak dipengaruhi oleh bringToFront."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-171",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Objek browser API apakah yang digunakan untuk mengamati secara asynchronous perubahan ukuran dimensi elemen DOM container peta (misal saat sidebar dibuka atau ditutup) guna memanggil map.invalidateSize()?",
+    "topic": "Spatial SQL ST_NPoints",
+    "questionType": "output",
+    "question": "Berapa jumlah vertex (titik simpul) yang dikembalikan oleh ST_NPoints untuk segitiga tertutup berikut?\n\n```sql\nSELECT ST_NPoints(ST_GeomFromText('POLYGON((0 0, 4 0, 2 3, 0 0))'));\n```",
+    "code": "SELECT ST_NPoints(ST_GeomFromText('POLYGON((0 0, 4 0, 2 3, 0 0))'));",
     "options": {
-      "A": "ResizeObserver",
-      "B": "IntersectionObserver",
-      "C": "MutationObserver",
-      "D": "PerformanceObserver"
+      "A": "4",
+      "B": "3",
+      "C": "2",
+      "D": "6"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ResizeObserver memantau perubahan dimensi ukuran kotak batas elemen secara efisien dan memicu callback untuk merespons perubahan tata letak layout.",
-      "A": "Opsi A benar karena ResizeObserver mendeteksi perubahan ukuran elemen DOM.",
-      "B": "Opsi B salah karena IntersectionObserver memantau visibilitas elemen terhadap viewport (scrolling).",
-      "C": "Opsi C salah karena MutationObserver memantau penambahan/penghapusan node child DOM.",
-      "D": "Opsi D salah karena PerformanceObserver merekam metrik waktu performa browser."
+      "correct": "Meskipun segitiga memiliki 3 sudut, representasi cincin poligon OGC mewajibkan titik awal diulang di akhir untuk menutup geometri: (0,0), (4,0), (2,3), dan (0,0). Total ada 4 vertex simpul.",
+      "A": "Benar. Tiga titik sudut ditambah satu titik penutup sama dengan 4 vertex simpul.",
+      "B": "Salah. Poligon tertutup wajib memiliki vertex penutup sehingga berjumlah 4, bukan 3.",
+      "C": "Salah. Garis minimal membutuhkan 2 titik, poligon minimal 4 titik simpul.",
+      "D": "Salah. Tidak ada titik tambahan lainnya."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-172",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Objek browser API apakah yang digunakan untuk mendeteksi kapan container peta masuk ke dalam area viewport layar pengguna untuk memicu lazy loading pemuatan peta?",
+    "topic": "JavaScript Proj4 Definition",
+    "questionType": "output",
+    "question": "Format string definisi CRS apakah yang diawali dengan '+proj=utm +zone=48 +south +datum=WGS84'?\n\n```javascript\nconst def = \"+proj=utm +zone=48 +south +datum=WGS84 +units=m +no_defs\";\n```",
+    "code": "const def = \"+proj=utm +zone=48 +south +datum=WGS84 +units=m +no_defs\";",
     "options": {
-      "A": "IntersectionObserver",
-      "B": "ResizeObserver",
-      "C": "DimensionObserver",
-      "D": "VisibilitySensor"
+      "A": "Proj4 string",
+      "B": "WKT2",
+      "C": "GeoJSON",
+      "D": "KML"
     },
     "answer": "A",
     "explanation": {
-      "correct": "IntersectionObserver mendeteksi perpotongan (overlap) antara elemen target dan viewport browser secara non-blocking, sangat optimal untuk memicu pemuatan aset peta hanya saat digulir (scroll) ke pandangan.",
-      "A": "Opsi A benar karena IntersectionObserver adalah standar industri lazy loading berbasis posisi gulir.",
-      "B": "Opsi B salah karena ResizeObserver memantau ukuran dimensi kotak.",
-      "C": "Opsi C salah karena bukan API web standar.",
-      "D": "Opsi D salah karena bukan API browser bawaan."
+      "correct": "String dengan parameter berawalan tanda tambah (`+proj=...`) adalah sintaks format parameter Proj4 standar yang digunakan oleh library PROJ dan Proj4js.",
+      "A": "Benar. Format +key=value adalah sintaks resmi Proj4 parameter string.",
+      "B": "Salah. WKT2 menggunakan sintaks berbasis teks blok tanda kurung seperti PROJCRS[\"...\"]",
+      "C": "Salah. GeoJSON adalah format pertukaran data fitur, bukan string definisi proyeksi.",
+      "D": "Salah. KML adalah format XML buatan Google."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-173",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Dalam JavaScript modern, bagaimana cara membuat salinan mendalam (Deep Clone) dari objek GeoJSON bersarang tanpa kehilangan data tipe dasar secara native di browser modern dan Node.js 17+?",
+    "topic": "PostGIS ST_Simplify",
+    "questionType": "output",
+    "question": "Algoritma penyederhanaan garis apakah yang digunakan oleh fungsi `ST_Simplify(geom, tolerance)` di PostGIS?\n\n```sql\nSELECT ST_Simplify(geom, 0.001) FROM coastlines;\n```",
+    "code": "SELECT ST_Simplify(geom, 0.001) FROM coastlines;",
     "options": {
-      "A": "structuredClone(geojsonObj)",
-      "B": "JSON.parse(JSON.stringify(geojsonObj)) (dengan keterbatasan tipe Date/undefined)",
-      "C": "Object.assign({}, geojsonObj)",
-      "D": "Spread operator { ...geojsonObj }"
+      "A": "Douglas-Peucker",
+      "B": "Visvalingam-Whyatt",
+      "C": "Dijkstra",
+      "D": "A-Star"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Fungsi global structuredClone() adalah standar web modern untuk deep copy yang mendukung circular references, TypedArray, Map, Set, dan Date secara native tanpa hack serialisasi JSON.",
-      "A": "Opsi A benar karena structuredClone adalah fungsi standar deep clone native tercepat dan teraman.",
-      "B": "Opsi B salah karena trik JSON stringify lambat dan merusak tipe Date, RegExp, dan mengabaikan undefined.",
-      "C": "Opsi C salah karena Object.assign hanya melakukan shallow copy pada level pertama.",
-      "D": "Opsi D salah karena spread operator hanya melakukan shallow copy."
+      "correct": "Fungsi `ST_Simplify` di PostGIS menggunakan algoritma klasik Douglas-Peucker untuk mengurangi jumlah vertex pada garis/poligon berdasarkan batas toleransi jarak tegak lurus.",
+      "A": "Benar. ST_Simplify mengimplementasikan algoritma reduksi geometri Douglas-Peucker.",
+      "B": "Salah. Visvalingam-Whyatt berbasis luas area segitiga, bukan toleransi jarak default ST_Simplify.",
+      "C": "Salah. Dijkstra adalah algoritma routing graf jalur terpendek.",
+      "D": "Salah. A-Star adalah algoritma heuristic pathfinding."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-174",
     "level": "intermediate",
-    "topic": "JavaScript/TypeScript",
-    "question": "Format biner terstruktur apakah di JavaScript yang digunakan untuk menyimpan koordinat koordinat geometri mentah secara kompak di TypedArray (seperti Float64Array) untuk transfer cepat ke Web Workers?",
+    "topic": "Leaflet Polygon Area",
+    "questionType": "output",
+    "question": "Manakah metode Leaflet untuk membuat poligon dengan lubang (donut polygon)?\n\n```javascript\n// Format array koordinat poligon berlubang di Leaflet:\n```",
+    "code": "// Format array koordinat poligon berlubang di Leaflet:",
     "options": {
-      "A": "ArrayBuffer",
-      "B": "String JSON",
-      "C": "HTML String",
-      "D": "XML Document"
+      "A": "L.polygon([exteriorRingCoords, interiorHoleCoords])",
+      "B": "L.polygon(exteriorCoords).subtract(holeCoords)",
+      "C": "L.donut(exteriorCoords, holeCoords)",
+      "D": "Leaflet melarang poligon berlubang"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ArrayBuffer merepresentasikan buffer data biner mentah panjang tetap di memori, yang dapat ditransfer ke Web Workers menggunakan Transferable Objects dengan biaya komputasi nol (zero-copy memory transfer).",
-      "A": "Opsi A benar karena ArrayBuffer adalah fondasi TypedArray memori berkecepatan tinggi di JS.",
-      "B": "Opsi B salah karena string JSON memiliki overhead parsing teks yang besar.",
-      "C": "Opsi C salah karena bukan format biner spasial.",
-      "D": "Opsi D salah karena XML berbasis teks pohon verbose."
+      "correct": "Di Leaflet, poligon berlubang dibuat dengan memberikan array of LatLng arrays: elemen pertama adalah cincin luar (exterior ring), dan elemen-elemen berikutnya adalah cincin lubang dalam (interior hole rings).",
+      "A": "Benar. Array berindeks 0 adalah batas luar, dan indeks berikutnya adalah lubang.",
+      "B": "Salah. Tidak ada method subtract pada L.polygon.",
+      "C": "Salah. L.donut bukan class di Leaflet.",
+      "D": "Salah. Leaflet mendukung poligon berlubang multi-cincin."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-175",
     "level": "intermediate",
-    "topic": "HTML & CSS",
-    "question": "Properti CSS apakah yang digunakan untuk mengatur bagaimana browser harus menangani gestur cubit (pinch-to-zoom) dan geser (pan) pada layar sentuh perangkat mobile di atas container peta interaktif?",
+    "topic": "Spatial SQL ST_FlipCoordinates",
+    "questionType": "output",
+    "question": "Apa fungsi dari `ST_FlipCoordinates` di PostGIS?\n\n```sql\nSELECT ST_AsText(ST_FlipCoordinates(ST_GeomFromText('POINT(106 -6)')));\n```",
+    "code": "SELECT ST_AsText(ST_FlipCoordinates(ST_GeomFromText('POINT(106 -6)')));",
     "options": {
-      "A": "touch-action: none (atau touch-action: pan-x pan-y)",
-      "B": "pointer-events: touch",
-      "C": "gesture-handling: manual",
-      "D": "screen-touch: disable"
+      "A": "POINT(-6 106) (Menukar nilai koordinat X dan Y)",
+      "B": "POINT(-106 6) (Mengalikan koordinat dengan -1)",
+      "C": "POINT(0 0)",
+      "D": "LINESTRING(106 -6, -6 106)"
     },
     "answer": "A",
     "explanation": {
-      "correct": "touch-action menentukan apakah aksi sentuhan layar sentuh ditangani oleh browser default (seperti scroll halaman) atau diteruskan ke kode JavaScript aplikasi pemetaan.",
-      "A": "Opsi A benar karena touch-action mengontrol resolusi gestur sentuhan layar browser.",
-      "B": "Opsi B salah karena pointer-events tidak memiliki nilai touch.",
-      "C": "Opsi C salah karena bukan properti CSS resmi (itu nama plugin Leaflet).",
-      "D": "Opsi D salah karena bukan properti CSS yang valid."
+      "correct": "`ST_FlipCoordinates(geom)` menukar posisi koordinat X dan Y (latitude dan longitude), sangat berguna ketika data spasial mengalami bug urutan koordinat tertukar (misal dari GPS receiver).",
+      "A": "Benar. Menukar urutan nilai sumbu X dan Y pada setiap vertex.",
+      "B": "Salah. Tidak menginversi tanda minus.",
+      "C": "Salah. Tidak mereset ke origin.",
+      "D": "Salah. Geometri tetap bertipe Point."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-176",
     "level": "intermediate",
-    "topic": "React atau Vue",
-    "question": "Pola (pattern) apakah yang paling tepat untuk membungkus library pihak ketiga non-React (seperti Leaflet L.map) ke dalam Custom Hook React?",
+    "topic": "Leaflet Heatmap Plugin",
+    "questionType": "output",
+    "question": "Format array data apakah yang diterima oleh plugin `L.heatLayer` untuk membuat peta panas (heatmap)?\n\n```javascript\nconst heat = L.heatLayer(data, { radius: 25 }).addTo(map);\n```",
+    "code": "const heat = L.heatLayer(data, { radius: 25 }).addTo(map);",
     "options": {
-      "A": "Membuat hook kustom (useLeafletMap) yang menggunakan useRef untuk container DOM dan useEffect untuk menginisialisasi map serta mengembalikan instance map",
-      "B": "Menyimpan instance map di dalam LocalStorage",
-      "C": "Menginisialisasi L.map langsung di dalam render body fungsi komponen tanpa useEffect",
-      "D": "Membuat iframe terpisah untuk setiap komponen"
+      "A": "Array dari array koordinat [lat, lng, intensity?]",
+      "B": "Array string nama kota",
+      "C": "Array gambar raster TIFF",
+      "D": "File XML KML mentah"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Menginisialisasi library imperatif di dalam useEffect bersama useRef mengisolasi siklus hidup DOM dari siklus render deklaratif React dan memastikan cleanup map.remove() dipanggil dengan benar.",
-      "A": "Opsi A benar karena custom hook berbasis useRef + useEffect adalah best practice integrasi library eksternal di React.",
-      "B": "Opsi B salah karena instance objek JavaScript hidup di memori dan tidak dapat di-serialize ke LocalStorage.",
-      "C": "Opsi C salah karena menginisialisasi di body render akan membuat peta baru berulang kali di setiap render hingga crash.",
-      "D": "Opsi D salah karena iframe membatasi komunikasi data dan boros resource memori."
+      "correct": "Plugin `leaflet-heat` menerima data berupa array of points dalam format `[lat, lng]` atau `[lat, lng, intensity]` di mana intensity bernilai antara 0 hingga 1.",
+      "A": "Benar. Format data berupa [[lat, lng, intensity?], ...].",
+      "B": "Salah. Plugin tidak melakukan geocoding teks nama kota.",
+      "C": "Salah. Heatmap dikalkulasi dari titik diskrit di Canvas, bukan gambar TIFF.",
+      "D": "Salah. Plugin tidak mem-parse format KML."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-177",
     "level": "intermediate",
-    "topic": "React atau Vue",
-    "question": "Dalam aplikasi Web GIS React dengan ribuan fitur spasial, apa keuntungan menggunakan library state manager seperti Zustand dibandingkan React Context API murni?",
+    "topic": "Spatial SQL ST_PointOnSurface",
+    "questionType": "output",
+    "question": "Mengapa `ST_PointOnSurface` sering lebih disukai daripada `ST_Centroid` untuk penempatan label nama poligon?\n\n```sql\nSELECT ST_PointOnSurface(geom) FROM provinces;\n```",
+    "code": "SELECT ST_PointOnSurface(geom) FROM provinces;",
     "options": {
-      "A": "Zustand mendukung 'atomic state selection' di mana komponen hanya me-render ulang jika bagian state spesifik yang dipilihnya berubah, sedangkan Context API me-render ulang seluruh komponen consumer",
-      "B": "Zustand otomatis mengonversi data menjadi file SQL",
-      "C": "Context API tidak bisa menyimpan data bertipe array",
-      "D": "Zustand hanya bisa dijalankan di server backend"
+      "A": "ST_PointOnSurface dijamin selalu berada di dalam (interior) poligon, sedangkan ST_Centroid bisa jatuh di luar poligon (misal pada poligon berbentuk bulan sabit atau pulau terpisah)",
+      "B": "ST_PointOnSurface menghitung luas bukan titik",
+      "C": "ST_Centroid hanya bekerja untuk garis lurus",
+      "D": "ST_PointOnSurface selalu mengembalikan nilai NULL"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Pada Context API, setiap pembaruan nilai konteks memicu re-render pada semua subscriber. Zustand menggunakan pemilih (selectors, misal useStore(s => s.activeFeatureId)) sehingga hanya komponen yang relevan yang di-render ulang.",
-      "A": "Opsi A benar karena seleksi state granular Zustand mencegah re-render massal yang tidak perlu.",
-      "B": "Opsi B salah karena Zustand bukan ORM database.",
-      "C": "Opsi C salah karena Context API dapat menampung sembarang tipe data JavaScript.",
-      "D": "Opsi D salah karena Zustand adalah state manager sisi klien."
+      "correct": "Centroid adalah pusat massa matematis. Pada poligon berbentuk melengkung (seperti huruf U atau pulau dengan teluk), centroid bisa berada di luar daratan (di laut). `ST_PointOnSurface` menjamin titik hasil selalu berada di dalam area poligon.",
+      "A": "Benar. Menjamin titik berada di dalam badan poligon untuk penempatan label yang estetis.",
+      "B": "Salah. Fungsinya mengembalikan titik geometri (Point), bukan luas.",
+      "C": "Salah. ST_Centroid bekerja untuk titik, garis, dan poligon.",
+      "D": "Salah. Fungsi mengembalikan titik yang valid."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-178",
     "level": "intermediate",
-    "topic": "React atau Vue",
-    "question": "Komponen React-Leaflet resmi apakah yang bertindak sebagai pembungkus utama seluruh hierarki konteks peta Leaflet di React?",
+    "topic": "Leaflet Pane Customization",
+    "questionType": "output",
+    "question": "Apa fungsi dari opsi `pane` saat membuat layer di Leaflet?\n\n```javascript\nconst customPane = map.createPane(\"topLabels\");\ncustomPane.style.zIndex = 650;\nL.marker([0, 0], { pane: \"topLabels\" }).addTo(map);\n```",
+    "code": "const customPane = map.createPane(\"topLabels\");\ncustomPane.style.zIndex = 650;\nL.marker([0, 0], { pane: \"topLabels\" }).addTo(map);",
     "options": {
-      "A": "<MapContainer>",
-      "B": "<LeafletRoot>",
-      "C": "<MapCanvas>",
-      "D": "<GeoWrapper>"
+      "A": "Mengontrol urutan tumpukan z-index rendering secara spesifik untuk memisahkan grup layer",
+      "B": "Membuat panel navigasi samping di halaman web",
+      "C": "Menyimpan data layer ke database SQL",
+      "D": "Mengubah warna latar belakang seluruh peta"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Di react-leaflet v3+, <MapContainer center={...} zoom={...}> adalah komponen root yang menginisialisasi peta dan menyediakan instance peta ke komponen anak melalui React Context.",
-      "A": "Opsi A benar karena MapContainer adalah nama komponen resmi react-leaflet.",
-      "B": "Opsi B salah karena bukan komponen react-leaflet.",
-      "C": "Opsi C salah karena bukan komponen react-leaflet.",
-      "D": "Opsi D salah karena bukan komponen react-leaflet."
+      "correct": "Leaflet Map Panes adalah wadah elemen DOM khusus yang memungkinkan developer mengatur urutan tumpukan (`z-index`) layer peta secara presisi (misal: label di atas overlay poligon, tapi poligon di atas basemap).",
+      "A": "Benar. Map Panes mengelola z-index layer dalam hierarki DOM Leaflet.",
+      "B": "Salah. Pane bukan komponen sidebar navigasi UI.",
+      "C": "Salah. Leaflet tidak terhubung langsung ke database SQL.",
+      "D": "Salah. Pane tidak mengubah background warna canvas."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-179",
     "level": "intermediate",
-    "topic": "React atau Vue",
-    "question": "Hook khusus apakah yang disediakan oleh library 'react-leaflet' untuk mengakses instance peta Leaflet aktif di dalam komponen child?",
+    "topic": "Spatial SQL ST_Collect vs ST_Union",
+    "questionType": "output",
+    "question": "Apa perbedaan fundamental antara `ST_Collect` dan `ST_Union` di PostGIS?\n\n```sql\n-- Query 1: ST_Collect(geom)\n-- Query 2: ST_Union(geom)\n```",
+    "code": "-- Query 1: ST_Collect(geom)\n-- Query 2: ST_Union(geom)",
     "options": {
-      "A": "useMap()",
-      "B": "useLeaflet()",
-      "C": "getMapInstance()",
-      "D": "useCurrentMap()"
+      "A": "ST_Collect hanya menggabungkan geometri ke dalam Multi-geometry tanpa kalkulasi perpotongan/dissolve (sangat cepat), sedangkan ST_Union menghapus batas internal (dissolve) yang tumpang tindih",
+      "B": "ST_Collect menghapus data, sedangkan ST_Union menambahkan data",
+      "C": "ST_Collect hanya untuk data raster",
+      "D": "Keduanya identik 100% tanpa perbedaan performa"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Hook useMap() dipanggil di dalam komponen anak dari <MapContainer> untuk mendapatkan referensi langsung ke instance L.Map aktif.",
-      "A": "Opsi A benar karena useMap() adalah hook resmi react-leaflet untuk mengakses instance peta.",
-      "B": "Opsi B salah karena useLeaflet adalah hook lama di versi react-leaflet v2 yang sudah deprecated.",
-      "C": "Opsi C salah karena bukan hook React.",
-      "D": "Opsi D salah karena bukan hook react-leaflet."
+      "correct": "`ST_Collect` adalah operasi agregasi cepat tanpa validasi topologi atau pelepasan batas (hanya membungkus ke dalam MultiGeometry / GeometryCollection). `ST_Union` melakukan kalkulasi spasial berat untuk melebur dan menghilangkan garis batas tumpang tindih.",
+      "A": "Benar. ST_Collect jauh lebih cepat karena tidak melakukan kalkulasi topology dissolve.",
+      "B": "Salah. ST_Collect adalah fungsi agregat konstruksi, bukan delete.",
+      "C": "Salah. ST_Collect bekerja pada tipe geometri vektor.",
+      "D": "Salah. ST_Collect memiliki kompleksitas waktu jauh lebih rendah daripada ST_Union."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-180",
     "level": "intermediate",
-    "topic": "React atau Vue",
-    "question": "Bagaimana cara mengoptimalkan performa tabel atribut GIS yang menampilkan 10.000 baris data fitur di frontend React tanpa membekukan browser?",
+    "topic": "JavaScript WKT Parsing",
+    "questionType": "output",
+    "question": "Berapa jumlah titik koordinat yang dihasilkan dari parsing string WKT berikut?\n\n```javascript\nconst wkt = \"LINESTRING(10 20, 30 40, 50 60)\";\nconst count = wkt.replace(\"LINESTRING(\", \"\").replace(\")\", \"\").split(\",\").length;\nconsole.log(count);\n```",
+    "code": "const wkt = \"LINESTRING(10 20, 30 40, 50 60)\";\nconst count = wkt.replace(\"LINESTRING(\", \"\").replace(\")\", \"\").split(\",\").length;\nconsole.log(count);",
     "options": {
-      "A": "Menerapkan teknik 'Virtual List' (Windowing) menggunakan library seperti react-window atau @tanstack/react-virtual",
-      "B": "Merender semua 10.000 elemen <tr> secara langsung ke DOM sekaligus",
-      "C": "Mengubah font-size tabel menjadi 1px",
-      "D": "Menghapus semua baris data secara permanen"
+      "A": "3",
+      "B": "6",
+      "C": "1",
+      "D": "2"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Virtual List (DOM virtualization) hanya merender sejumlah kecil baris yang terlihat di layar pengguna (~20 baris) dan mendaur ulang elemen saat digulir, menjaga konsumsi memori dan DOM nodes tetap sangat kecil.",
-      "A": "Opsi A benar karena virtualisasi DOM menjaga performa tetap stabil pada dataset berukuran besar.",
-      "B": "Opsi B salah karena merender 10.000 DOM nodes sekaligus menyebabkan browser lag dan memory bloat.",
-      "C": "Opsi C salah karena ukuran font tidak mengurangi jumlah node DOM.",
-      "D": "Opsi D salah karena menghapus data menghilangkan informasi yang dibutuhkan pengguna."
+      "correct": "String WKT memisahkan setiap titik simpul koordinat dengan tanda koma: '10 20', ' 30 40', dan ' 50 60'. Pemisahan dengan `.split(',')` menghasilkan array dengan panjang 3.",
+      "A": "Benar. Terdapat 3 vertex simpul yang dipisahkan oleh tanda koma.",
+      "B": "Salah. 6 adalah jumlah angka skalar X dan Y, bukan jumlah pasangan titik.",
+      "C": "Salah. Garis memiliki 3 koordinat simpul.",
+      "D": "Salah. Ada 3 bagian setelah split koma."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-181",
     "level": "intermediate",
-    "topic": "React atau Vue",
-    "question": "Dalam Vue 3, apa perbedaan antara 'computed()' dan 'watch()' saat menangani perubahan filter koordinat spasial?",
+    "topic": "PostGIS Spatial JOIN Performance",
+    "questionType": "debug",
+    "question": "Kueri spatial JOIN berikut membutuhkan waktu 45 detik pada 50.000 baris. Bagaimana cara mempercepatnya drastis menggunakan indeks GiST?\n\n```sql\nSELECT p.id, COUNT(pt.id)\nFROM polygons p\nLEFT JOIN points pt ON ST_Within(pt.geom, p.geom)\nGROUP BY p.id;\n```",
+    "code": "SELECT p.id, COUNT(pt.id)\nFROM polygons p\nLEFT JOIN points pt ON ST_Within(pt.geom, p.geom)\nGROUP BY p.id;",
     "options": {
-      "A": "'computed()' menghasilkan nilai turunan baru yang di-cache secara otomatis (murni/pure), sedangkan 'watch()' mengeksekusi efek samping (seperti memanggil fetch data API ke backend) saat data reaktif berubah",
-      "B": "'watch()' hanya bisa memantau tipe angka",
-      "C": "'computed()' dijalankan di server backend",
-      "D": "Keduanya persis sama tanpa perbedaan fungsi"
+      "A": "Menambahkan operator bounding box 'pt.geom && p.geom' pada klausa ON atau memastikan indeks GiST terpasang pada kedua kolom geom",
+      "B": "Menghapus klausa GROUP BY",
+      "C": "Mengganti LEFT JOIN menjadi CROSS JOIN",
+      "D": "Menghapus primary key p.id"
     },
     "answer": "A",
     "explanation": {
-      "correct": "computed menghasilkan cached derived state (misal: filtering list poligon lokal), sedangkan watch merespons perubahan untuk memicu side-effects asinkron (misal: memanggil API getFeaturesByBbox saat koordinat peta berubah).",
-      "A": "Opsi A benar karena membedakan cached derived value vs reactive side-effect listener.",
-      "B": "Opsi B salah karena watch dapat memantau sembarang tipe data reaktif.",
-      "C": "Opsi C salah karena computed berjalan lokal di frontend Vue.",
-      "D": "Opsi D salah karena semantik dan kasus penggunaannya berbeda secara jelas."
+      "correct": "Spatial JOIN tanpa operator bounding box `&&` dapat memaksa Nested Loop Sequential Scan jika versi query planner tidak meng-inline fungsi ST_Within. Menambahkan kondisi `pt.geom && p.geom AND ST_Within(pt.geom, p.geom)` menjamin penggunaan indeks GiST secara maksimal.",
+      "A": "Benar. Memastikan indeks GiST aktif pada kedua tabel dan memanfaatkan operator bounding box &&.",
+      "B": "Salah. Menghapus GROUP BY merusak logika agregasi hitungan.",
+      "C": "Salah. CROSS JOIN tanpa kondisi adalah cartesian product yang jauh lebih lambat (2.5 miliar baris).",
+      "D": "Salah. Menghapus primary key tidak membantu indeks spasial."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-182",
     "level": "intermediate",
-    "topic": "React atau Vue",
-    "question": "Teknik apakah di React yang memisahkan bundle JavaScript menjadi potongan-potongan kecil (chunks) yang hanya diunduh saat rute atau komponen peta dibutuhkan (misal: React.lazy dan Suspense)?",
+    "topic": "Leaflet GeoServer WMS CORS",
+    "questionType": "debug",
+    "question": "Layer WMS dari GeoServer gagal dimuat di Leaflet dengan pesan error 'Access to image from origin has been blocked by CORS policy'. Di mana konfigurasi yang harus diperbaiki?\n\n```javascript\n// Frontend Leaflet:\nL.tileLayer.wms(\"http://geoserver.local:8080/geoserver/wms\", {...}).addTo(map);\n```",
+    "code": "// Frontend Leaflet:\nL.tileLayer.wms(\"http://geoserver.local:8080/geoserver/wms\", {...}).addTo(map);",
     "options": {
-      "A": "Code Splitting",
-      "B": "Tree Shaking",
-      "C": "Hot Reloading",
-      "D": "Server-Side Rendering murni"
+      "A": "Mengaktifkan CORS (Cross-Origin Resource Sharing) Filter pada web server GeoServer (web.xml / Tomcat)",
+      "B": "Menghapus kode JavaScript Leaflet",
+      "C": "Menonaktifkan kartu grafis pengguna",
+      "D": "Mengganti browser Chrome dengan Notepad"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Code Splitting via dynamic import (const HeavyMap = React.lazy(() => import('./HeavyMap'))) menunda pengunduhan library GIS besar (Leaflet/OpenLayers) sampai user benar-benar membuka halaman peta.",
-      "A": "Opsi A benar karena Code Splitting mengoptimasi ukuran bundle initial load.",
-      "B": "Opsi B salah karena Tree Shaking adalah pembuangan dead-code yang tidak terpakai saat build.",
-      "C": "Opsi C salah karena Hot Reloading adalah fitur penggantian modul saat development tanpa reload.",
-      "D": "Opsi D salah karena SSR adalah teknik rendering HTML di server."
+      "correct": "CORS adalah kebijakan keamanan browser yang membatasi permintaan HTTP antar domain/port berbeda. Untuk mengizinkan aplikasi web mengakses GeoServer di port berbeda, filter CORS harus diaktifkan pada konfigurasi server GeoServer (web.xml di Tomcat).",
+      "A": "Benar. CORS Filter harus diaktifkan di server GeoServer.",
+      "B": "Salah. Masalah berada pada header HTTP server, bukan kode Leaflet frontend.",
+      "C": "Salah. Kartu grafis tidak berhubungan dengan kebijakan keamanan HTTP CORS.",
+      "D": "Salah. Notepad adalah text editor, bukan web browser."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-183",
     "level": "intermediate",
-    "topic": "Node.js",
-    "question": "Dalam arsitektur Node.js, mengapa penggunaan 'Stream' (Readable/Writable Stream) sangat dianjurkan saat memproses file Shapefile atau GeoJSON berukuran multi-gigabyte?",
+    "topic": "PostGIS Geometry vs Geography",
+    "questionType": "debug",
+    "question": "Kueri berikut menghasilkan error 'function st_distance(geography, geometry) does not exist'. Mengapa?\n\n```sql\nSELECT ST_Distance(a.geog_col, b.geom_col) FROM table_a a, table_b b;\n```",
+    "code": "SELECT ST_Distance(a.geog_col, b.geom_col) FROM table_a a, table_b b;",
     "options": {
-      "A": "Stream memproses data sepotong demi sepotong (chunk by chunk) dalam buffer memori kecil yang konstan, mencegah pemakaian memori heap melonjak dan menghindari JavaScript heap out of memory",
-      "B": "Stream otomatis mengompresi data menjadi file ZIP",
-      "C": "Stream menghapus data yang memiliki atribut null",
-      "D": "Stream membuat aplikasi berjalan di browser"
+      "A": "PostGIS tidak menyediakan signature ST_Distance yang mencampur tipe `geography` dan `geometry` secara bersamaan",
+      "B": "ST_Distance dilarang menggunakan dua tabel",
+      "C": "Nama kolom geog_col terlalu panjang",
+      "D": "Tipe geography tidak mendukung perhitungan jarak"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Membaca file 2GB sekaligus dengan fs.readFile() memuat seluruh isi ke memori heap dan melebihi batas default V8 engine (~2-4GB). Stream memproses data secara kontinu tanpa batas ukuran file.",
-      "A": "Opsi A benar karena Stream menjaga penggunaan memori tetap minimal dan konstan.",
-      "B": "Opsi B salah karena kompresi memerlukan modul zlib tambahan.",
-      "C": "Opsi C salah karena Stream tidak memodifikasi data tanpa transform stream.",
-      "D": "Opsi D salah karena Stream di sini adalah modul backend Node.js core."
+      "correct": "Tipe `geography` (sferis/geodesik) dan `geometry` (planar Cartesian) adalah dua tipe data yang berbeda di PostGIS. Operasi spasial mengharuskan kedua argumen bertipe sama persis. Solusinya: `ST_Distance(a.geog_col, b.geom_col::geography)`.",
+      "A": "Benar. Kedua argumen harus memiliki tipe spasial yang sama (keduanya geometry atau keduanya geography).",
+      "B": "Salah. Operasi spasial lintas tabel adalah hal yang sangat standar.",
+      "C": "Salah. Panjang nama kolom tidak menyebabkan type mismatch.",
+      "D": "Salah. Tipe geography dirancang khusus untuk perhitungan jarak bumi yang akurat."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-184",
     "level": "intermediate",
-    "topic": "Node.js",
-    "question": "Bagaimana cara mengeksekusi perintah command-line utilitas geospasial native (seperti GDAL/OGR 'ogr2ogr') dari dalam script backend Node.js?",
+    "topic": "Leaflet Zoom Animation Flicker",
+    "questionType": "debug",
+    "question": "Peta mengalami kedipan hitam (flicker) saat animasi zoom berlangsung pada layer kustom Canvas. Opsi apa pada L.canvas() yang mengatasi masalah ini?\n\n```javascript\nconst canvasRenderer = L.canvas({ /* opsi apa yang mencegah redraw blink? */ });\n```",
+    "code": "const canvasRenderer = L.canvas({ /* opsi apa yang mencegah redraw blink? */ });",
     "options": {
-      "A": "Menggunakan modul 'child_process' bawaan Node.js (seperti child_process.spawn atau exec)",
-      "B": "Menggunakan fungsi window.runCommand()",
-      "C": "Menulis perintah di file package.json",
-      "D": "Menggunakan tag <script> di HTML"
+      "A": "tolerance: 5 atau padding: 0.5 untuk memperluas buffer rendering di luar batas viewport",
+      "B": "deleteCanvas: true",
+      "C": "animate: false pada sistem operasi",
+      "D": "opacity: 0"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Modul child_process memungkinkan aplikasi Node.js meluncurkan proses anak di sistem operasi server untuk menjalankan program CLI seperti GDAL, FFmpeg, atau Python scripts.",
-      "A": "Opsi A benar karena child_process adalah API resmi eksekusi perintah OS di Node.js.",
-      "B": "Opsi B salah karena window adalah objek browser yang tidak ada di Node.js.",
-      "C": "Opsi C salah karena package.json hanya untuk manajemen script project, bukan eksekusi runtime dinamis.",
-      "D": "Opsi D salah karena tag script adalah sintaks browser."
+      "correct": "Opsi `padding` pada Canvas renderer Leaflet menentukan seberapa jauh kanvas meluas di luar batas viewport layar (misal 0.5 = 50% buffer). Buffer ini mencegah kanvas kosong terlihat saat peta digeser atau di-zoom sebelum frame baru selesai digambar.",
+      "A": "Benar. Opsi padding menyediakan buffer kanvas untuk mencegah area kosong saat translasi/zoom.",
+      "B": "Salah. deleteCanvas bukan opsi valid di Leaflet.",
+      "C": "Salah. Mematikan animasi di OS bukan solusi level kode aplikasi.",
+      "D": "Salah. opacity: 0 membuat seluruh layer tidak terlihat sama sekali."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-185",
     "level": "intermediate",
-    "topic": "Node.js",
-    "question": "Dalam Express.js, bagaimana cara membuat centralized error handling middleware yang menangkap semua error dari route handlers?",
+    "topic": "Spatial SQL SRID 4326 Distance Error",
+    "questionType": "debug",
+    "question": "Seorang developer ingin mencari restoran dalam jarak 5 kilometer menggunakan kueri berikut, tetapi kueri mengembalikan seluruh restoran di dunia. Apa bugnya?\n\n```sql\nSELECT * FROM restaurants WHERE ST_Distance(geom, ST_MakePoint(106.8, -6.2)) <= 5;\n```",
+    "code": "SELECT * FROM restaurants WHERE ST_Distance(geom, ST_MakePoint(106.8, -6.2)) <= 5;",
     "options": {
-      "A": "Mendefinisikan middleware dengan 4 parameter spesifik: (err, req, res, next) di baris paling akhir setelah semua rute didaftarkan",
-      "B": "Menambahkan blok try-catch di file server.js",
-      "C": "Menghapus parameter res dari setiap controller",
-      "D": "Menggunakan perintah process.on('uncaughtException') saja"
+      "A": "Angka 5 diinterpretasikan sebagai 5 derajat sudut (~555 kilometer), bukan 5 kilometer",
+      "B": "Tanda <= harus diganti ==",
+      "C": "Restoran di dunia tidak memiliki koordinat",
+      "D": "Fungsi ST_Distance hanya mengembalikan nilai negatif"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Express mengidentifikasi error-handling middleware berdasarkan aritas 4 parameter (err, req, res, next). Middleware ini mencegat semua error yang diteruskan via next(err).",
-      "A": "Opsi A benar karena 4 parameter adalah konvensi resmi penanganan error di Express.",
-      "B": "Opsi B salah karena try-catch di file entrypoint tidak mencegat async route rejection di Express 4.",
-      "C": "Opsi C salah karena res mutlak diperlukan untuk mengirim respons ke klien.",
-      "D": "Opsi D salah karena uncaughtException adalah penanganan darurat sebelum proses mati, bukan middleware respons HTTP yang terstruktur."
+      "correct": "Pada tipe `geometry` dengan proyeksi WGS 84 (SRID 4326), satuan jarak adalah derajat busur. 1 derajat di khatulistiwa setara dengan ~111.32 km. Jarak 5 derajat berarti radius ~555 km! Gunakan `ST_DWithin(geom::geography, point::geography, 5000)` untuk 5.000 meter.",
+      "A": "Benar. Satuan derajat disalahartikan sebagai kilometer; 5 derajat ~ 555 km.",
+      "B": "Salah. Operator pembanding SQL yang benar adalah <=, bukan ==.",
+      "C": "Salah. Restoran memiliki koordinat geografis.",
+      "D": "Salah. Jarak spasial selalu bernilai non-negatif (>= 0)."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-186",
     "level": "intermediate",
-    "topic": "Node.js",
-    "question": "Package npm populer apakah yang digunakan untuk memvalidasi struktur data dan tipe input payload request di Node.js secara deklaratif (schema validation)?",
+    "topic": "Leaflet Marker Clustering",
+    "questionType": "debug",
+    "question": "Setelah menambahkan plugin markercluster, marker tidak mengelompok dan console error 'L.markerClusterGroup is not a constructor'. Apa penyebabnya?\n\n```javascript\nconst markers = L.markerClusterGroup();\nmap.addLayer(markers);\n```",
+    "code": "const markers = L.markerClusterGroup();\nmap.addLayer(markers);",
     "options": {
-      "A": "Zod atau Joi",
-      "B": "Express",
-      "C": "Nodemon",
-      "D": "Babel"
+      "A": "Script file `leaflet.markercluster.js` belum di-load di halaman HTML atau urutan script mendahului `leaflet.js`",
+      "B": "Nama fungsi harus ditulis dengan huruf kapital L.MARKERCLUSTERGROUP",
+      "C": "Browser menolak pengelompokan marker secara hardware",
+      "D": "Marker cluster hanya bekerja di NodeJS bukan browser"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Zod dan Joi adalah pustaka deklarasi dan validasi skema TypeScript-first yang memastikan payload request memenuhi batasan tipe sebelum diproses oleh business logic.",
-      "A": "Opsi A benar karena Zod dan Joi adalah standar validasi skema di ekosistem Node.js/TypeScript.",
-      "B": "Opsi B salah karena Express adalah web framework, bukan validator skema.",
-      "C": "Opsi C salah karena Nodemon adalah tool dev auto-restart.",
-      "D": "Opsi D salah karena Babel adalah JavaScript transpiler compiler."
+      "correct": "Error 'is not a constructor' menandakan objek fungsi tidak ditemukan di runtime window global. Ini terjadi jika file library plugin Leaflet.markercluster belum di-include melalui tag `<script>`, atau dipanggil sebelum `leaflet.js` dimuat.",
+      "A": "Benar. Library plugin belum dimuat atau urutan pemuatan script keliru.",
+      "B": "Salah. Nama constructor resmi adalah camelCase L.markerClusterGroup.",
+      "C": "Salah. Tidak ada penolakan hardware browser untuk cluster.",
+      "D": "Salah. Marker clustering adalah library frontend browser murni."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-187",
     "level": "intermediate",
-    "topic": "Node.js",
-    "question": "Bagaimana cara memecah rute endpoint Express.js ke dalam file-file modul terpisah berdasarkan resource (seperti /api/layers, /api/auth) agar arsitektur kode terstruktur?",
+    "topic": "PostGIS Poligon Berlubang WKT",
+    "questionType": "debug",
+    "question": "Kueri berikut menghasilkan poligon solid tanpa lubang padahal ditujukan membuat poligon dengan lubang. Di mana kesalahan sintaks WKT-nya?\n\n```sql\nSELECT ST_GeomFromText('POLYGON((0 0, 10 0, 10 10, 0 10, 0 0), (2 2, 8 2, 8 8, 2 8, 2 2))');\n```",
+    "code": "SELECT ST_GeomFromText('POLYGON((0 0, 10 0, 10 10, 0 10, 0 0), (2 2, 8 2, 8 8, 2 8, 2 2))');",
     "options": {
-      "A": "Menggunakan 'express.Router()' di setiap modul file dan mendaftarkannya dengan 'app.use(\"/path\", routerModule)'",
-      "B": "Menulis semua rute di file index.js hingga ribuan baris",
-      "C": "Membuat server Express baru di port yang berbeda untuk setiap endpoint",
-      "D": "Menggunakan file .html untuk setiap rute"
+      "A": "Sintaks WKT di atas sebenarnya sudah benar untuk poligon berlubang, tetapi arah orientasi cincin lubang (interior ring) harus berlawanan arah jarum jam (counter-clockwise) sesuai standar OGC/GIS tertentu",
+      "B": "WKT tidak mengizinkan poligon berlubang",
+      "C": "Tanda kurung harus diganti kurung kurawal {}",
+      "D": "Jumlah titik lubang harus ganjil"
     },
     "answer": "A",
     "explanation": {
-      "correct": "express.Router() bertindak sebagai mini-application mandiri yang dapat didefinisikan di file terpisah dan di-mount secara modular ke aplikasi utama.",
-      "A": "Opsi A benar karena express.Router() adalah pola modularisasi rute resmi di Express.",
-      "B": "Opsi B salah karena menumpuk ribuan baris di satu file adalah antipattern monolitik spaghetti.",
-      "C": "Opsi C salah karena memisahkan port untuk setiap rute merusak arsitektur API.",
-      "D": "Opsi D salah karena routing backend Express menangani API, bukan file HTML statis."
+      "correct": "Standar OGC SFS dan pemroses GIS mewajibkan exterior ring berorientasi searah jarum jam (clockwise / Right-Hand Rule RFC 7946) dan interior ring (lubang) berorientasi berlawanan arah jarum jam. Orientasi yang salah dapat menyebabkan beberapa viewer merender area sebagai solid fill.",
+      "A": "Benar. Kaidah aturan tangan kanan (Right-Hand Rule) dan arah cincin menentukan lubang poligon.",
+      "B": "Salah. WKT mendukung poligon berlubang dengan multiple rings.",
+      "C": "Salah. Sintaks WKT menggunakan kurung biasa (parentheses).",
+      "D": "Salah. Cincin poligon tertutup minimal memiliki 4 titik simpul."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-188",
     "level": "intermediate",
-    "topic": "Node.js",
-    "question": "Apa fungsi dari library middleware 'helmet' pada aplikasi backend Express.js?",
+    "topic": "Leaflet GeoJSON Layer Click Selection",
+    "questionType": "debug",
+    "question": "Fungsi klik berikut ingin mengubah warna poligon yang sedang diklik menjadi kuning, namun warna poligon lain yang sebelumnya diklik tidak kembali ke warna asal. Bagaimana solusinya?\n\n```javascript\nlet selectedLayer = null;\nfunction onFeatureClick(e) {\n  if (selectedLayer) {\n    geoLayer.resetStyle(selectedLayer); // Kembalikan style lama\n  }\n  selectedLayer = e.target;\n  selectedLayer.setStyle({ fillColor: \"yellow\" });\n}\n```",
+    "code": "let selectedLayer = null;\nfunction onFeatureClick(e) {\n  if (selectedLayer) {\n    geoLayer.resetStyle(selectedLayer); // Kembalikan style lama\n  }\n  selectedLayer = e.target;\n  selectedLayer.setStyle({ fillColor: \"yellow\" });\n}",
     "options": {
-      "A": "Mengamankan aplikasi Express dengan menyetel berbagai HTTP response headers keamanan (seperti Content-Security-Policy, X-Frame-Options, X-Content-Type-Options)",
-      "B": "Mempercepat kompresi gambar raster",
-      "C": "Mengubah query SQL menjadi aman",
-      "D": "Mencegah server mati saat kehabisan listrik"
+      "A": "Logika di atas sudah benar, namun method `resetStyle` hanya tersedia pada instance `L.geoJSON`, bukan pada layer individual",
+      "B": "Warna kuning dilarang di browser",
+      "C": "e.target harus di-clone dengan Object.assign",
+      "D": "resetStyle harus dipanggil sebelum event listener didaftarkan"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Helmet membantu mengamankan server dari kerentanan web umum dengan mengonfigurasi header HTTP keamanan secara otomatis sesuai rekomendasi OWASP.",
-      "A": "Opsi A benar karena Helmet adalah middleware standar keamanan header HTTP di Express.",
-      "B": "Opsi B salah karena kompresi gambar ditangani oleh library seperti Sharp.",
-      "C": "Opsi C salah karena keamanan SQL ditangani oleh ORM parameterized queries.",
-      "D": "Opsi D salah karena hardware failure tidak dapat dicegah oleh software middleware."
+      "correct": "Method `resetStyle(layer)` adalah method milik parent layer `L.geoJSON`. Memanggil `geoLayer.resetStyle(selectedLayer)` mengembalikan konfigurasi path option layer yang dipilih kembali ke fungsi style default awal.",
+      "A": "Benar. geoLayer.resetStyle(selectedLayer) mengembalikan style fitur ke konfigurasi awal.",
+      "B": "Salah. Warna kuning ('yellow' / '#ffff00') didukung penuh.",
+      "C": "Salah. Meng-clone layer DOM memutus keterikatan objek internal Leaflet.",
+      "D": "Salah. resetStyle dipanggil saat interaksi dinamis pengguna."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-189",
     "level": "intermediate",
-    "topic": "Node.js",
-    "question": "Dalam Node.js, kelas Buffer digunakan untuk:",
+    "topic": "PostGIS ST_GeomFromGeoJSON",
+    "questionType": "debug",
+    "question": "Kueri berikut menghasilkan error saat mengonversi string GeoJSON: 'Feature types not supported'. Mengapa?\n\n```sql\nSELECT ST_GeomFromGeoJSON('{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[106,-6]}}');\n```",
+    "code": "SELECT ST_GeomFromGeoJSON('{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[106,-6]}}');",
     "options": {
-      "A": "Menangani alokasi data biner mentah (raw binary data) di memori di luar V8 heap (seperti saat memproses header file biner Shapefile atau ubin MVT)",
-      "B": "Menyimpan teks string biasa",
-      "C": "Membuat antrean tugas cron job",
-      "D": "Mengatur styling visual CSS"
+      "A": "Fungsi ST_GeomFromGeoJSON hanya menerima objek 'Geometry' GeoJSON murni, bukan objek 'Feature' atau 'FeatureCollection'",
+      "B": "PostGIS tidak mendukung format GeoJSON",
+      "C": "Koordinat harus bertipe integer",
+      "D": "Format string JSON harus di-encode base64"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Kelas Buffer menyediakan cara berinteraksi dengan stream data biner tingkat rendah di memori native, esensial untuk decoding format file spasial biner.",
-      "A": "Opsi A benar karena Buffer adalah representasi memori biner mentah di Node.js.",
-      "B": "Opsi B salah karena teks string dikelola oleh tipe String standar V8.",
-      "C": "Opsi C salah karena task scheduling menggunakan node-cron atau BullMQ.",
-      "D": "Opsi D salah karena CSS tidak diproses di lingkungan backend Node.js core."
+      "correct": "`ST_GeomFromGeoJSON` hanya mengekstrak fragmen geometri spesifik: `{\"type\":\"Point\",\"coordinates\":[106,-6]}`. Jika diberikan objek pembungkus Feature lengkap dengan properties, fungsi akan melempar error. Objek geometry harus diekstrak terlebih dahulu.",
+      "A": "Benar. ST_GeomFromGeoJSON membutuhkan objek geometry murni tanpa pembungkus Feature.",
+      "B": "Salah. PostGIS mendukung konversi dua arah GeoJSON secara penuh.",
+      "C": "Salah. Koordinat GPS umumnya bertipe desimal (float).",
+      "D": "Salah. Fungsi menerima string JSON polos."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-190",
     "level": "intermediate",
-    "topic": "React atau Vue",
-    "question": "Apa perbedaan konseptual antara 'Prop Drilling' dan pemanfaatan 'Context API / State Store' dalam aplikasi web GIS yang kompleks?",
+    "topic": "Leaflet Panes zIndex Conflict",
+    "questionType": "debug",
+    "question": "Marker tidak bisa diklik karena tertutup oleh layer poligon tematik di atasnya. Bagaimana cara memperbaiki arsitektur z-index-nya?\n\n```javascript\n// Masalah: Klik pada marker selalu mengenai poligon di bawah kursor mouse.\n```",
+    "code": "// Masalah: Klik pada marker selalu mengenai poligon di bawah kursor mouse.",
     "options": {
-      "A": "Prop Drilling mengalirkan data melalui komponen perantara yang sebenarnya tidak membutuhkan data tersebut, sedangkan Context API menyediakan data secara langsung ke komponen yang membutuhkan di tingkat hierarki berapapun",
-      "B": "Prop Drilling otomatis menyimpan data ke hard disk",
-      "C": "Context API hanya bisa digunakan di aplikasi satu halaman",
-      "D": "Keduanya persis sama tanpa perbedaan struktur"
+      "A": "Menempatkan marker di pane khusus dengan z-index lebih tinggi atau mengatur 'interactive: false' pada layer poligon yang hanya berfungsi sebagai latar",
+      "B": "Menghapus elemen peta dari halaman",
+      "C": "Mematikan koneksi internet",
+      "D": "Mengganti koordinat marker ke belahan bumi lain"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Context API mengeliminasi keharusan meneruskan props melalui 5-10 lapisan komponen perantara yang hanya bertindak sebagai jembatan pembawa (prop drilling).",
-      "A": "Opsi A benar karena membedakan alur props manual bertingkat vs penyediaan data kontekstual langsung.",
-      "B": "Opsi B salah karena Prop Drilling adalah konsep arsitektur kode murni.",
-      "C": "Opsi C salah karena Context API dapat digunakan di segala jenis struktur aplikasi React.",
-      "D": "Opsi D salah karena maintainability dan keterbacaan kodenya berbeda drastis."
+      "correct": "Secara default di Leaflet, marker pane memiliki z-index 600 dan overlay pane memiliki z-index 400. Namun jika layer poligon kustom ditambahkan di pane teratas, event mouse akan terserap oleh poligon. Mengatur `interactive: false` pada poligon meneruskan event klik ke marker di bawahnya.",
+      "A": "Benar. interactive: false meneruskan event mouse ke layer di bawahnya (seperti pointer-events: none).",
+      "B": "Salah. Menghapus peta bukan solusi arsitektur.",
+      "C": "Salah. Koneksi internet tidak berpengaruh pada event handling DOM lokal.",
+      "D": "Salah. Mengubah koordinat merusak akurasi informasi peta."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-191",
     "level": "intermediate",
-    "topic": "React atau Vue",
-    "question": "Dalam React, kapan Anda sebaiknya membungkus fungsi callback dengan 'useCallback'?",
+    "topic": "Spatial SQL ST_Intersects vs ST_Overlaps",
+    "questionType": "debug",
+    "question": "Kueri menggunakan ST_Overlaps tidak mengembalikan data apa pun saat sebuah titik berada di dalam poligon. Mengapa?\n\n```sql\nSELECT * FROM parcels p, points pt WHERE ST_Overlaps(p.geom, pt.geom);\n```",
+    "code": "SELECT * FROM parcels p, points pt WHERE ST_Overlaps(p.geom, pt.geom);",
     "options": {
-      "A": "Ketika fungsi callback tersebut diteruskan sebagai props ke komponen anak yang dioptimasi dengan React.memo, untuk mencegah re-render anak akibat re-instansiasi fungsi",
-      "B": "Pada setiap fungsi biasa di aplikasi tanpa terkecuali",
-      "C": "Hanya saat fungsi melakukan perhitungan matematika dasar",
-      "D": "Ketika fungsi tidak memiliki parameter"
+      "A": "Menurut standar OGC DE-9IM, ST_Overlaps hanya berlaku untuk dua geometri dengan dimensi yang sama persis (keduanya poligon atau keduanya garis)",
+      "B": "ST_Overlaps adalah fungsi kadaluarsa",
+      "C": "Titik tidak memiliki koordinat",
+      "D": "Parcels harus memiliki luas nol"
     },
     "answer": "A",
     "explanation": {
-      "correct": "useCallback mempertahankan referensi identitas fungsi yang sama antar render, mencegah komponen anak ber-React.memo me-render ulang karena referensi fungsi props dianggap baru.",
-      "A": "Opsi A benar karena mempertahankan stabilitas referensi fungsi untuk optimasi React.memo.",
-      "B": "Opsi B salah karena membungkus semua fungsi tanpa alasan menambah overhead memori yang sia-sia.",
-      "C": "Opsi C salah karena perhitungan matematika dioptimasi dengan useMemo, bukan useCallback.",
-      "D": "Opsi D salah karena parameter fungsi tidak menentukan kebutuhan useCallback."
+      "correct": "Definisi formal `ST_Overlaps` mensyaratkan kedua geometri memiliki dimensi spasial yang sama (dim(A) == dim(B)) dan irisannya memiliki dimensi yang sama tetapi tidak sama dengan salah satunya. Untuk menguji relasi titik (0D) dengan poligon (2D), fungsi yang benar adalah `ST_Intersects` atau `ST_Within`.",
+      "A": "Benar. ST_Overlaps hanya berlaku untuk geometri dengan dimensi yang sama (misal poligon dengan poligon).",
+      "B": "Salah. ST_Overlaps adalah fungsi standar OGC yang aktif.",
+      "C": "Salah. Titik memiliki dimensi 0D dengan koordinat valid.",
+      "D": "Salah. Poligon memiliki dimensi 2D dengan luas positif."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-192",
     "level": "intermediate",
-    "topic": "React atau Vue",
-    "question": "Dalam Vue 3, apa fungsi dari 'provide' dan 'inject' (Dependency Injection)?",
+    "topic": "Leaflet GeoJSON update data",
+    "questionType": "debug",
+    "question": "Saat data GeoJSON di-update via WebSocket setiap 5 detik, browser mengalami kebocoran memori (memory leak) dan lemot. Di mana letak kesalahannya?\n\n```javascript\n// WebSocket onmessage handler:\nsocket.onmessage = (event) => {\n  const data = JSON.parse(event.data);\n  L.geoJSON(data).addTo(map); // BUG MEMORY LEAK!\n};\n```",
+    "code": "// WebSocket onmessage handler:\nsocket.onmessage = (event) => {\n  const data = JSON.parse(event.data);\n  L.geoJSON(data).addTo(map); // BUG MEMORY LEAK!\n};",
     "options": {
-      "A": "Memungkinkan komponen ancestor menyediakan (provide) data atau fungsi yang dapat diakses langsung oleh komponen descendant manapun di bawahnya (inject) tanpa prop drilling",
-      "B": "Menghubungkan Vue ke database MySQL secara langsung",
-      "C": "Menginjeksi virus ke browser klien",
-      "D": "Mengunduh file CSS secara otomatis"
+      "A": "Setiap pesan masuk membuat instance L.geoJSON baru dan menambahkannya ke peta tanpa menghapus layer data sebelumnya",
+      "B": "WebSocket dilarang di JavaScript",
+      "C": "JSON.parse memakan memori CPU 100%",
+      "D": "Leaflet tidak mendukung streaming data"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Provide/Inject di Vue menyelesaikan masalah prop drilling di hierarki komponen yang dalam, setara dengan React Context API.",
-      "A": "Opsi A benar karena mendefinisikan mekanisme provide/inject di Vue 3.",
-      "B": "Opsi B salah karena frontend Vue tidak terhubung langsung ke database tanpa backend API.",
-      "C": "Opsi C salah karena bukan modul malware.",
-      "D": "Opsi D salah karena bukan pengunduh stylesheet."
+      "correct": "Memanggil `L.geoJSON(data).addTo(map)` berulang kali terus menambahkan layer SVG/Canvas baru di atas layer lama di DOM tanpa pernah membersihkannya. Solusinya: simpan referensi layer dalam variabel dan panggil `layer.clearLayers()` atau perbarui koordinat layer yang sudah ada.",
+      "A": "Benar. Layer lama harus dibersihkan dengan clearLayers() sebelum data baru ditambahkan.",
+      "B": "Salah. WebSocket adalah standar industri untuk komunikasi real-time dua arah.",
+      "C": "Salah. JSON.parse sangat efisien dan merupakan fungsi native mesin V8.",
+      "D": "Salah. Leaflet sangat andal untuk data real-time jika dikelola dengan lifecycle yang benar."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-193",
     "level": "intermediate",
-    "topic": "Node.js",
-    "question": "Package npm apakah yang menjadi driver koneksi database PostgreSQL paling populer dan berkinerja tinggi di lingkungan Node.js dengan dukungan connection pooling?",
+    "topic": "PostGIS Topology Exception",
+    "questionType": "debug",
+    "question": "Kueri ST_Union melempar 'TopologyException: Input geom 0 is invalid: Self-intersection at or near point...'. Bagaimana cara membersihkan geometri tersebut secara otomatis di SQL?\n\n```sql\nSELECT ST_Union(geom) FROM raw_land_parcels;\n```",
+    "code": "SELECT ST_Union(geom) FROM raw_land_parcels;",
     "options": {
-      "A": "pg (node-postgres)",
-      "B": "mysql2",
-      "C": "sqlite3",
-      "D": "mongoose"
+      "A": "Membungkus kolom dengan ST_MakeValid: 'SELECT ST_Union(ST_MakeValid(geom)) FROM raw_land_parcels;'",
+      "B": "Menghapus database dan menginstal ulang",
+      "C": "Mengganti ST_Union dengan ST_Area",
+      "D": "Mengabaikan error dan membiarkan data kosong"
     },
     "answer": "A",
     "explanation": {
-      "correct": "'pg' (node-postgres) adalah modul client PostgreSQL resmi untuk Node.js yang menyediakan interface low-level yang cepat dan class Pool untuk pooling koneksi.",
-      "A": "Opsi A benar karena node-postgres adalah driver PostgreSQL standar di Node.js.",
-      "B": "Opsi B salah karena mysql2 adalah driver untuk database MySQL.",
-      "C": "Opsi C salah karena sqlite3 untuk database SQLite embedded.",
-      "D": "Opsi D salah karena mongoose adalah ODM untuk database MongoDB."
+      "correct": "`ST_MakeValid(geom)` adalah fungsi PostGIS yang menganalisis geometri yang rusak/invalid (seperti self-intersection, cincin terlipat, atau collinear collapse) dan memperbaikinya menjadi representasi geometri OGC yang valid secara topologi.",
+      "A": "Benar. ST_MakeValid memperbaiki kesalahan topologi geometri secara otomatis.",
+      "B": "Salah. Reinstall database tidak memperbaiki data geometri yang korup di tabel.",
+      "C": "Salah. ST_Area menghitung luas, bukan menggabungkan geometri.",
+      "D": "Salah. Mengabaikan error menyebabkan kegagalan pipeline data spasial."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-194",
     "level": "intermediate",
-    "topic": "Node.js",
-    "question": "Bagaimana cara menangani unhandled promise rejections secara aman agar server Node.js tidak mengalami silent failure?",
+    "topic": "Leaflet Tooltip Sticky vs Permanent",
+    "questionType": "debug",
+    "question": "Tooltip pada marker langsung menghilang saat mouse bergerak, padahal diinginkan tooltip selalu menempel mengikuti kursor mouse di atas area fitur. Opsi apa yang harus diatur?\n\n```javascript\nlayer.bindTooltip(\"Informasi Area\", { ___: true });\n```",
+    "code": "layer.bindTooltip(\"Informasi Area\", { ___: true });",
     "options": {
-      "A": "Mendengarkan event 'process.on(\"unhandledRejection\", (reason, promise) => { ... })' dan mencatat log error sebelum gracefully shutdown",
-      "B": "Menghapus semua Promise dari kode",
-      "C": "Mematikan server setiap kali ada request baru",
-      "D": "Mengabaikan error tersebut karena Node.js otomatis membaik"
+      "A": "sticky",
+      "B": "permanent",
+      "C": "opacity",
+      "D": "followMouse"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Unhandled rejection di versi Node.js modern dapat menghentikan proses aplikasi dengan exit code 1. Menangkap event ini memungkinkan logging terstruktur dan pembersihan koneksi.",
-      "A": "Opsi A benar karena mendengarkan event unhandledRejection adalah praktik baku pertahanan proses Node.js.",
-      "B": "Opsi B salah karena Promise adalah fondasi async modern.",
-      "C": "Opsi C salah karena merusak layanan sistem.",
-      "D": "Opsi D salah karena mengabaikan unhandled rejection menyebabkan memory leak atau crash tak terduga."
+      "correct": "Opsi `sticky: true` pada Leaflet Tooltip membuat posisi tooltip mengikuti pergerakan kursor mouse selama kursor berada di atas area poligon/layer tersebut.",
+      "A": "Benar. sticky: true membuat tooltip dinamis mengikuti gerakan kursor pengguna.",
+      "B": "Salah. permanent: true membuat tooltip selalu terbuka permanen tanpa interaksi mouse.",
+      "C": "Salah. opacity mengatur transparansi visual, bukan perilaku penempelan kursor.",
+      "D": "Salah. followMouse bukan nama properti opsi Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-195",
     "level": "intermediate",
-    "topic": "React atau Vue",
-    "question": "Pola rendering React apakah yang digunakan untuk merender komponen child (seperti modal popup peta atau floating inspector) di luar root DOM container aplikasi induknya?",
+    "topic": "Spatial SQL Aggregate Window Function",
+    "questionType": "debug",
+    "question": "Kueri berikut ingin mencari titik terdekat untuk setiap pelanggan, tetapi kueri berjalan sangat lambat. Bagaimana cara membatasi pencarian terdekat (k-Nearest Neighbors / kNN) menggunakan operator spasial PostGIS?\n\n```sql\n-- Mencari 1 fasilitas terdekat untuk titik p:\nSELECT * FROM facilities ORDER BY geom <-> ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326) LIMIT 1;\n```",
+    "code": "-- Mencari 1 fasilitas terdekat untuk titik p:\nSELECT * FROM facilities ORDER BY geom <-> ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326) LIMIT 1;",
     "options": {
-      "A": "React Portals (ReactDOM.createPortal)",
-      "B": "React Suspense",
-      "C": "React Fragment",
-      "D": "React ErrorBoundary"
+      "A": "Operator '<->' memanfaatkan indeks GiST untuk mencari nearest neighbor secara instan (kNN spatial index scan)",
+      "B": "Operator '<->' mematikan indeks database",
+      "C": "Kueri harus menggunakan FULL OUTER JOIN",
+      "D": "LIMIT 1 dilarang dalam kueri spasial"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ReactDOM.createPortal(children, domNode) menyisipkan elemen child ke dalam node DOM lain di luar hierarki DOM induknya, menghindari masalah clipping overflow CSS dan z-index.",
-      "A": "Opsi A benar karena React Portals merender elemen ke DOM node eksternal.",
-      "B": "Opsi B salah karena Suspense untuk penanganan loading state async.",
-      "C": "Opsi C salah karena Fragment untuk mengelompokkan elemen tanpa tag pembungkus ekstra di DOM.",
-      "D": "Opsi D salah karena ErrorBoundary untuk menangkap runtime exception di komponen anak."
+      "correct": "Operator `<->` di PostGIS adalah operator jarak bounding box yang terintegrasi dengan indeks GiST untuk k-Nearest Neighbor (kNN). Database dapat mengambil N titik terdekat secara instan menggunakan traversal pohon R-Tree tanpa menghitung jarak seluruh baris tabel.",
+      "A": "Benar. Operator <-> memungkinkan kNN index traversal berkecepatan tinggi dengan klausa ORDER BY ... LIMIT.",
+      "B": "Salah. Operator <-> secara khusus didesain untuk mengoptimalkan indeks GiST.",
+      "C": "Salah. JOIN tidak diperlukan untuk query nearest point tunggal.",
+      "D": "Salah. LIMIT adalah bagian kunci untuk menghentikan traversal kNN index."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-196",
     "level": "intermediate",
-    "topic": "Node.js",
-    "question": "Dalam Express.js, apa fungsi dari parameter 'next' pada route handler?",
+    "topic": "Leaflet GeoJSON onEachFeature Memory Leak",
+    "questionType": "debug",
+    "question": "Kode berikut memasang event listener pada setiap fitur GeoJSON, tetapi saat data di-refresh, listener bertumpuk. Mengapa?\n\n```javascript\nL.geoJSON(data, {\n  onEachFeature: (f, layer) => {\n    map.on(\"zoomend\", () => layer.updateIcon(map.getZoom())); // BUG!\n  }\n});\n```",
+    "code": "L.geoJSON(data, {\n  onEachFeature: (f, layer) => {\n    map.on(\"zoomend\", () => layer.updateIcon(map.getZoom())); // BUG!\n  }\n});",
     "options": {
-      "A": "Mengoper kendali eksekusi ke middleware atau route handler berikutnya dalam antrean rantai (middleware chain)",
-      "B": "Melompat ke baris pertama kode",
-      "C": "Membuat database baru",
-      "D": "Mengakhiri proses server"
+      "A": "Mendaftarkan listener pada objek global 'map' di dalam onEachFeature menambahkan ribuan listener duplikat ke map yang tidak pernah dibersihkan",
+      "B": "Method map.on dilarang di Leaflet",
+      "C": "Event zoomend tidak didukung browser",
+      "D": "Layer tidak boleh memiliki icon"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Memanggil next() meneruskan alur ke middleware berikutnya; jika diberikan argumen next(err), Express akan melompati semua middleware biasa dan langsung menuju ke error-handling middleware.",
-      "A": "Opsi A benar karena next() adalah pendelegasi alur middleware chain.",
-      "B": "Opsi B salah karena tidak mengulang eksekusi dari baris pertama.",
-      "C": "Opsi C salah karena bukan perintah database.",
-      "D": "Opsi D salah karena tidak mengakhiri proses server."
+      "correct": "Setiap kali onEachFeature dieksekusi untuk ratusan fitur, `map.on('zoomend', ...)` mendaftarkan handler baru ke instance map. Ini menyebabkan ribuan handler menumpuk di memori. Seharusnya listen event zoom di level map sekali saja secara global.",
+      "A": "Benar. Menambahkan handler ke map di dalam loop fitur menyebabkan kebocoran event listener masif.",
+      "B": "Salah. map.on adalah method resmi pendaftaran event Leaflet.",
+      "C": "Salah. zoomend adalah event standar siklus peta Leaflet.",
+      "D": "Salah. Layer marker mendukung custom icon."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-197",
     "level": "intermediate",
-    "topic": "Node.js",
-    "question": "Teknik keamanan apakah di Node.js yang membatasi jumlah permintaan HTTP dari satu alamat IP dalam jangka waktu tertentu (misal maksimal 100 request per menit) untuk mencegah serangan DoS?",
+    "topic": "PostGIS ST_Difference Direction",
+    "questionType": "debug",
+    "question": "Mengapa hasil ST_Difference(A, B) berbeda secara drastis dengan ST_Difference(B, A)?\n\n```sql\n-- Hasil Query 1: ST_Difference(geom_a, geom_b)\n-- Hasil Query 2: ST_Difference(geom_b, geom_a)\n```",
+    "code": "-- Hasil Query 1: ST_Difference(geom_a, geom_b)\n-- Hasil Query 2: ST_Difference(geom_b, geom_a)",
     "options": {
-      "A": "Rate Limiting (menggunakan library express-rate-limit)",
-      "B": "Data Encryption",
-      "C": "File Upload Filtering",
-      "D": "Database Indexing"
+      "A": "ST_Difference mengembalikan bagian geometri pertama yang TIDAK tumpang tindih dengan geometri kedua (operasi himpunan pengurangan A - B tidak bersifat komutatif)",
+      "B": "PostGIS memiliki bug acak pada operasi pengurangan",
+      "C": "ST_Difference selalu mengembalikan geometri yang lebih kecil",
+      "D": "Kedua kueri seharusnya menghasilkan geometri yang sama persis"
     },
     "answer": "A",
     "explanation": {
-      "correct": "express-rate-limit memantau frekuensi request dari IP klien dan otomatis membalas dengan status 429 Too Many Requests jika kuota request terlampaui.",
-      "A": "Opsi A benar karena Rate Limiting adalah mekanisme pembatasan frekuensi akses API.",
-      "B": "Opsi B salah karena enkripsi untuk kerahasiaan data, bukan throttling.",
-      "C": "Opsi C salah karena filtering upload hanya memeriksa file, bukan laju request.",
-      "D": "Opsi D salah karena indexing untuk optimasi query database."
+      "correct": "Operasi pengurangan himpunan geometri tidak bersifat komutatif: `A - B` menghasilkan area A tanpa bagian yang dipotong B, sedangkan `B - A` menghasilkan area B tanpa bagian yang dipotong A.",
+      "A": "Benar. Pengurangan spasial A - B tidak sama dengan B - A (non-komutatif).",
+      "B": "Salah. Ini adalah perilaku matematika dasar, bukan bug database.",
+      "C": "Salah. Hasil bergantung pada bentuk geometri masing-masing, bukan ukuran.",
+      "D": "Salah. Operasi tidak komutatif sehingga hasilnya pasti berbeda."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-198",
     "level": "intermediate",
-    "topic": "React atau Vue",
-    "question": "Dalam React, kapan Anda sebaiknya menggunakan 'useLayoutEffect' alih-alih 'useEffect' biasa?",
+    "topic": "JavaScript Turfs Along Linestring",
+    "questionType": "debug",
+    "question": "Fungsi `turf.along(line, distance)` menghasilkan titik di luar garis saat jarak yang diminta melebihi total panjang garis. Bagaimana mengamankannya?\n\n```javascript\nfunction getPointAt(line, dist) {\n  const totalLen = turf.length(line, { units: \"kilometers\" });\n  const safeDist = Math.min(dist, totalLen);\n  return turf.along(line, safeDist, { units: \"kilometers\" });\n}\n```",
+    "code": "function getPointAt(line, dist) {\n  const totalLen = turf.length(line, { units: \"kilometers\" });\n  const safeDist = Math.min(dist, totalLen);\n  return turf.along(line, safeDist, { units: \"kilometers\" });\n}",
     "options": {
-      "A": "Ketika Anda perlu membaca layout DOM (seperti getBoundingClientRect) dan melakukan mutasi visual secara sinkron SEBELUM browser melukis (paint) layar untuk mencegah kedipan visual (flicker)",
-      "B": "Untuk memuat data API dari backend",
-      "C": "Pada setiap pemanggilan fungsi biasa",
-      "D": "Ketika tidak membutuhkan akses ke elemen DOM"
+      "A": "Menggunakan Math.min() untuk membatasi jarak agar tidak melebihi total panjang garis linestring",
+      "B": "Mengalikan jarak dengan angka -1",
+      "C": "Menghapus parameter line",
+      "D": "Mengganti garis dengan poligon"
     },
     "answer": "A",
     "explanation": {
-      "correct": "useLayoutEffect berjalan sinkron tepat setelah DOM dimutasi tetapi sebelum browser me-render frame ke layar, sangat penting untuk pengukuran elemen UI yang harus pas tanpa efek berkedip.",
-      "A": "Opsi A benar karena useLayoutEffect berjalan sinkron sebelum visual browser paint.",
-      "B": "Opsi B salah karena pemanggilan API async lebih tepat di useEffect agar tidak memblokir browser paint.",
-      "C": "Opsi C salah karena useLayoutEffect memiliki biaya blocking render.",
-      "D": "Opsi D salah karena useLayoutEffect secara khusus digunakan saat membutuhkan akses pengukuran DOM."
+      "correct": "Jika jarak yang diminta lebih besar dari total panjang garis, `turf.along()` akan mengembalikan titik ujung akhir garis (atau titik ekstrapolasi). Menggunakan `Math.min(dist, totalLen)` menjamin nilai jarak selalu berada dalam batas sah garis.",
+      "A": "Benar. Membatasi jarak input dengan panjang total garis mencegah titik keluar batas.",
+      "B": "Salah. Jarak negatif tidak diperbolehkan pada turf.along.",
+      "C": "Salah. Fungsi membutuhkan geometri linestring untuk dianalisis.",
+      "D": "Salah. turf.along hanya bekerja untuk garis (LineString)."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-199",
     "level": "intermediate",
-    "topic": "Node.js",
-    "question": "Library utility berkecepatan tinggi apakah di ekosistem Node.js yang digunakan untuk memproses, mengubah ukuran (resize), memotong, dan mengonversi format citra raster satelit secara efisien berbasis pustaka libvips C++?",
+    "topic": "Spatial SQL Bounding Box Expansion",
+    "questionType": "debug",
+    "question": "Kueri berikut ingin memperluas batas bounding box pencarian sebesar 0.01 derajat ke segala arah. Fungsi PostGIS apa yang paling tepat?\n\n```sql\nSELECT * FROM roads WHERE geom && ST____(ST_MakePoint(106.8, -6.2), 0.01);\n```",
+    "code": "SELECT * FROM roads WHERE geom && ST____(ST_MakePoint(106.8, -6.2), 0.01);",
     "options": {
-      "A": "Sharp",
-      "B": "Jimp",
-      "C": "Canvas murni",
-      "D": "Babel"
+      "A": "Expand",
+      "B": "Stretch",
+      "C": "Inflate",
+      "D": "Enlarge"
     },
     "answer": "A",
     "explanation": {
-      "correct": "'sharp' adalah modul pengolahan gambar tercepat di Node.js (4-5x lebih cepat dari Jimp/ImageMagick) karena didukung oleh pustaka C libvips multithreaded.",
-      "A": "Opsi A benar karena Sharp adalah standar pemrosesan citra raster performa tinggi di Node.js.",
-      "B": "Opsi B salah karena Jimp ditulis dalam JavaScript murni dan jauh lebih lambat untuk citra besar.",
-      "C": "Opsi C salah karena canvas Node.js lebih berat dan tidak secepat libvips untuk resize citra.",
-      "D": "Opsi D salah karena Babel adalah compiler JavaScript."
+      "correct": "Fungsi `ST_Expand(geom, radius)` membuat bounding box kotak 2D baru yang diperluas ke arah utara, selatan, timur, dan barat sebesar jarak parameter, sangat cepat untuk memicu pencarian indeks GiST.",
+      "A": "Benar. ST_Expand memperluas bounding box geometri untuk query indeks.",
+      "B": "Salah. Stretch bukan nama fungsi PostGIS.",
+      "C": "Salah. Inflate bukan fungsi PostGIS yang valid.",
+      "D": "Salah. Enlarge bukan fungsi resmi PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-200",
     "level": "intermediate",
-    "topic": "React atau Vue",
-    "question": "Komponen React khusus apakah yang digunakan untuk menangkap error JavaScript di mana saja pada tree komponen anak dan menampilkan UI fallback ramah alih-alih merusak seluruh aplikasi?",
+    "topic": "Leaflet GeoJSON Path Hover Effect",
+    "questionType": "debug",
+    "question": "Efek mouseout tidak mengembalikan ketebalan garis poligon ke ukuran awal saat kursor keluar. Apa penyebabnya?\n\n```javascript\npolygon.on(\"mouseover\", () => polygon.setStyle({ weight: 5 }));\npolygon.on(\"mouseout\", () => polygon.setStyle({ weight: 2 }));\n```",
+    "code": "polygon.on(\"mouseover\", () => polygon.setStyle({ weight: 5 }));\npolygon.on(\"mouseout\", () => polygon.setStyle({ weight: 2 }));",
     "options": {
-      "A": "Error Boundary (mengimplementasikan componentDidCatch atau getDerivedStateFromError)",
-      "B": "TryCatchComponent",
-      "C": "SafeWrapper",
-      "D": "NullComponent"
+      "A": "Hardcoding weight: 2 mengabaikan style dinamis awal; cara yang benar adalah menyimpan style asli atau menggunakan geoLayer.resetStyle(e.target)",
+      "B": "Leaflet melarang perubahan properti weight",
+      "C": "Event mouseout hanya bekerja pada tombol keyboard",
+      "D": "Angka 5 terlalu besar untuk CSS browser"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Error Boundary adalah komponen kelas React yang bertindak layaknya blok catch deklaratif untuk komponen UI, mencegah satu layer peta yang error merusak seluruh halaman aplikasi.",
-      "A": "Opsi A benar karena Error Boundary adalah mekanisme resmi penanganan runtime crash komponen di React.",
-      "B": "Opsi B salah karena bukan komponen React bawaan.",
-      "C": "Opsi C salah karena bukan komponen React standar.",
-      "D": "Opsi D salah karena bukan komponen penanganan error."
+      "correct": "Menuliskan angka statis `weight: 2` adalah antipattern jika tiap poligon memiliki konfigurasi bobot atau warna garis yang berbeda-beda. Cara terbaik adalah memanggil `geoLayer.resetStyle(e.target)` untuk mengembalikan semua properti ke definisi fungsi style awal.",
+      "A": "Benar. resetStyle mengembalikan konfigurasi layer secara konsisten sesuai aturan style awal.",
+      "B": "Salah. Leaflet mendukung modifikasi properti weight via setStyle secara dinamis.",
+      "C": "Salah. mouseout adalah event pointer mouse browser.",
+      "D": "Salah. Ketebalan garis 5px sangat umum digunakan untuk efek hover highlight."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-201",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam GeoPandas, fungsi apakah yang digunakan untuk menggabungkan dua tabel spasial berdasarkan relasi geometrisnya (seperti titik yang berada di dalam poligon) bukan berdasarkan kolom kunci teks biasa?",
+    "topic": "Leaflet Custom WMS Layer",
+    "questionType": "completion",
+    "question": "Lengkapi inisialisasi WMS layer Leaflet untuk memanggil layer 'osm:indonesia_roads' dengan format gambar transparan PNG:\n\n```javascript\nconst wmsLayer = L.tileLayer.__(\"https://geoserver.example.com/geoserver/wms\", {\n  layers: \"osm:indonesia_roads\",\n  format: \"image/png\",\n  transparent: true\n}).addTo(map);\n```",
+    "code": "const wmsLayer = L.tileLayer.__(\"https://geoserver.example.com/geoserver/wms\", {\n  layers: \"osm:indonesia_roads\",\n  format: \"image/png\",\n  transparent: true\n}).addTo(map);",
     "options": {
-      "A": "gpd.sjoin(left_df, right_df, how='inner', predicate='within')",
-      "B": "pd.merge(left_df, right_df, on='id')",
-      "C": "gpd.concat_spatial([df1, df2])",
-      "D": "df.spatial_combine()"
+      "A": "wms",
+      "B": "tile",
+      "C": "raster",
+      "D": "vector"
     },
     "answer": "A",
     "explanation": {
-      "correct": "gpd.sjoin (Spatial Join) menggabungkan atribut dari dua GeoDataFrame berdasarkan predikat hubungan ruang (seperti intersects, contains, within) memanfaatkan spatial index R-Tree internal.",
-      "A": "Opsi A benar karena sjoin adalah fungsi resmi Spatial Join di GeoPandas.",
-      "B": "Opsi B salah karena pd.merge adalah join atribut tabular biasa berbasis kolom teks/angka.",
-      "C": "Opsi C salah karena concat_spatial bukan fungsi GeoPandas.",
-      "D": "Opsi D salah karena bukan method DataFrame."
+      "correct": "`L.tileLayer.wms(url, options)` adalah factory method bawaan Leaflet untuk memuat layer peta standar OGC WMS (Web Map Service) secara otomatis.",
+      "A": "Benar. L.tileLayer.wms adalah method resmi Leaflet untuk WMS.",
+      "B": "Salah. tileLayer biasa untuk slippy map {z}/{x}/{y}, bukan parameter WMS.",
+      "C": "Salah. raster bukan method Leaflet.",
+      "D": "Salah. vector bukan factory method tileLayer."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-202",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Bagaimana cara mengubah sistem proyeksi koordinat (CRS) dari sebuah GeoDataFrame di GeoPandas (misal dari EPSG:4326 ke UTM Zone 48S EPSG:32748)?",
+    "topic": "PostGIS Spatial Transformation",
+    "questionType": "completion",
+    "question": "Lengkapi kueri SQL untuk mereproyeksikan koordinat dari WGS 84 (4326) ke Web Mercator (3857):\n\n```sql\nSELECT ST____(geom, 3857) FROM parcel_boundaries;\n```",
+    "code": "SELECT ST____(geom, 3857) FROM parcel_boundaries;",
     "options": {
-      "A": "gdf = gdf.to_crs(epsg=32748)",
-      "B": "gdf.crs = 32748 (secara langsung)",
-      "C": "gdf.reproject(32748)",
-      "D": "gdf.set_projection(32748)"
+      "A": "Transform",
+      "B": "Reproject",
+      "C": "ConvertSRID",
+      "D": "SetProjection"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Method .to_crs() mentransformasikan seluruh koordinat geometri fisik menggunakan modul pyproj, sedangkan menetapkan gdf.crs secara langsung hanya mengubah metadata label tanpa mengubah angka koordinat.",
-      "A": "Opsi A benar karena to_crs() menghitung transformasi koordinat fisik.",
-      "B": "Opsi B salah karena menimpa gdf.crs merusak data koordinat jika tidak sesuai sistem proyeksi aslinya.",
-      "C": "Opsi C salah karena bukan method GeoPandas.",
-      "D": "Opsi D salah karena bukan method GeoPandas."
+      "correct": "`ST_Transform(geometry, target_srid)` adalah fungsi inti PostGIS untuk mengubah koordinat spasial geometri dari satu sistem proyeksi ke sistem proyeksi lainnya.",
+      "A": "Benar. ST_Transform mereproyeksikan koordinat ke SRID baru.",
+      "B": "Salah. Reproject bukan nama fungsi PostGIS.",
+      "C": "Salah. ConvertSRID bukan fungsi resmi PostGIS.",
+      "D": "Salah. SetProjection bukan fungsi SQL PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-203",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dengan pustaka Rasterio di Python, bagaimana cara membuka file citra satelit GeoTIFF dan membaca band spektral pertama sebagai array NumPy 2D?",
+    "topic": "Leaflet GeoJSON Point To Layer",
+    "questionType": "completion",
+    "question": "Lengkapi opsi `pointToLayer` berikut agar setiap titik dirender sebagai lingkaran kecil (L.circleMarker):\n\n```javascript\nL.geoJSON(pointsData, {\n  pointToLayer: function(feature, latlng) {\n    return L.____(latlng, { radius: 6, fillColor: \"blue\" });\n  }\n}).addTo(map);\n```",
+    "code": "L.geoJSON(pointsData, {\n  pointToLayer: function(feature, latlng) {\n    return L.____(latlng, { radius: 6, fillColor: \"blue\" });\n  }\n}).addTo(map);",
     "options": {
-      "A": "with rasterio.open('image.tif') as src: band1 = src.read(1)",
-      "B": "band1 = rasterio.read_image('image.tif')[0]",
-      "C": "band1 = np.load_tif('image.tif')",
-      "D": "band1 = rasterio.open('image.tif').get_pixels()"
+      "A": "circleMarker",
+      "B": "point",
+      "C": "markerCircle",
+      "D": "dot"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Rasterio menggunakan indeks berbasis 1 (1-indexed) untuk band citra satelit; src.read(1) membaca seluruh nilai piksel band 1 ke dalam array NumPy 2D.",
-      "A": "Opsi A benar karena merupakan idiom standar pembacaan band citra satelit di Rasterio.",
-      "B": "Opsi B salah karena bukan sintaks Rasterio.",
-      "C": "Opsi C salah karena NumPy tidak memiliki method load_tif bawaan.",
-      "D": "Opsi D salah karena bukan method Rasterio."
+      "correct": "`L.circleMarker(latlng, options)` membuat lingkaran vektor dengan radius tetap dalam pixel, sangat cocok untuk merender ratusan titik GeoJSON dengan ringan.",
+      "A": "Benar. L.circleMarker merender titik sebagai lingkaran vektor berbasis pixel.",
+      "B": "Salah. L.point adalah koordinat 2D pixel internal, bukan layer visual.",
+      "C": "Salah. markerCircle bukan class Leaflet.",
+      "D": "Salah. dot bukan komponen bawaan Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-204",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Bagaimana rumus kalkulasi indeks vegetasi NDVI menggunakan dua array band NumPy (nir dan red) di Python dengan penanganan pembagian dengan nol (zero division)?",
+    "topic": "PostGIS Geometry Simplification",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi PostGIS berikut untuk menyederhanakan geometri batas wilayah tanpa merusak topologi poligon:\n\n```sql\nSELECT ST____(geom, 0.005) FROM country_borders;\n```",
+    "code": "SELECT ST____(geom, 0.005) FROM country_borders;",
     "options": {
-      "A": "ndvi = np.where((nir + red) == 0, 0, (nir - red) / (nir + red))",
-      "B": "ndvi = (nir - red) / (nir + red) (tanpa penanganan nol)",
-      "C": "ndvi = nir / red",
-      "D": "ndvi = np.multiply(nir, red)"
+      "A": "SimplifyPreserveTopology",
+      "B": "SimplifyLinear",
+      "C": "ReducePoints",
+      "D": "CleanBorders"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Penggunaan np.where() mencegah munculnya RuntimeWarning 'divide by zero encountered in divide' dan nilai NaN ketika piksel bernilai nol (misal area masking no-data atau background hitam).",
-      "A": "Opsi A benar karena menangani pembagian dengan nol secara elegan pada array NumPy.",
-      "B": "Opsi B salah karena dapat memicu RuntimeWarning dan menghasilkan nilai NaN/Inf.",
-      "C": "Opsi C salah karena itu adalah Simple Ratio, bukan NDVI.",
-      "D": "Opsi D salah karena perkalian bukan rumus indeks normalisasi selisih."
+      "correct": "`ST_SimplifyPreserveTopology` menyederhanakan geometri poligon menggunakan Douglas-Peucker sambil menjamin bahwa poligon tidak akan menghasilkan lubang atau self-intersection yang melanggar topologi.",
+      "A": "Benar. ST_SimplifyPreserveTopology mencegah rusaknya topologi poligon saat disederhanakan.",
+      "B": "Salah. SimplifyLinear bukan nama fungsi PostGIS.",
+      "C": "Salah. ReducePoints bukan fungsi resmi PostGIS.",
+      "D": "Salah. CleanBorders bukan fungsi PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-205",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam Shapely, operasi geometri apakah yang digunakan untuk menggabungkan sekumpulan poligon yang saling bertetangga menjadi satu poligon kesatuan tunggal tanpa batas internal?",
+    "topic": "Turf.js Bounding Box",
+    "questionType": "completion",
+    "question": "Lengkapi pemanggilan fungsi Turf.js untuk menghitung bounding box `[minX, minY, maxX, maxY]` dari sebuah objek GeoJSON:\n\n```javascript\nconst bbox = turf.____(geojsonFeatureCollection);\n```",
+    "code": "const bbox = turf.____(geojsonFeatureCollection);",
     "options": {
-      "A": "shapely.ops.unary_union(polygons) (atau shapely.union_all())",
-      "B": "shapely.combine(polygons)",
-      "C": "shapely.merge_shapes(polygons)",
-      "D": "polygons.join()"
+      "A": "bbox",
+      "B": "extent",
+      "C": "envelope",
+      "D": "bounds"
     },
     "answer": "A",
     "explanation": {
-      "correct": "unary_union adalah operasi dissolusi spasial paling efisien di Shapely yang meleburkan banyak geometri menjadi satu representasi geometri gabungan.",
-      "A": "Opsi A benar karena unary_union/union_all adalah fungsi resmi peleburan geometri Shapely.",
-      "B": "Opsi B salah karena bukan fungsi Shapely.",
-      "C": "Opsi C salah karena bukan fungsi Shapely.",
-      "D": "Opsi D salah karena bukan method geometri."
+      "correct": "`turf.bbox(geojson)` menghitung dan mengembalikan array 4 elemen bounding box `[minX, minY, maxX, maxY]` dari fitur atau koleksi fitur GeoJSON.",
+      "A": "Benar. turf.bbox adalah fungsi standar Turf.js untuk menghitung BBOX.",
+      "B": "Salah. extent adalah nama modul Turf lama yang sudah deprecated dan digantikan bbox.",
+      "C": "Salah. turf.envelope menghasilkan poligon persegi, bukan array 4 angka BBOX.",
+      "D": "Salah. bounds bukan nama fungsi utama Turf.js."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-206",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam FastAPI, bagaimana cara mendefinisikan dependensi yang dapat digunakan kembali (seperti sesi koneksi database spasial atau autentikasi JWT)?",
+    "topic": "Spatial SQL Envelope",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi PostGIS untuk membuat geometri persegi panjang bounding box dari 4 koordinat batas:\n\n```sql\nSELECT ST____(106.0, -7.0, 108.0, -6.0, 4326);\n```",
+    "code": "SELECT ST____(106.0, -7.0, 108.0, -6.0, 4326);",
     "options": {
-      "A": "Menggunakan 'Depends(get_db)' pada parameter fungsi endpoint",
-      "B": "Menggunakan import global biasa di setiap file",
-      "C": "Menggunakan variabel global global_db = ...",
-      "D": "Menyimpan koneksi database di file teks"
+      "A": "MakeEnvelope",
+      "B": "CreateBox",
+      "C": "BuildBBox",
+      "D": "MakePolygonFromBounds"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Sistem Dependency Injection FastAPI menggunakan Depends() untuk menyelesaikan dependensi secara deklaratif per-request, memastikan resource (seperti DB session) dibuka dan ditutup dengan benar via generator.",
-      "A": "Opsi A benar karena Depends() adalah mekanisme resmi Dependency Injection FastAPI.",
-      "B": "Opsi B salah karena import global menyulitkan mocking saat unit testing.",
-      "C": "Opsi C salah karena variabel global tidak thread-safe dan memicu race condition pada async request.",
-      "D": "Opsi D salah karena bukan cara manajemen koneksi database."
+      "correct": "`ST_MakeEnvelope(xmin, ymin, xmax, ymax, srid)` membuat geometri poligon persegi empat sempurna dari batas koordinat bounding box yang diberikan.",
+      "A": "Benar. ST_MakeEnvelope menghasilkan poligon persegi dari parameter minX, minY, maxX, maxY.",
+      "B": "Salah. CreateBox bukan nama fungsi PostGIS.",
+      "C": "Salah. BuildBBox bukan fungsi spasial PostGIS.",
+      "D": "Salah. MakePolygonFromBounds bukan fungsi resmi."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-207",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam Rasterio, atribut apakah yang memuat informasi matriks transformasi affine yang memetakan koordinat piksel (kolom, baris) ke koordinat georeferensi bumi nyata (X, Y)?",
+    "topic": "Leaflet GeoJSON Interactive State",
+    "questionType": "completion",
+    "question": "Lengkapi kode berikut agar layer poligon tidak merespons event mouse (pointer pass-through ke layer di bawahnya):\n\n```javascript\nconst layer = L.geoJSON(data, {\n  style: {\n    ____: false,\n    color: \"#333\"\n  }\n});\n```",
+    "code": "const layer = L.geoJSON(data, {\n  style: {\n    ____: false,\n    color: \"#333\"\n  }\n});",
     "options": {
-      "A": "src.transform",
-      "B": "src.matrix",
-      "C": "src.affine_coords",
-      "D": "src.geotransform_array"
+      "A": "interactive",
+      "B": "clickable",
+      "C": "pointerEvents",
+      "D": "active"
     },
     "answer": "A",
     "explanation": {
-      "correct": "src.transform adalah objek Affine yang mendefinisikan ukuran piksel (resolusi), sudut rotasi, dan koordinat sudut kiri atas (origin X, Y) citra raster.",
-      "A": "Opsi A benar karena src.transform adalah atribut resmi matriks affine di Rasterio.",
-      "B": "Opsi B salah karena bukan atribut Rasterio.",
-      "C": "Opsi C salah karena bukan atribut Rasterio.",
-      "D": "Opsi D salah karena itu format lama tuple GDAL, bukan objek Rasterio."
+      "correct": "Opsi `interactive: false` pada path options Leaflet menonaktifkan penangkapan mouse/touch event pada layer tersebut sehingga event diteruskan ke layer di belakangnya.",
+      "A": "Benar. interactive: false menonaktifkan penanganan interaksi mouse pada layer.",
+      "B": "Salah. clickable adalah opsi Leaflet v0.7 lama yang sudah diganti oleh interactive di Leaflet v1.0+.",
+      "C": "Salah. pointerEvents adalah properti CSS mentah, bukan opsi Path Leaflet.",
+      "D": "Salah. active bukan opsi style layer Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-208",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Pustaka Python apakah yang menjadi antarmuka standar untuk memformat dan mengeksekusi konversi CRS serta koordinat geodetik antar kode EPSG?",
+    "topic": "PostGIS Spatial Centroid Calculation",
+    "questionType": "completion",
+    "question": "Lengkapi kueri SQL berikut untuk menghitung titik pusat geometri:\n\n```sql\nSELECT id, ST____(geom) as center_geom FROM building_footprints;\n```",
+    "code": "SELECT id, ST____(geom) as center_geom FROM building_footprints;",
     "options": {
-      "A": "pyproj (membungkus pustaka C PROJ)",
-      "B": "scikit-learn",
-      "C": "pandas",
-      "D": "pydantic"
+      "A": "Centroid",
+      "B": "Center",
+      "C": "Midpoint",
+      "D": "Middle"
     },
     "answer": "A",
     "explanation": {
-      "correct": "pyproj adalah pustaka Python resmi untuk transformasi kartografis dan perhitungan geodetik berbasis standar pustaka C PROJ.",
-      "A": "Opsi A benar karena pyproj adalah standar transformasi proyeksi di ekosistem spasial Python.",
-      "B": "Opsi B salah karena scikit-learn untuk machine learning.",
-      "C": "Opsi C salah karena pandas untuk analisis data tabular umum.",
-      "D": "Opsi D salah karena pydantic untuk validasi skema data."
+      "correct": "`ST_Centroid(geom)` menghitung pusat massa geometrik dari poligon, garis, atau kumpulan titik.",
+      "A": "Benar. ST_Centroid adalah fungsi OGC resmi untuk pusat massa geometri.",
+      "B": "Salah. Center bukan nama fungsi spasial PostGIS.",
+      "C": "Salah. Midpoint digunakan untuk titik tengah garis pada beberapa library, bukan nama fungsi PostGIS.",
+      "D": "Salah. Middle bukan fungsi PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-209",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Di GeoDjango, lookup query spasial apakah yang digunakan untuk mencari semua record entitas yang berjarak maksimal D meter dari sebuah titik koordinat referensi?",
+    "topic": "Leaflet Layer Control",
+    "questionType": "completion",
+    "question": "Lengkapi penambahan kontrol layer (layer switcher basemap dan overlay) di pojok kanan atas peta:\n\n```javascript\nconst baseMaps = { \"OSM\": osmLayer, \"Satellite\": satLayer };\nconst overlayMaps = { \"Rute\": routeLayer };\nL.control.____(baseMaps, overlayMaps).addTo(map);\n```",
+    "code": "const baseMaps = { \"OSM\": osmLayer, \"Satellite\": satLayer };\nconst overlayMaps = { \"Rute\": routeLayer };\nL.control.____(baseMaps, overlayMaps).addTo(map);",
     "options": {
-      "A": "City.objects.filter(location__dwithin=(point, D))",
-      "B": "City.objects.filter(location__distance_lte=D)",
-      "C": "City.objects.filter(location__radius=D)",
-      "D": "City.objects.filter(location__near=point)"
+      "A": "layers",
+      "B": "switcher",
+      "C": "legend",
+      "D": "selector"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Lookup spasial '__dwithin' di GeoDjango memanfaatkan fungsi PostGIS ST_DWithin yang secara optimal menggunakan indeks GiST tanpa perlu membuat buffer poligon manual.",
-      "A": "Opsi A benar karena dwithin adalah spatial lookup resmi GeoDjango untuk batas jarak spasial.",
-      "B": "Opsi B salah karena distance_lte bukan lookup spasial standar GeoDjango.",
-      "C": "Opsi C salah karena bukan lookup GeoDjango.",
-      "D": "Opsi D salah karena near adalah lookup MongoDB, bukan GeoDjango PostGIS."
+      "correct": "`L.control.layers(baseLayers, overlays, options)` adalah komponen UI resmi Leaflet untuk menyediakan panel pilihan basemap dan checkbox toggle layer overlay.",
+      "A": "Benar. L.control.layers adalah class resmi Leaflet layer switcher.",
+      "B": "Salah. switcher bukan nama kontrol bawaan Leaflet.",
+      "C": "Salah. legend bukan class kontrol default Leaflet.",
+      "D": "Salah. selector bukan method kontrol bawaan Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-210",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam FastAPI, apa keuntungan mendeklarasikan endpoint sebagai asynchronous ('async def') saat melakukan panggilan I/O database atau request API eksternal?",
+    "topic": "PostGIS Spatial Split / Subdivide",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi PostGIS untuk membagi poligon raksasa yang memiliki puluhan ribu vertex menjadi potongan-potongan poligon kecil maksimal 255 vertex agar query spasial menjadi cepat:\n\n```sql\nSELECT ST____(geom, 255) FROM large_forest_polygons;\n```",
+    "code": "SELECT ST____(geom, 255) FROM large_forest_polygons;",
     "options": {
-      "A": "Event loop server tidak terblokir selama menunggu respons I/O, memungkinkan satu worker thread melayani ribuan request concurrent secara non-blocking",
-      "B": "Endpoint otomatis berjalan di komputer klien",
-      "C": "FastAPI otomatis menghapus semua error kode",
-      "D": "Query SQL otomatis menjadi dua kali lebih cepat di database server"
+      "A": "Subdivide",
+      "B": "Chop",
+      "C": "SplitPoints",
+      "D": "Fragment"
     },
     "answer": "A",
     "explanation": {
-      "correct": "async/await menyerahkan kendali kembali ke event loop ASGI saat menunggu operasi I/O jaringan/database, menjaga konkurensi server tetap tinggi dengan konsumsi memori minimal.",
-      "A": "Opsi A benar karena menjelaskan sifat non-blocking event loop pada endpoint async.",
-      "B": "Opsi B salah karena endpoint dieksekusi di backend server.",
-      "C": "Opsi C salah karena async/await tidak meniadakan penanganan error.",
-      "D": "Opsi D salah karena kecepatan engine internal database tidak dipengaruhi langsung oleh deklarasi async Python."
+      "correct": "`ST_Subdivide(geom, max_vertices)` memotong poligon besar menjadi sub-poligon yang lebih kecil dengan jumlah vertex maksimal tertentu, meningkatkan efisiensi indeks GiST dan kecepatan kueri spasial hingga 100x lipat.",
+      "A": "Benar. ST_Subdivide memecah geometri kompleks menjadi bagian-bagian berbobot ringan.",
+      "B": "Salah. Chop bukan nama fungsi PostGIS.",
+      "C": "Salah. SplitPoints bukan fungsi resmi PostGIS.",
+      "D": "Salah. Fragment bukan fungsi spasial PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-211",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Pustaka Python open-source apakah yang sering digunakan sebagai Cloud Optimized GeoTIFF (COG) reader dinamis untuk memotong tile citra satelit langsung dari penyimpanan S3/GCS?",
+    "topic": "Turf.js Midpoint",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi penghitungan titik tengah antara dua titik di Turf.js:\n\n```javascript\nconst mid = turf.____(point1, point2);\n```",
+    "code": "const mid = turf.____(point1, point2);",
     "options": {
-      "A": "rio-tiler atau Titiler",
-      "B": "Django",
-      "C": "PyMongo",
-      "D": "SqlAlchemy murni"
+      "A": "midpoint",
+      "B": "center",
+      "C": "average",
+      "D": "haleway"
     },
     "answer": "A",
     "explanation": {
-      "correct": "rio-tiler dan TiTiler adalah pustaka Python spesialis untuk membaca ubin (tile) dan melakukan kalkulasi matematika band secara dinamis dari file COG di cloud via HTTP range requests.",
-      "A": "Opsi A benar karena rio-tiler/TiTiler adalah standar dinamis tile generator COG di Python.",
-      "B": "Opsi B salah karena Django adalah full-stack web framework umum.",
-      "C": "Opsi C salah karena PyMongo adalah driver database MongoDB.",
-      "D": "Opsi D salah karena SQLAlchemy adalah ORM database SQL."
+      "correct": "`turf.midpoint(point1, point2)` menghitung titik tepat di tengah garis geodesik antara dua titik koordinat.",
+      "A": "Benar. turf.midpoint mengembalikan titik tengah antara dua koordinat.",
+      "B": "Salah. turf.center menghitung pusat bounding box dari koleksi fitur, bukan midpoint dua titik.",
+      "C": "Salah. average bukan nama fungsi Turf.js.",
+      "D": "Salah. haleway bukan nama fungsi di Turf.js."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-212",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam Shapely, atribut apakah yang digunakan untuk memverifikasi apakah sebuah poligon geometris berstatus 'Valid' (tidak memiliki garis saling silang sendiri / self-intersection)?",
+    "topic": "PostGIS Closest Point",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi PostGIS untuk menemukan titik pada geometri A yang paling dekat dengan geometri B:\n\n```sql\nSELECT ST____(line_geom, point_geom);\n```",
+    "code": "SELECT ST____(line_geom, point_geom);",
     "options": {
-      "A": "geom.is_valid",
-      "B": "geom.check()",
-      "C": "geom.has_no_errors",
-      "D": "geom.is_clean"
+      "A": "ClosestPoint",
+      "B": "NearestVertex",
+      "C": "MinDistancePoint",
+      "D": "SnapPoint"
     },
     "answer": "A",
     "explanation": {
-      "correct": "geom.is_valid mengevaluasi kepatuhan terhadap aturan topologi OGC (misal poligon tidak boleh berbentuk angka 8 berpita sendiri); jika tidak valid, fungsi shapely.validation.make_valid() dapat digunakan untuk memperbaikinya.",
-      "A": "Opsi A benar karena is_valid adalah properti resmi validasi topologi geometri Shapely.",
-      "B": "Opsi B salah karena bukan method Shapely.",
-      "C": "Opsi C salah karena bukan atribut Shapely.",
-      "D": "Opsi D salah karena bukan properti Shapely."
+      "correct": "`ST_ClosestPoint(geomA, geomB)` mengembalikan titik 2D pada geomA yang jaraknya paling dekat dengan geomB.",
+      "A": "Benar. ST_ClosestPoint mencari titik terdekat pada geometri sumber ke geometri target.",
+      "B": "Salah. NearestVertex hanya mencari simpul sudut, bukan sembarang titik pada kontur.",
+      "C": "Salah. MinDistancePoint bukan nama fungsi PostGIS.",
+      "D": "Salah. SnapPoint bukan nama fungsi pencarian jarak terdekat."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-213",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam GeoPandas, method apakah yang digunakan untuk menghitung luas area setiap poligon di dalam kolom geometri?",
+    "topic": "Leaflet Polygon LatLngs Extraction",
+    "questionType": "completion",
+    "question": "Lengkapi pemanggilan method untuk mendapatkan seluruh array koordinat dari sebuah objek `L.polygon` yang sedang diedit:\n\n```javascript\nconst coords = polygonLayer.____();\n```",
+    "code": "const coords = polygonLayer.____();",
     "options": {
-      "A": "gdf['area'] = gdf.geometry.area",
-      "B": "gdf['area'] = gdf.calc_area()",
-      "C": "gdf['area'] = gpd.compute_size(gdf)",
-      "D": "gdf['area'] = gdf.geometry.size"
+      "A": "getLatLngs",
+      "B": "getCoordinates",
+      "C": "toPoints",
+      "D": "extractVertices"
     },
     "answer": "A",
     "explanation": {
-      "correct": "gdf.geometry.area mengeksekusi kalkulasi luas permukaan planar untuk setiap baris geometri dalam GeoSeries (menghasilkan satuan meter persegi jika CRS adalah proyeksi planar seperti UTM).",
-      "A": "Opsi A benar karena .geometry.area adalah properti perhitungan luas resmi di GeoPandas.",
-      "B": "Opsi B salah karena bukan method GeoPandas.",
-      "C": "Opsi C salah karena bukan fungsi GeoPandas.",
-      "D": "Opsi D salah karena .size mengembalikan jumlah elemen baris, bukan luas geometris."
+      "correct": "Method `getLatLngs()` mengembalikan array koordinat `L.LatLng` yang menyusun poligon atau cincin poligon berlubang di Leaflet.",
+      "A": "Benar. getLatLngs() adalah method resmi Leaflet untuk membaca koordinat poligon/polyline.",
+      "B": "Salah. getCoordinates bukan method Leaflet melainkan istilah GeoJSON.",
+      "C": "Salah. toPoints bukan method bawaan Leaflet.",
+      "D": "Salah. extractVertices bukan method Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-214",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Pustaka ORM Python apakah yang menyediakan ekstensi 'GeoAlchemy2' untuk bekerja dengan tipe data spasial PostGIS di SQLAlchemy?",
+    "topic": "PostGIS Line Interpolate Point",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi PostGIS untuk menemukan titik di sepanjang garis pada posisi 50% (tengah) panjang garis:\n\n```sql\nSELECT ST____(line_geom, 0.5);\n```",
+    "code": "SELECT ST____(line_geom, 0.5);",
     "options": {
-      "A": "SQLAlchemy",
-      "B": "Peewee",
-      "C": "Tortoise ORM",
-      "D": "Pony ORM"
+      "A": "LineInterpolatePoint",
+      "B": "PointOnLine",
+      "C": "InterpolateDistance",
+      "D": "SplitLinePercent"
     },
     "answer": "A",
     "explanation": {
-      "correct": "GeoAlchemy2 mengintegrasikan tipe geometri/geografi PostGIS dan fungsi ST_* ke dalam SQLAlchemy, memungkinkan kueri spasial deklaratif di FastAPI.",
-      "A": "Opsi A benar karena GeoAlchemy2 dibangun di atas SQLAlchemy.",
-      "B": "Opsi B salah karena Peewee menggunakan playhouse.postgres_ext.",
-      "C": "Opsi C salah karena Tortoise ORM adalah ORM async terpisah.",
-      "D": "Opsi D salah karena Pony ORM adalah framework ORM independen."
+      "correct": "`ST_LineInterpolatePoint(line, fraction)` mengambil nilai fraksi antara 0.0 (awal garis) hingga 1.0 (akhir garis) dan mengembalikan titik koordinat pada posisi persentase tersebut.",
+      "A": "Benar. ST_LineInterpolatePoint menginterpolasi titik pada fraksi panjang garis.",
+      "B": "Salah. PointOnLine bukan nama fungsi PostGIS.",
+      "C": "Salah. InterpolateDistance menerima jarak absolut, bukan fraksi 0.5.",
+      "D": "Salah. SplitLinePercent bukan nama fungsi resmi PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-215",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Format file citra satelit raster modern apakah yang dirancang dengan ubin internal (tiled) dan piramida resolusi (overviews) agar dapat dibaca sebagian via HTTP GET Range Requests tanpa perlu mendownload seluruh file giga-byte?",
+    "topic": "Turf.js Clean Coordinates",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi Turf.js yang digunakan untuk menghapus koordinat duplikat atau garis yang berulang pada GeoJSON:\n\n```javascript\nconst cleaned = turf.____(dirtyGeojson);\n```",
+    "code": "const cleaned = turf.____(dirtyGeojson);",
     "options": {
-      "A": "Cloud Optimized GeoTIFF (COG)",
-      "B": "BMP biasa",
-      "C": "JPEG statis",
-      "D": "RAW camera"
+      "A": "cleanCoords",
+      "B": "removeDuplicates",
+      "C": "sanitizeGeometry",
+      "D": "filterPoints"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Cloud Optimized GeoTIFF (COG) menyusun blok byte data citra sehingga klien web atau server GIS dapat langsung meminta byte tertentu dari cloud storage (S3 bucket) hanya untuk area pandang yang aktif.",
-      "A": "Opsi A benar karena COG adalah standar format citra satelit cloud-native industri.",
-      "B": "Opsi B salah karena BMP tidak memiliki overviews maupun struktur internal geospasial.",
-      "C": "Opsi C salah karena JPEG statis biasa tidak mendukung georeferensi multi-band bertingkat.",
-      "D": "Opsi D salah karena file RAW kamera tidak memiliki georeferensi standar CRS."
+      "correct": "`turf.cleanCoords(geojson)` menghapus titik-titik simpul yang berhimpitan/duplikat tanpa mengubah bentuk geometris fitur.",
+      "A": "Benar. cleanCoords adalah fungsi Turf.js untuk membersihkan koordinat berulang.",
+      "B": "Salah. removeDuplicates bukan nama fungsi Turf.js.",
+      "C": "Salah. sanitizeGeometry bukan nama fungsi di Turf.js.",
+      "D": "Salah. filterPoints bukan nama fungsi reduksi duplikat Turf."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-216",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam GeoDjango, bagaimana cara menyerialisasi queryset model spasial langsung menjadi format string GeoJSON tanpa serializer eksternal?",
+    "topic": "PostGIS Spatial Aggregation to GeoJSON",
+    "questionType": "completion",
+    "question": "Lengkapi kueri SQL untuk menggabungkan banyak baris data menjadi satu objek tunggal FeatureCollection GeoJSON secara native di PostgreSQL:\n\n```sql\nSELECT jsonb_build_object(\n  'type', 'FeatureCollection',\n  'features', jsonb_agg(ST____(p.*)::jsonb)\n) FROM pois p;\n```",
+    "code": "SELECT jsonb_build_object(\n  'type', 'FeatureCollection',\n  'features', jsonb_agg(ST____(p.*)::jsonb)\n) FROM pois p;",
     "options": {
-      "A": "from django.core.serializers import serialize; data = serialize('geojson', MyModel.objects.all(), geometry_field='geom')",
-      "B": "data = MyModel.objects.to_geojson()",
-      "C": "data = json.dumps(MyModel.objects.all())",
-      "D": "data = MyModel.export_json()"
+      "A": "AsGeoJSON",
+      "B": "MakeFeature",
+      "C": "RowToGeoJSON",
+      "D": "EncodeJSON"
     },
     "answer": "A",
     "explanation": {
-      "correct": "GeoDjango menyediakan serializer 'geojson' bawaan yang otomatis memformat entitas model menjadi struktur FeatureCollection GeoJSON lengkap beserta propertinya.",
-      "A": "Opsi A benar karena merupakan fungsi resmi serialisasi GeoJSON di GeoDjango.",
-      "B": "Opsi B salah karena method to_geojson tidak ada di QuerySet standar.",
-      "C": "Opsi C salah karena json.dumps standar gagal mem-parse objek model Django.",
-      "D": "Opsi D salah karena bukan method model Django."
+      "correct": "`ST_AsGeoJSON(record)` di PostGIS dapat menerima seluruh record baris tabel dan otomatis mengonversinya menjadi objek Feature GeoJSON lengkap beserta atribut properties.",
+      "A": "Benar. ST_AsGeoJSON(row) mengonversi record baris tabel menjadi GeoJSON Feature.",
+      "B": "Salah. MakeFeature bukan fungsi PostGIS.",
+      "C": "Salah. RowToGeoJSON bukan fungsi bawaan PostGIS.",
+      "D": "Salah. EncodeJSON bukan fungsi spasial."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-217",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Pustaka Python apakah yang menjadi antarmuka tingkat tinggi untuk membaca dan menulis data vektor spasial (seperti Shapefile, GeoPackage) menggunakan konsep iterator dictionary Python?",
+    "topic": "Leaflet PanTo Animation",
+    "questionType": "completion",
+    "question": "Lengkapi method pemindahan center peta secara halus dengan animasi translasi (pan):\n\n```javascript\nmap.____([-6.9, 107.6], { animate: true, duration: 1.5 });\n```",
+    "code": "map.____([-6.9, 107.6], { animate: true, duration: 1.5 });",
     "options": {
-      "A": "Fiona",
-      "B": "Requests",
-      "C": "NLTK",
-      "D": "Spacy"
+      "A": "panTo",
+      "B": "moveTo",
+      "C": "glideTo",
+      "D": "shiftView"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Fiona membungkus library C OGR untuk membaca dan menulis dataset vektor geospasial menjadi objek kamus (dict) yang bersih dan ramah Python.",
-      "A": "Opsi A benar karena Fiona adalah pustaka I/O data vektor standar di Python.",
-      "B": "Opsi B salah karena Requests adalah HTTP client.",
-      "C": "Opsi C salah karena NLTK untuk pemrosesan bahasa alami (NLP).",
-      "D": "Opsi D salah karena Spacy untuk NLP tingkat lanjut."
+      "correct": "Method `map.panTo(latlng, options)` menggeser pusat tampilan peta ke lokasi baru dengan transisi animasi halus tanpa mengubah tingkat zoom saat ini.",
+      "A": "Benar. map.panTo adalah method resmi Leaflet untuk translasi pusat peta.",
+      "B": "Salah. moveTo bukan method bawaan peta Leaflet.",
+      "C": "Salah. glideTo bukan nama method Leaflet.",
+      "D": "Salah. shiftView bukan method Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-218",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam FastAPI, bagaimana cara mendefinisikan Background Tasks untuk memproses analisis spasial yang memakan waktu (seperti clipping citra satelit) setelah respons HTTP dikembalikan ke klien?",
+    "topic": "PostGIS Delaunay Triangulation",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi PostGIS untuk menghasilkan jaring-jaring segitiga Delaunay dari sebaran titik koordinat:\n\n```sql\nSELECT ST____(ST_Collect(geom)) FROM elevation_points;\n```",
+    "code": "SELECT ST____(ST_Collect(geom)) FROM elevation_points;",
     "options": {
-      "A": "Menambahkan parameter 'background_tasks: BackgroundTasks' pada fungsi endpoint dan memanggil 'background_tasks.add_task(func, *args)'",
-      "B": "Menggunakan perintah time.sleep(100)",
-      "C": "Membuat proses shutdown pada server",
-      "D": "Menonaktifkan async pada endpoint"
+      "A": "DelaunayTriangles",
+      "B": "VoronoiPolygons",
+      "C": "MeshGrid",
+      "D": "TINBuilder"
     },
     "answer": "A",
     "explanation": {
-      "correct": "FastAPI BackgroundTasks memungkinkan eksekusi tugas di background tepat setelah respons HTTP 202 atau 200 terkirim, menjaga waktu respons API tetap instan bagi pengguna.",
-      "A": "Opsi A benar karena BackgroundTasks adalah fitur bawaan resmi FastAPI untuk asynchronous background processing.",
-      "B": "Opsi B salah karena time.sleep memblokir thread server.",
-      "C": "Opsi C salah karena mematikan server menghentikan seluruh layanan.",
-      "D": "Opsi D salah karena menonaktifkan async tidak membuat background task."
+      "correct": "`ST_DelaunayTriangles(geom, tolerance, flag)` menghasilkan triangulasi Delaunay poligon TIN (Triangulated Irregular Network) dari kumpulan titik spasial.",
+      "A": "Benar. ST_DelaunayTriangles adalah fungsi pembangun TIN Delaunay di PostGIS.",
+      "B": "Salah. VoronoiPolygons menghasilkan diagram Voronoi/Thiessen polygon, bukan segitiga Delaunay.",
+      "C": "Salah. MeshGrid bukan fungsi PostGIS.",
+      "D": "Salah. TINBuilder bukan fungsi resmi SQL PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-219",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam Shapely, method apakah yang digunakan untuk mengecek apakah titik (Point) berada tepat di dalam batas poligon (Polygon)?",
+    "topic": "Leaflet GeoJSON eachLayer",
+    "questionType": "completion",
+    "question": "Lengkapi perulangan pada setiap layer anak yang berada di dalam `L.geoJSON` layer:\n\n```javascript\ngeoJsonLayer.____(function(layer) {\n  layer.openPopup();\n});\n```",
+    "code": "geoJsonLayer.____(function(layer) {\n  layer.openPopup();\n});",
     "options": {
-      "A": "polygon.contains(point) (atau point.within(polygon))",
-      "B": "polygon.has_point(point)",
-      "C": "polygon.in(point)",
-      "D": "polygon.inside(point)"
+      "A": "eachLayer",
+      "B": "forEach",
+      "C": "iterate",
+      "D": "mapLayers"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Metode topologi OGC di Shapely menyediakan polygon.contains(point) (menghasilkan True jika titik berada di interior poligon) atau point.within(polygon).",
-      "A": "Opsi A benar karena contains dan within adalah predikat topologi standar Shapely.",
-      "B": "Opsi B salah karena bukan method Shapely.",
-      "C": "Opsi C salah karena in adalah keyword bahasa Python.",
-      "D": "Opsi D salah karena bukan method Shapely."
+      "correct": "Method `eachLayer(fn)` adalah metode iterasi standar pada semua turunan `L.LayerGroup` di Leaflet untuk mengeksekusi fungsi pada tiap layer anak.",
+      "A": "Benar. eachLayer adalah method iterasi resmi layer Leaflet.",
+      "B": "Salah. forEach adalah method bawaan Array JavaScript, bukan method L.LayerGroup Leaflet.",
+      "C": "Salah. iterate bukan method Leaflet.",
+      "D": "Salah. mapLayers bukan method Leaflet."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-220",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Pustaka analisis data ilmiah Python apakah yang menyediakan struktur data N-Dimensional Array berlabel yang sangat populer untuk analisis citra satelit berseri waktu (data cube)?",
+    "topic": "Spatial SQL Bounding Box Cast",
+    "questionType": "completion",
+    "question": "Lengkapi operator casting di PostGIS untuk mengubah kolom geometri menjadi tipe bounding box 2D (`box2d`):\n\n```sql\nSELECT geom____box2d FROM parcels;\n```",
+    "code": "SELECT geom____box2d FROM parcels;",
     "options": {
-      "A": "Xarray",
-      "B": "Flask",
-      "C": "PyTest",
-      "D": "BeautifulSoup"
+      "A": "::",
+      "B": "->",
+      "C": "=>",
+      "D": "%"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Xarray memperkenalkan label dimensi, koordinat, dan atribut pada array multi-dimensi NumPy, menjadi standar komputasi geosains untuk data cuaca dan citra satelit time-series (seperti NetCDF / Zarr).",
-      "A": "Opsi A benar karena Xarray adalah pustaka standar komputasi multi-dimensional data cube geosains.",
-      "B": "Opsi B salah karena Flask adalah web framework.",
-      "C": "Opsi C salah karena PyTest adalah framework pengujian unit.",
-      "D": "Opsi D salah karena BeautifulSoup adalah library parser HTML."
+      "correct": "Di PostgreSQL, operator double-colon `::` digunakan untuk type casting (misal `geom::box2d`), mengekstrak bounding box 2D dari geometri.",
+      "A": "Benar. Operator :: adalah sintaks type casting resmi PostgreSQL.",
+      "B": "Salah. -> digunakan untuk navigasi JSON key di PostgreSQL.",
+      "C": "Salah. => digunakan untuk named arguments di SQL.",
+      "D": "Salah. % adalah operator modulo."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-221",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Format geodatabase terbuka berbasis SQLite satu file (.gpkg) yang distandarisasi oleh OGC untuk menyimpan data vektor dan raster sekaligus tanpa batasan ukuran Shapefile 2GB adalah:",
+    "topic": "Vector Tiles vs GeoJSON",
+    "questionType": "best-practice",
+    "question": "Kapan sebuah sistem web GIS sebaiknya bermigrasi dari pengiriman data GeoJSON biasa ke Vector Tiles (MVT / Mapbox Vector Tiles)?\n\n```javascript\n// Pertimbangan arsitektur data spasial web:\n```",
+    "code": "// Pertimbangan arsitektur data spasial web:",
     "options": {
-      "A": "GeoPackage",
-      "B": "KML",
-      "C": "GML",
-      "D": "MapInfo TAB"
+      "A": "Ketika jumlah data melebihi puluhan ribu fitur yang menyebabkan ukuran file GeoJSON membengkak (>5-10 MB) dan membuat browser klien macet",
+      "B": "Ketika data hanya terdiri dari 5 titik marker",
+      "C": "Ketika server tidak memiliki database",
+      "D": "Hanya jika peta ditampilkan di televisi tabung CRT"
     },
     "answer": "A",
     "explanation": {
-      "correct": "GeoPackage (.gpkg) adalah standar terbuka modern OGC berbasis container database SQLite yang mengatasi semua keterbatasan kuno format ESRI Shapefile (seperti batasan ukuran 2GB dan pemotongan nama kolom 10 karakter).",
-      "A": "Opsi A benar karena GeoPackage adalah format wadah spasial standar OGC modern berbasis SQLite.",
-      "B": "Opsi B salah karena KML adalah format berbasis teks XML.",
-      "C": "Opsi C salah karena GML adalah format XML verbose.",
-      "D": "Opsi D salah karena MapInfo TAB adalah format proprietary lama."
+      "correct": "Vector Tiles (MVT) memotong data vektor menjadi potongan grid tile (berdasarkan zoom level) dalam format biner Protocol Buffers yang sangat padat. Browser hanya mengunduh data vektor di viewport aktif, memangkas konsumsi bandwidth dan memori secara dramatis.",
+      "A": "Benar. Vector Tiles mengeliminasi bottleneck transfer dataset masif melalui tiling biner terpartisi.",
+      "B": "Salah. Untuk 5 titik, GeoJSON sederhana jauh lebih cepat dan mudah diimplementasikan.",
+      "C": "Salah. Vector tiles memerlukan backend/tile server pen-generate tile.",
+      "D": "Salah. Perangkat display CRT tidak relevan dengan arsitektur web mapping modern."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-222",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam GeoPandas, bagaimana cara menghitung titik pusat massa (centroid) dari setiap poligon di dalam layer?",
+    "topic": "Leaflet Canvas vs SVG",
+    "questionType": "best-practice",
+    "question": "Mengapa menyetel opsi `{ renderer: L.canvas() }` pada layer Leaflet sangat disarankan ketika merender 10.000 poligon batas persil tanah?\n\n```javascript\n// Konfigurasi renderer Leaflet:\nconst map = L.map(\"map\", { preferCanvas: true });\n```",
+    "code": "// Konfigurasi renderer Leaflet:\nconst map = L.map(\"map\", { preferCanvas: true });",
     "options": {
-      "A": "centroids = gdf.geometry.centroid",
-      "B": "centroids = gdf.get_center_points()",
-      "C": "centroids = gpd.calc_middle(gdf)",
-      "D": "centroids = gdf.geometry.center"
+      "A": "Canvas menggambar seluruh poligon ke dalam satu elemen `<canvas>` tunggal, menghindari pembuatan 10.000 node elemen DOM `<svg>` individual yang membebani browser",
+      "B": "Canvas menghasilkan file gambar berukuran 0 byte",
+      "C": "SVG dilarang oleh konsorsium W3C sejak tahun 2020",
+      "D": "Canvas secara otomatis memperbaiki kesalahan topologi database"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Properti .geometry.centroid mengembalikan GeoSeries berisi titik geometris (Point) yang mewakili pusat gravitasi geometris dari setiap poligon.",
-      "A": "Opsi A benar karena .geometry.centroid adalah properti resmi perhitungan titik pusat di GeoPandas.",
-      "B": "Opsi B salah karena bukan method GeoPandas.",
-      "C": "Opsi C salah karena bukan fungsi GeoPandas.",
-      "D": "Opsi D salah karena bukan properti GeoPandas."
+      "correct": "Mode SVG bawaan Leaflet membuat satu elemen DOM SVG path per fitur. 10.000 elemen DOM menyebabkan browser mengalami layout recalculation dan garbage collection freeze yang parah. Canvas menggambar piksel langsung ke kanvas tunggal dengan beban DOM nol.",
+      "A": "Benar. Canvas menjaga pohon DOM tetap ramping (hanya 1 elemen kanvas untuk ribuan layer).",
+      "B": "Salah. Canvas adalah elemen visual dinamis di memori, bukan file nol byte.",
+      "C": "Salah. SVG adalah standar aktif W3C yang sangat baik untuk fitur skala kecil-menengah.",
+      "D": "Salah. Canvas adalah mesin rendering grafis klien, tidak mengubah data database."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-223",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam FastAPI, bagaimana cara menangani error validasi kustom dan mengembalikan format JSON terstandar saat data koordinat di luar jangkauan geografis?",
+    "topic": "Spatial Index Selection SP-GiST vs GiST",
+    "questionType": "best-practice",
+    "question": "Pada tipe distribusi data spasial bagaimanakah indeks SP-GiST (Space-Partitioned GiST) dapat memberikan performa query lebih cepat dan ukuran indeks lebih kecil daripada GiST standar?\n\n```sql\n-- Pemilihan indeks: CREATE INDEX ... USING SPGIST(geom);\n```",
+    "code": "-- Pemilihan indeks: CREATE INDEX ... USING SPGIST(geom);",
     "options": {
-      "A": "Mendefinisikan @app.exception_handler(RequestValidationError) kustom dan mengembalikan JSONResponse",
-      "B": "Menghapus exception dari skrip Python",
-      "C": "Mengembalikan string teks error polos",
-      "D": "Mematikan server Uvicorn"
+      "A": "Pada data spasial yang memiliki distribusi titik tidak merata dengan banyak kluster kepadatan ekstrem (misal: sebaran titik alamat perkotaan padat vs pedesaan kosong)",
+      "B": "Pada tabel kosong tanpa data",
+      "C": "Hanya untuk menyimpan file audio MP3",
+      "D": "Pada data yang sudah diurutkan alfabet"
     },
     "answer": "A",
     "explanation": {
-      "correct": "FastAPI memungkinkan pendaftaran custom exception handler untuk mencegat RequestValidationError dari Pydantic dan memformat pesan error ke skema respons yang disesuaikan.",
-      "A": "Opsi A benar karena exception handler terpusat adalah cara terstandar kustomisasi respons error di FastAPI.",
-      "B": "Opsi B salah karena error harus divalidasi dan ditangani.",
-      "C": "Opsi C salah karena REST API profesional mewajibkan respons terstruktur berformat JSON.",
-      "D": "Opsi D salah karena mematikan server merusak layanan aplikasi."
+      "correct": "SP-GiST menggunakan partisi ruang non-overlapping (seperti quad-tree atau k-d tree). Pada sebaran data yang memiliki disparitas kepadatan tinggi (skewed distribution), SP-GiST menghemat kedalaman traversal pohon indeks dan mengurangi waktu pencarian.",
+      "A": "Benar. SP-GiST sangat efisien untuk data titik dengan sebaran spasial yang sangat tidak seragam (skewed).",
+      "B": "Salah. Indeks dibuat untuk mempercepat pencarian data yang terisi.",
+      "C": "Salah. SP-GiST di PostGIS khusus untuk tipe spasial dan rentang geometrik.",
+      "D": "Salah. Pengurutan alfabet menggunakan B-Tree."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-224",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Dalam Rasterio, bagaimana cara memotong (mask/clip) citra raster satelit berdasarkan batas poligon area studi dari file GeoJSON?",
+    "topic": "GeoServer WFS vs WMS Selection",
+    "questionType": "best-practice",
+    "question": "Dalam arsitektur Web GIS, kapan sebaiknya frontend memanggil endpoint WMS (Web Map Service) daripada WFS (Web Feature Service)?\n\n```javascript\n// WMS vs WFS di Web Mapping:\n```",
+    "code": "// WMS vs WFS di Web Mapping:",
     "options": {
-      "A": "Menggunakan fungsi 'rasterio.mask.mask(src, shapes, crop=True)'",
-      "B": "Menggunakan method src.clip_image(shapes)",
-      "C": "Memotong array secara manual dengan for loop piksel",
-      "D": "Mengubah file raster menjadi vektor terlebih dahulu"
+      "A": "Saat frontend hanya perlu menampilkan visualisasi peta tanpa perlu memanipulasi geometri mentah atau membaca atribut di sisi klien (server merender citra gambar PNG)",
+      "B": "Saat pengguna ingin mengedit vertex geometri secara interaktif di browser",
+      "C": "Ketika client offline tanpa koneksi internet",
+      "D": "Hanya untuk mengekspor dokumen Microsoft Word"
     },
     "answer": "A",
     "explanation": {
-      "correct": "rasterio.mask.mask mengekstrak subset piksel yang berada di dalam poligon geometri vektor (shapes) dan mengatur nilai di luar poligon menjadi nilai nodata.",
-      "A": "Opsi A benar karena rasterio.mask.mask adalah fungsi clipping raster standar.",
-      "B": "Opsi B salah karena bukan method Rasterio.",
-      "C": "Opsi C salah karena iterasi for loop piksel di Python sangat lambat.",
-      "D": "Opsi D salah karena vektorisasi citra satelit skala penuh sangat boros komputasi dan tidak diperlukan hanya untuk clipping."
+      "correct": "WMS merender data menjadi gambar raster (JPEG/PNG) di sisi server, sehingga sangat ringan untuk browser klien terlepas dari berapa juta baris data di database. WFS mengirimkan koordinat geometri mentah (vektor/GML/GeoJSON) yang cocok untuk pengeditan dan query atribut.",
+      "A": "Benar. WMS merender peta menjadi gambar di server, sangat ideal untuk visualisasi data besar tanpa lag klien.",
+      "B": "Salah. Pengeditan vertex membutuhkan geometri vektor mentah via WFS-T (Transactional WFS).",
+      "C": "Salah. Keduanya membutuhkan koneksi ke map server.",
+      "D": "Salah. WMS adalah standar visualisasi peta geospasial OGC."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-225",
     "level": "intermediate",
-    "topic": "Python (FastAPI atau Django)",
-    "question": "Pustaka Python open source apakah yang digunakan untuk membangun antarmuka dasbor web data geospasial interaktif secara cepat (Rapid Prototyping) berbasis Python murni?",
+    "topic": "Database Connection Pooling with PostGIS",
+    "questionType": "best-practice",
+    "question": "Pengaturan apa pada pooler koneksi seperti PgBouncer yang harus diperhatikan jika aplikasi menggunakan prepared statements untuk query spasial kompleks?\n\n```sql\n-- Mode PgBouncer: Session vs Transaction vs Statement pooling\n```",
+    "code": "-- Mode PgBouncer: Session vs Transaction vs Statement pooling",
     "options": {
-      "A": "Streamlit (atau Panel / Dash)",
-      "B": "Pygame",
-      "C": "Tkinter",
-      "D": "Numpy murni"
+      "A": "Prepared statements memerlukan mode Session pooling, atau konfigurasi khusus (seperti protocol-level named prepared statement support di PgBouncer modern) jika menggunakan Transaction pooling",
+      "B": "Mematikan seluruh sistem keamanan database",
+      "C": "Menggunakan port HTTP 80 untuk koneksi JDBC PostgreSQL",
+      "D": "Menonaktifkan ekstensi PostGIS"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Streamlit memungkinkan data scientist dan GIS developer membangun aplikasi web interaktif lengkap dengan peta Folium/PyDeck hanya dengan menulis skrip Python pendek.",
-      "A": "Opsi A benar karena Streamlit adalah framework dashboard data Python terkemuka.",
-      "B": "Opsi B salah karena Pygame untuk pembuatan game 2D desktop.",
-      "C": "Opsi C salah karena Tkinter untuk GUI desktop lama.",
-      "D": "Opsi D salah karena NumPy murni tidak memiliki komponen server UI web."
+      "correct": "Secara historis, Transaction pooling di PgBouncer tidak mendukung prepared statements yang mengikat state ke sesi koneksi backend. Aplikasi harus menggunakan session pooling atau mengaktifkan `max_prepared_statements` pada versi PgBouncer terbaru untuk mencegah 'prepared statement does not exist'.",
+      "A": "Benar. Pengelolaan state prepared statement krusial dalam mode transaction pooling connection pooler.",
+      "B": "Salah. Menghilangkan keamanan membahayakan sistem produksi.",
+      "C": "Salah. PostgreSQL/PgBouncer menggunakan protokol biner TCP port default 5432/6432, bukan HTTP.",
+      "D": "Salah. PostGIS wajib aktif untuk memproses tipe geometri."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-226",
     "level": "intermediate",
-    "topic": "PostgreSQL/MySQL",
-    "question": "Perintah PostgreSQL apakah yang digunakan untuk menganalisis dan memperbarui statistik perencana kueri (query planner statistics) pada tabel database spasial?",
+    "topic": "Leaflet GeoJSON Debounce on Pan/Zoom",
+    "questionType": "best-practice",
+    "question": "Saat memuat data spasial berbasis BBOX tampilan layar (`map.on('moveend', ...)`), mengapa sangat disarankan menerapkan teknik 'debounce' atau 'throttle'?\n\n```javascript\n// Event drag/pan peta:\n```",
+    "code": "// Event drag/pan peta:",
     "options": {
-      "A": "ANALYZE nama_tabel;",
-      "B": "UPDATE STATISTICS;",
-      "C": "REFRESH TABLE;",
-      "D": "RECALCULATE;"
+      "A": "Mencegah pengiriman ratusan request HTTP AJAX ke server database secara beruntun saat pengguna menggeser peta terus menerus",
+      "B": "Menghapus cookie browser pengguna",
+      "C": "Memperbesar resolusi gambar layar",
+      "D": "Mengurangi kecepatan jaringan internet"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Perintah ANALYZE mengumpulkan statistik distribusi data pada kolom tabel yang digunakan oleh PostgreSQL Query Optimizer untuk menentukan rencana eksekusi tercepat (seperti memilih Index Scan vs Seq Scan).",
-      "A": "Opsi A benar karena ANALYZE adalah perintah resmi pembaruan statistik kueri di PostgreSQL.",
-      "B": "Opsi B salah karena UPDATE STATISTICS adalah dialek SQL Server.",
-      "C": "Opsi C salah karena REFRESH TABLE bukan perintah PostgreSQL standar.",
-      "D": "Opsi D salah karena bukan perintah SQL."
+      "correct": "Pengguna sering kali menggeser dan memperbesar peta berkali-kali dalam beberapa detik. Debounce menunda eksekusi fetch API hingga gerakan pengguna berhenti selama rentang waktu tertentu (misal 300ms), menghemat ribuan kueri SQL tidak berguna.",
+      "A": "Benar. Debounce menstabilkan beban server dengan hanya mengeksekusi request saat interaksi selesai.",
+      "B": "Salah. Debounce tidak berhubungan dengan penghapusan cookie.",
+      "C": "Salah. Resolusi layar dikendalikan oleh hardware dan CSS viewport.",
+      "D": "Salah. Debounce justru mengoptimalkan utilisasi jaringan."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-227",
     "level": "intermediate",
-    "topic": "PostgreSQL/MySQL",
-    "question": "Dalam PostgreSQL, bagaimana cara membuat indeks GIN pada kolom JSONB agar pencarian berbasis operator containment ('@>') berjalan instan?",
+    "topic": "Spatial Table Partitioning",
+    "questionType": "best-practice",
+    "question": "Strategi partisi tabel (Table Partitioning) manakah yang paling efektif di PostgreSQL untuk tabel data pelacakan armada kendaraan (GPS Tracking) yang bertambah jutaan baris per hari?\n\n```sql\n-- Partisi tabel data historis pelacakan GPS:\n```",
+    "code": "-- Partisi tabel data historis pelacakan GPS:",
     "options": {
-      "A": "CREATE INDEX idx_props ON features USING GIN (properties);",
-      "B": "CREATE INDEX idx_props ON features USING BTREE (properties);",
-      "C": "CREATE INDEX idx_props ON features (properties JSON);",
-      "D": "CREATE UNIQUE GIN INDEX ON features (properties);"
+      "A": "Partisi berbasis rentang waktu (Range Partitioning pada kolom timestamp/tanggal), dikombinasikan dengan indeks spasial GiST pada masing-masing partisi lokal",
+      "B": "Partisi acak (Random Hash) pada kolom ID",
+      "C": "Menyimpan seluruh data di satu file Excel tanpa partisi",
+      "D": "Menghapus data setiap 5 menit"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Indeks GIN (Generalized Inverted Index) mengindeks setiap pasangan key dan value di dalam dokumen JSONB, memungkinkan pencarian ekspresi WHERE properties @> '{\"status\": \"active\"}' dieksekusi secepat kilat.",
-      "A": "Opsi A benar karena GIN adalah tipe indeks standar untuk penelusuran dokumen JSONB di PostgreSQL.",
-      "B": "Opsi B salah karena B-Tree hanya bisa mencocokkan kesamaan string dokumen secara utuh, bukan mengekstrak atribut di dalamnya.",
-      "C": "Opsi C salah karena bukan sintaks pembuatan indeks PostgreSQL.",
-      "D": "Opsi D salah karena GIN tidak mendukung batasan UNIQUE."
+      "correct": "Kueri pelacakan armada hampir selalu memiliki filter rentang waktu (misal: 'perjalanan hari ini'). Partisi berdasarkan waktu (misal per bulan atau per hari) memungkinkan query planner melakukan *partition pruning* (hanya memindai partisi yang relevan), dan partisi lama mudah diarsipkan (DROP TABLE) tanpa overhead delete.",
+      "A": "Benar. Range partitioning per tanggal + local GiST index memberikan performa write dan scan tertinggi untuk IoT/GPS data.",
+      "B": "Salah. Hash ID tidak mendukung partition pruning berbasis filter waktu query.",
+      "C": "Salah. Excel tidak mampu menampung puluhan juta record data spasial industri.",
+      "D": "Salah. Menghapus data menghilangkan nilai historis analytics bisnis."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-228",
     "level": "intermediate",
-    "topic": "PostgreSQL/MySQL",
-    "question": "Mengapa penggunaan connection pooler eksternal seperti 'PgBouncer' sangat penting pada aplikasi backend GIS dengan ribuan koneksi konkuren?",
+    "topic": "GeoJSON Serialization in Spring Boot",
+    "questionType": "best-practice",
+    "question": "Di backend Spring Boot, library apakah yang menjadi standar untuk otomatis men-serialize objek geometri JTS (`org.locationtech.jts.geom.Geometry`) ke format GeoJSON melalui Jackson?\n\n```java\n// Spring Boot dependency untuk modul geospasial Jackson:\n```",
+    "code": "// Spring Boot dependency untuk modul geospasial Jackson:",
     "options": {
-      "A": "PostgreSQL menggunakan model arsitektur satu proses (process-based) per koneksi klien yang memakan memori RAM besar (~10MB per koneksi); PgBouncer mendaur ulang koneksi server yang sudah ada untuk ribuan klien via pooling transaksi",
-      "B": "PgBouncer mengubah database menjadi file NoSQL",
-      "C": "PgBouncer menghapus query yang mengandung syntax error",
-      "D": "PgBouncer mengompresi data tabel menjadi format RAR"
+      "A": "jackson-datatype-jts",
+      "B": "spring-boot-starter-mail",
+      "C": "lombok",
+      "D": "junit-jupiter"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Setiap koneksi langsung ke PostgreSQL membuat proses background OS baru. Menghubungkan 5.000 klien secara langsung akan menghabiskan memori RAM dan membebani CPU context switching. PgBouncer menjadi pintu tengah yang mengelola koneksi server secara hemat dan efisien.",
-      "A": "Opsi A benar karena menjelaskan keunggulan pengelolaan koneksi berbasis proses via PgBouncer.",
-      "B": "Opsi B salah karena PgBouncer tidak mengubah engine penyimpanan PostgreSQL.",
-      "C": "Opsi C salah karena PgBouncer adalah proxy TCP, bukan parser syntax kueri.",
-      "D": "Opsi D salah karena bukan archiver file."
+      "correct": "Modul `jackson-datatype-jts` mendaftarkan serializer dan deserializer kustom ke ObjectMapper Spring Boot sehingga tipe geometri JTS (Point, Polygon, MultiPolygon) otomatis dikonversi ke format GeoJSON standar RFC 7946.",
+      "A": "Benar. jackson-datatype-jts adalah jembatan resmi antara JTS Topology Suite dan JSON Jackson.",
+      "B": "Salah. starter-mail untuk mengirim email.",
+      "C": "Salah. lombok untuk boilerplate getter/setter code generation.",
+      "D": "Salah. junit untuk testing otomatis."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-229",
     "level": "intermediate",
-    "topic": "PostgreSQL/MySQL",
-    "question": "Fungsi window SQL PostgreSQL apakah yang digunakan untuk membagi hasil kueri ke dalam kelompok persentase atau N ember berukuran sama (misal membagi skor risiko banjir ke dalam 4 kuartil)?",
+    "topic": "Spatial Accuracy vs Performance: ST_DWithin vs ST_Buffer",
+    "questionType": "best-practice",
+    "question": "Mengapa kueri pencarian 'titik dalam radius 1 km' HARUS menggunakan `ST_DWithin` dan BUKAN `ST_Intersects(geom, ST_Buffer(point, 1000))`?\n\n```sql\n-- Query 1: ST_DWithin(geom, pt, 1000)\n-- Query 2: ST_Intersects(geom, ST_Buffer(pt, 1000))\n```",
+    "code": "-- Query 1: ST_DWithin(geom, pt, 1000)\n-- Query 2: ST_Intersects(geom, ST_Buffer(pt, 1000))",
     "options": {
-      "A": "NTILE(4) OVER (ORDER BY risk_score)",
-      "B": "CHUNK(4)",
-      "C": "SPLIT(4)",
-      "D": "BUCKET(4)"
+      "A": "ST_Buffer harus membuat geometri poligon lingkaran baru dengan puluhan vertex di memori untuk setiap baris, sedangkan ST_DWithin memanfaatkan indeks spasial dan kalkulasi jarak langsung yang jauh lebih cepat",
+      "B": "ST_Buffer dilarang oleh standar SQL",
+      "C": "ST_DWithin hanya bekerja untuk data fiksi",
+      "D": "Kedua kueri memiliki kecepatan eksekusi yang sama persis"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Fungsi NTILE(n) membagi baris terurut ke dalam sejumlah n bucket bernomor 1 sampai n secara proporsional.",
-      "A": "Opsi A benar karena NTILE adalah fungsi window resmi pembagian kuartil/persentil di SQL.",
-      "B": "Opsi B salah karena bukan fungsi SQL.",
-      "C": "Opsi C salah karena bukan fungsi SQL.",
-      "D": "Opsi D salah karena bukan fungsi SQL standar."
+      "correct": "Membuat poligon penyangga via `ST_Buffer` memakan alokasi memori CPU yang besar untuk mengaproksimasi lingkaran dengan banyak segmen garis. `ST_DWithin` menghitung relasi jarak secara langsung menggunakan bounding box expand dan jarak indeks R-Tree tanpa instansiasi geometri poligon perantara.",
+      "A": "Benar. ST_DWithin jauh lebih hemat memori dan puluhan kali lebih cepat karena index-native.",
+      "B": "Salah. ST_Buffer adalah fungsi resmi OGC, tetapi tidak efisien jika dipakai sebagai pengganti radius search.",
+      "C": "Salah. ST_DWithin digunakan pada data geospasial riil di seluruh dunia.",
+      "D": "Salah. ST_Buffer jauh lebih lambat karena komputasi konstruksi vertex lingkaran."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-230",
     "level": "intermediate",
-    "topic": "PostgreSQL/MySQL",
-    "question": "Klausa SQL apakah di PostgreSQL yang digunakan untuk melakukan operasi 'Upsert' (Insert data baru, atau Update jika data dengan primary key/unique key yang sama sudah ada)?",
+    "topic": "Web Map Layer Reordering UX",
+    "questionType": "best-practice",
+    "question": "Dalam prinsip kartografi web interaktif, bagaimana urutan penumpukan layer dari yang paling bawah ke paling atas yang benar secara visual?\n\n```javascript\n// Urutan tumpukan layer peta web:\n```",
+    "code": "// Urutan tumpukan layer peta web:",
     "options": {
-      "A": "INSERT INTO ... ON CONFLICT (id) DO UPDATE SET ...",
-      "B": "INSERT OR REPLACE INTO ... (hanya dialek SQLite/MySQL)",
-      "C": "INSERT IGNORE (hanya dialek MySQL)",
-      "D": "MERGE IF EXISTS"
+      "A": "Basemap Citra/Jalan (Paling Bawah) -> Poligon Tematik -> Garis Jaringan Jalan -> Titik POI/Marker -> Label Teks Peta (Paling Atas)",
+      "B": "Titik POI (Paling Bawah) -> Poligon Tematik -> Basemap (Paling Atas menutupi semua data)",
+      "C": "Poligon Tematik (Paling Atas dengan opacity 100% menutupi marker)",
+      "D": "Semua layer ditumpuk acak tanpa urutan"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Klausa 'ON CONFLICT (target_kolom) DO UPDATE SET ...' adalah sintaks resmi PostgreSQL untuk menangani benturan constraint unik dan melakukan pembaruan secara atomik.",
-      "A": "Opsi A benar karena ON CONFLICT DO UPDATE adalah fitur Upsert standar PostgreSQL.",
-      "B": "Opsi B salah karena INSERT OR REPLACE adalah sintaks SQLite dan MySQL lama.",
-      "C": "Opsi C salah karena INSERT IGNORE adalah sintaks spesifik MySQL.",
-      "D": "Opsi D salah karena bukan sintaks PostgreSQL standar."
+      "correct": "Prinsip kartografi visual hierarki: Basemap sebagai referensi latar di dasar, poligon area tematik semi-transparan di atasnya, linestring garis jaringan di atas poligon, marker/titik diskrit di atas garis, dan label teks/tooltip di lapisan paling atas agar tidak tertutup objek lain.",
+      "A": "Benar. Hierarki standar: Basemap -> Area/Poligon -> Garis -> Titik/Simbol -> Label anotasi.",
+      "B": "Salah. Menempatkan basemap di paling atas akan menutupi seluruh data spasial di bawahnya.",
+      "C": "Salah. Poligon opaque di atas marker akan menyembunyikan titik lokasi dari pandangan pengguna.",
+      "D": "Salah. Tumpukan acak menghasilkan peta yang sulit dibaca dan membingungkan."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-231",
     "level": "intermediate",
-    "topic": "PostGIS & Spatial Database",
-    "question": "Operator spasial PostGIS apakah yang digunakan untuk membandingkan apakah Bounding Box (kotak batas) dari geometri A beririsan dengan Bounding Box geometri B dengan memanfaatkan indeks GiST?",
+    "topic": "Spatial Clustering Thresholds",
+    "questionType": "best-practice",
+    "question": "Pada plugin Leaflet.markercluster, opsi apakah yang mengontrol jarak maksimum (dalam pixel) pengelompokan marker saat zoom in?\n\n```javascript\nconst cluster = L.markerClusterGroup({\n  maxClusterRadius: 50 // Pengaturan jarak pixel kluster\n});\n```",
+    "code": "const cluster = L.markerClusterGroup({\n  maxClusterRadius: 50 // Pengaturan jarak pixel kluster\n});",
     "options": {
-      "A": "geomA && geomB",
-      "B": "geomA == geomB",
-      "C": "geomA // geomB",
-      "D": "geomA <> geomB"
+      "A": "maxClusterRadius menentukan radius cakupan pixel di mana titik-titik akan digabungkan menjadi satu bulatan cluster",
+      "B": "maxClusterRadius mengatur batas memori RAM komputer klien",
+      "C": "maxClusterRadius membatasi jumlah data di database SQL",
+      "D": "maxClusterRadius mengatur ketebalan garis batas negara"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Operator '&&' adalah operator penelusuran indeks bounding box di PostGIS. Menggunakan 'WHERE geom && ST_MakeEnvelope(...)' memungkinkan kueri langsung menyaring data menggunakan indeks GiST secara instan sebelum fungsi evaluasi geometris eksak dijalankan.",
-      "A": "Opsi A benar karena operator '&&' adalah operator bounding box overlap PostGIS berindeks GiST.",
-      "B": "Opsi B salah karena == adalah perbandingan bahasa pemrograman, bukan operator SQL spasial.",
-      "C": "Opsi C salah karena // bukan operator PostGIS.",
-      "D": "Opsi D salah karena <> adalah operator tidak sama dengan standar SQL."
+      "correct": "`maxClusterRadius` (default biasanya 80px) menentukan jarak piksel pada layar di mana marker yang berdekatan akan disatukan. Semakin kecil angkanya, cluster akan lebih cepat terurai menjadi marker individu pada tingkat zoom yang lebih rendah.",
+      "A": "Benar. Mengatur kepadatan pengelompokan kluster marker dalam satuan piksel layar.",
+      "B": "Salah. Tidak mengontrol RAM perangkat secara langsung.",
+      "C": "Salah. Opsi ini murni konfigurasi presentasi layer frontend.",
+      "D": "Salah. Tidak berhubungan dengan styling batas poligon negara."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-232",
     "level": "intermediate",
-    "topic": "PostGIS & Spatial Database",
-    "question": "Fungsi predikat spasial PostGIS apakah yang memeriksa apakah poligon A sepenuhnya memuat (encloses) geometri B tanpa ada bagian B yang berada di luar batas A?",
+    "topic": "PostGIS BRIN Index for Spatial Data",
+    "questionType": "best-practice",
+    "question": "Kapan indeks BRIN (Block Range Index) pada PostgreSQL/PostGIS menjadi alternatif yang sangat menguntungkan dibandingkan indeks GiST?\n\n```sql\n-- Indeks: CREATE INDEX idx_massive_geom ON massive_table USING BRIN(geom);\n```",
+    "code": "-- Indeks: CREATE INDEX idx_massive_geom ON massive_table USING BRIN(geom);",
     "options": {
-      "A": "ST_Contains(geomA, geomB)",
-      "B": "ST_Touches(geomA, geomB)",
-      "C": "ST_Crosses(geomA, geomB)",
-      "D": "ST_Overlaps(geomA, geomB)"
+      "A": "Pada tabel raksasa (ratusan juta baris) di mana data disimpan berurutan secara fisik di disk sesuai lokasi geografisnya (geographically clustered / sorted) dan ukuran GiST index terlalu besar untuk muat di RAM",
+      "B": "Pada tabel kecil berisi 10 baris data",
+      "C": "Hanya untuk kolom yang menyimpan nomor telepon",
+      "D": "Ketika disk storage sudah penuh 100%"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ST_Contains(A, B) menghasilkan TRUE jika tidak ada titik dari geometri B yang berada di eksterior geometri A, dan minimal satu titik interior B berada di interior A.",
-      "A": "Opsi A benar karena ST_Contains menguji hubungan penahanan spasial penuh.",
-      "B": "Opsi B salah karena ST_Touches hanya jika geometri bersentuhan di garis batas (boundary) tanpa irisan interior.",
-      "C": "Opsi C salah karena ST_Crosses untuk garis yang menyilang garis atau poligon.",
-      "D": "Opsi D salah karena ST_Overlaps untuk geometri berdimensi sama yang saling bertumpang tindih sebagian."
+      "correct": "Indeks BRIN hanya menyimpan nilai minimum dan maksimum per rentang blok halaman fisik disk (sangat kecil, sering kali hanya 1% dari ukuran GiST). Jika data diurutkan secara spasial (misal via geohash / ST_GeoHash), BRIN sangat cepat dan menghemat puluhan Gigabyte RAM.",
+      "A": "Benar. BRIN memiliki footprint memori mikro dan sangat unggul untuk tabel raksasa terurut fisik.",
+      "B": "Salah. Pada tabel kecil, indeks standar atau sequential scan sudah sangat cepat.",
+      "C": "Salah. BRIN pada kolom geom khusus untuk data spasial multi-dimensi.",
+      "D": "Salah. Indeks membutuhkan sisa kapasitas disk untuk dibuat."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-233",
     "level": "intermediate",
-    "topic": "PostGIS & Spatial Database",
-    "question": "Fungsi PostGIS apakah yang mengembalikan geometri baru yang merupakan irisan perpotongan fisik (intersection area) antara dua geometri?",
+    "topic": "Leaflet Event Delegation",
+    "questionType": "best-practice",
+    "question": "Mengapa menambahkan satu event listener pada layer container induk (`geoJsonLayer.on('click', handler)`) jauh lebih efisien daripada menambahkan event listener ke masing-masing fitur di `onEachFeature`?\n\n```javascript\n// Event Delegation di Leaflet:\n```",
+    "code": "// Event Delegation di Leaflet:",
     "options": {
-      "A": "ST_Intersection(geomA, geomB)",
-      "B": "ST_Intersects(geomA, geomB)",
-      "C": "ST_Cut(geomA, geomB)",
-      "D": "ST_Slice(geomA, geomB)"
+      "A": "Memanfaatkan pattern Event Bubbling sehingga hanya ada 1 fungsi listener yang dialokasikan di memori browser untuk ribuan fitur",
+      "B": "Membuat warna marker otomatis berubah acak",
+      "C": "Menghapus semua fitur yang tidak diklik",
+      "D": "Mematikan fungsi zooming peta"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Perhatikan perbedaannya: ST_Intersects (dengan huruf 's') mengembalikan boolean True/False, sedangkan ST_Intersection (kata benda) menghasilkan objek Geometri baru hasil perpotongan kedua bentuk spasial tersebut.",
-      "A": "Opsi A benar karena ST_Intersection mengembalikan objek geometri potongan ruang bersama.",
-      "B": "Opsi B salah karena ST_Intersects hanya mengembalikan boolean predikat relasi, bukan bentuk geometri baru.",
-      "C": "Opsi C salah karena bukan fungsi PostGIS.",
-      "D": "Opsi D salah karena bukan fungsi PostGIS."
+      "correct": "Event delegation memanfaatkan fakta bahwa interaksi mouse pada layer anak akan naik (bubble up) ke container induk. Menempelkan 1 handler pada parent menghemat alokasi fungsi JavaScript di memori dibandingkan membuat 10.000 closure listener terpisah.",
+      "A": "Benar. Event delegation memangkas overhead alokasi ribuan callback di memori browser.",
+      "B": "Salah. Event delegation tidak mengubah warna secara acak.",
+      "C": "Salah. Event delegation tidak menghapus layer fitur.",
+      "D": "Salah. Zooming peta tetap berfungsi normal."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-234",
     "level": "intermediate",
-    "topic": "PostGIS & Spatial Database",
-    "question": "Fungsi PostGIS apakah yang digunakan untuk menggabungkan sekumpulan geometri baris (seperti agregasi GROUP BY) menjadi satu kesatuan multi-geometri (agregat spasial)?",
+    "topic": "Spatial Query Parallelism",
+    "questionType": "best-practice",
+    "question": "Pengaturan konfigurasi PostgreSQL manakah yang memungkinkan query spasial berat (seperti ST_Intersects pada jutaan poligon) dieksekusi menggunakan banyak core CPU secara bersamaan?\n\n```sql\n-- Konfigurasi postgresql.conf:\n```",
+    "code": "-- Konfigurasi postgresql.conf:",
     "options": {
-      "A": "ST_Union(geom)",
-      "B": "ST_Collect(geom)",
-      "C": "SUM(geom)",
-      "D": "ST_MergeAll(geom)"
+      "A": "max_parallel_workers_per_gather dan max_parallel_workers",
+      "B": "autovacuum = off",
+      "C": "listen_addresses = 'none'",
+      "D": "fsync = off"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ST_Union sebagai fungsi agregat (GROUP BY) meleburkan batas internal antar poligon tetangga menjadi satu geometri utuh (operasi topological dissolve).",
-      "A": "Opsi A benar karena ST_Union adalah fungsi agregat penggabungan dan dissolusi batas poligon.",
-      "B": "Opsi B salah karena ST_Collect hanya mengelompokkan ke MultiGeometry tanpa menghilangkan garis batas internal (non-topological collection).",
-      "C": "Opsi C salah karena SUM adalah fungsi matematis skalar angka murni.",
-      "D": "Opsi D salah karena bukan fungsi PostGIS."
+      "correct": "PostgreSQL mendukung Parallel Query Execution untuk fungsi-fungsi spasial PostGIS yang ditandai sebagai `PARALLEL SAFE`. Menyetel `max_parallel_workers_per_gather` memungkinkan perencana kueri membagi komputasi geometri ke beberapa thread worker CPU paralel.",
+      "A": "Benar. Parameter parallel worker mengaktifkan eksekusi multi-core CPU untuk kalkulasi spasial.",
+      "B": "Salah. Mematikan autovacuum menyebabkan tabel bloat dan degradasi performa jangka panjang.",
+      "C": "Salah. listen_addresses = none memutus koneksi jaringan ke database.",
+      "D": "Salah. Mematikan fsync berisiko korupsi data saat server mati mendadak."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-235",
     "level": "intermediate",
-    "topic": "PostGIS & Spatial Database",
-    "question": "Fungsi PostGIS apakah yang digunakan untuk menyederhanakan (simplifikasi) geometri poligon atau garis kompleks menggunakan algoritma Douglas-Peucker demi mempercepat transfer data ke web?",
+    "topic": "MapLibre GL vs Leaflet",
+    "questionType": "best-practice",
+    "question": "Keunggulan utama apa yang didapatkan pengembang ketika memilih MapLibre GL JS / Mapbox GL dibandingkan Leaflet untuk aplikasi pemetaan modern?\n\n```javascript\n// MapLibre GL JS vs Leaflet:\n```",
+    "code": "// MapLibre GL JS vs Leaflet:",
     "options": {
-      "A": "ST_Simplify(geom, tolerance)",
-      "B": "ST_Reduce(geom, tolerance)",
-      "C": "ST_Shrink(geom, tolerance)",
-      "D": "ST_Compress(geom)"
+      "A": "Rendering berbasis WebGL/GPU hardware-accelerated yang mendukung rotasi peta (bearing), kemiringan 3D (pitch), dan styling vektor dinamis di sisi klien tanpa jeda reload",
+      "B": "MapLibre tidak memerlukan koneksi internet sama sekali",
+      "C": "Leaflet tidak bisa dijalankan di browser Google Chrome",
+      "D": "MapLibre hanya bisa menampilkan peta hitam putih"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ST_Simplify memangkas jumlah titik vertex pada garis/poligon berdasarkan nilai toleransi jarak yang ditentukan, memperkecil ukuran file transfer tanpa merusak bentuk umum.",
-      "A": "Opsi A benar karena ST_Simplify mengimplementasikan algoritma simplifikasi Douglas-Peucker.",
-      "B": "Opsi B salah karena bukan fungsi PostGIS.",
-      "C": "Opsi C salah karena bukan fungsi PostGIS.",
-      "D": "Opsi D salah karena bukan fungsi kompresi geometri PostGIS."
+      "correct": "MapLibre GL JS menggunakan WebGL untuk merender Vector Tiles langsung pada kartu grafis (GPU). Ini memungkinkan rotasi bebas 360 derajat, visualisasi 3D pitch teropong, transisi zoom kontinu ultra-smooth, dan penataan gaya data-driven yang instan.",
+      "A": "Benar. WebGL rendering memberikan performa 60 FPS GPU, rotasi peta, dan 3D visualisasi modern.",
+      "B": "Salah. MapLibre tetap membutuhkan koneksi jaringan untuk mengunduh tile dan aset gaya.",
+      "C": "Salah. Leaflet berjalan sempurna di Google Chrome dan seluruh browser modern.",
+      "D": "Salah. MapLibre mendukung pewarnaan RGB 32-bit penuh dan visualisasi kartografi mutakhir."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-236",
     "level": "intermediate",
-    "topic": "PostGIS & Spatial Database",
-    "question": "Apa keunggulan dari fungsi 'ST_SimplifyPreserveTopology(geom, tolerance)' dibandingkan 'ST_Simplify()' biasa?",
+    "topic": "Handling Coordinate Precision Drift",
+    "questionType": "best-practice",
+    "question": "Saat melakukan chaining operasi topologi spasial (misal: ST_Union lalu ST_Intersection lalu ST_Buffer), mengapa kadang muncul TopologyException atau sliver polygons, dan bagaimana mengatasinya?\n\n```sql\n-- Mengatasi floating-point arithmetic precision drift:\n```",
+    "code": "-- Mengatasi floating-point arithmetic precision drift:",
     "options": {
-      "A": "Mencegah terjadinya kerusakan topologi seperti timbulnya poligon yang saling silang sendiri (self-intersecting polygons) atau lubang pulau yang runtuh",
-      "B": "Menghasilkan ukuran file yang lebih besar 100 kali lipat",
-      "C": "Hanya bisa digunakan untuk titik 1D",
-      "D": "Menghapus semua atribut teks"
+      "A": "Menggunakan ST_SnapToGrid untuk menyelaraskan koordinat titik ke grid presisi tetap dan mengeliminasi ketidakkonsistenan floating point rounding",
+      "B": "Mengubah angka koordinat menjadi teks dan menghapus koma",
+      "C": "Menonaktifkan CPU floating point unit",
+      "D": "Mengalikan seluruh koordinat dengan angka nol"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ST_Simplify biasa dapat membuat poligon menjadi tidak valid (self-intersection) jika toleransinya terlalu besar. ST_SimplifyPreserveTopology menjamin geometri hasil penyederhanaan tetap valid sesuai standar OGC.",
-      "A": "Opsi A benar karena mempertahankan validitas topologi poligon.",
-      "B": "Opsi B salah karena tujuan simplifikasi justru memperkecil byte data.",
-      "C": "Opsi C salah karena simplifikasi ditujukan untuk garis dan poligon 2D.",
-      "D": "Opsi D salah karena fungsi geometri tidak menghapus atribut tabular baris."
+      "correct": "Representasi angka floating-point IEEE 754 pada komputer memiliki keterbatasan presisi mikroskopis yang dapat menyebabkan simpul garis yang seharusnya sejajar menjadi sedikit meleset (sliver / self-intersect). `ST_SnapToGrid` menyelaraskan titik ke grid reguler dan menstabilkan topologi.",
+      "A": "Benar. ST_SnapToGrid membersihkan artefak mikroskopis floating-point dan mencegah TopologyException.",
+      "B": "Salah. Mengubah menjadi teks tanpa koma merusak nilai koordinat geografis.",
+      "C": "Salah. FPU hardware tidak bisa dimatikan dari SQL.",
+      "D": "Salah. Mengalikan nol meruntuhkan seluruh geometri ke titik origin."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-237",
     "level": "intermediate",
-    "topic": "PostGIS & Spatial Database",
-    "question": "Fungsi PostGIS berkinerja tinggi apakah yang diperkenalkan untuk memproduksi Vector Tiles (MVT - Mapbox Vector Tiles) langsung di dalam database dalam format Protocol Buffers biner?",
+    "topic": "GeoServer Caching with GeoWebCache",
+    "questionType": "best-practice",
+    "question": "Apa peran GeoWebCache (GWC) yang terintegrasi secara bawaan di GeoServer?\n\n```sql\n// GeoWebCache pada arsitektur pemetaan web:\n```",
+    "code": "// GeoWebCache pada arsitektur pemetaan web:",
     "options": {
-      "A": "ST_AsMVT(mvtgeom.*)",
-      "B": "ST_AsGeoJSONTile()",
-      "C": "ST_CreateTile()",
-      "D": "ST_VectorTileFormat()"
+      "A": "Meng-cache tile peta yang sudah dirender (WMS-C / WMTS) di disk atau memory server untuk langsung disajikan ke klien tanpa merender ulang dari database",
+      "B": "Menghapus akun pengguna yang tidak aktif",
+      "C": "Mengirimkan email tagihan bulanan",
+      "D": "Mengompres file video MP4 di server"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ST_AsMVT mengonversi kumpulan baris geometri dan atribut menjadi payload biner Mapbox Vector Tile (MVT format .pbf) secara langsung di dalam PostgreSQL, sangat efisien untuk arsitektur dynamic tile server.",
-      "A": "Opsi A benar karena ST_AsMVT adalah fungsi resmi pembuatan Vector Tiles di PostGIS.",
-      "B": "Opsi B salah karena bukan fungsi PostGIS.",
-      "C": "Opsi C salah karena bukan fungsi PostGIS.",
-      "D": "Opsi D salah karena bukan fungsi PostGIS."
+      "correct": "GeoWebCache mengakselerasi respon server peta dengan menyimpan ubin (tile) gambar yang telah diminta sebelumnya. Permintaan berikutnya untuk tile yang sama langsung dilayani dari cache disk/memory dalam waktu beberapa milidetik tanpa membebani database PostGIS.",
+      "A": "Benar. GWC adalah tile cache accelerator untuk WMS/WMTS yang memangkas beban server secara drastis.",
+      "B": "Salah. GWC tidak mengelola akun pengguna aplikasi.",
+      "C": "Salah. GWC tidak berhubungan dengan sistem billing email.",
+      "D": "Salah. GWC khusus untuk ubin data geospasial, bukan video."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-238",
     "level": "intermediate",
-    "topic": "PostGIS & Spatial Database",
-    "question": "Fungsi pembantu apakah yang biasanya dipasangkan sebelum ST_AsMVT untuk memproyeksikan koordinat dunia nyata ke dalam sistem koordinat piksel lokal ubin (misal 4096 x 4096)?",
+    "topic": "Frontend GIS State Management",
+    "questionType": "best-practice",
+    "question": "Dalam arsitektur frontend (seperti React / Redux / Zustand), apa praktik terbaik terkait penyimpanan referensi objek instance peta Leaflet (`map`)?\n\n```javascript\n// State management instance peta di React:\n```",
+    "code": "// State management instance peta di React:",
     "options": {
-      "A": "ST_AsMVTGeom(geom, bounds, extent, buffer, clip_geom)",
-      "B": "ST_ScaleToTile(geom)",
-      "C": "ST_ProjectPixel(geom)",
-      "D": "ST_TileMatrix(geom)"
+      "A": "Menyimpan instance map di React useRef() atau React Context terisolasi, dan TIDAK menyimpannya di Redux store karena objek map tidak boleh diserialisasi (non-serializable state)",
+      "B": "Menyimpan seluruh instance map di Redux store global bersama data state bisnis",
+      "C": "Menyimpan instance map di localStorage browser",
+      "D": "Membuat instance baru di setiap render komponen"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ST_AsMVTGeom memotong (clip) dan mentransformasikan koordinat geometri global ke koordinat integer lokal ubin raster (tile extent 4096) sebelum dikemas oleh ST_AsMVT.",
-      "A": "Opsi A benar karena ST_AsMVTGeom adalah fungsi penyiapan geometri ubin MVT.",
-      "B": "Opsi B salah karena bukan fungsi PostGIS.",
-      "C": "Opsi C salah karena bukan fungsi PostGIS.",
-      "D": "Opsi D salah karena bukan fungsi PostGIS."
+      "correct": "Objek peta Leaflet (`L.Map`) berisi referensi DOM, event listener, dan method internal yang berstatus non-serializable dan sarat mutable state. Menyimpannya di Redux melanggar prinsip immutability Redux. Penggunaan `useRef` atau Context adalah solusi arsitektural yang tepat.",
+      "A": "Benar. Non-serializable map instance harus disimpan di useRef / custom Context, bukan di Redux store.",
+      "B": "Salah. Menyimpan objek non-serializable di Redux memicu serialization warning dan merusak time-travel debugging.",
+      "C": "Salah. localStorage hanya menerima string teks sederhana dan tidak dapat menyimpan objek DOM live.",
+      "D": "Salah. Membuat instance baru di setiap render menyebabkan duplikasi kontainer dan memory leak."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-239",
     "level": "intermediate",
-    "topic": "PostGIS & Spatial Database",
-    "question": "Fungsi kueri tetangga terdekat (KNN - K-Nearest Neighbors) dengan operator '<->' di PostGIS digunakan untuk:",
+    "topic": "PostGIS Spatial Index Clustering",
+    "questionType": "best-practice",
+    "question": "Perintah SQL manakah yang mengatur ulang urutan fisik baris data di disk storage mengikuti urutan indeks spasial GiST?\n\n```sql\n-- Optimalisasi fisik tabel spasial di disk:\n```",
+    "code": "-- Optimalisasi fisik tabel spasial di disk:",
     "options": {
-      "A": "Menemukan N titik fasilitas terdekat secara instan menggunakan indeks GiST berbasis jarak euclidean (contoh: ORDER BY geom <-> :target_pt LIMIT 5)",
-      "B": "Menghubungkan dua tabel database yang berbeda server",
-      "C": "Mengurutkan data berdasarkan abjad",
-      "D": "Menghapus titik yang berjarak jauh"
+      "A": "CLUSTER table_name USING index_name;",
+      "B": "ORDER TABLE table_name BY geom;",
+      "C": "REORGANIZE ALL DATA;",
+      "D": "DEFRAG DATABASE;"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Operator indeks KNN '<->' (index-assisted distance operator) memungkinkan query '5 rumah sakit terdekat' diselesaikan dalam hitungan sub-milidetik langsung dari pohon indeks tanpa harus menghitung jarak seluruh baris tabel.",
-      "A": "Opsi A benar karena operator <-> adalah operator KNN terindeks di PostGIS.",
-      "B": "Opsi B salah karena bukan modul federasi database.",
-      "C": "Opsi C salah karena bukan pengurutan teks leksikografis.",
-      "D": "Opsi D salah karena kueri SELECT tidak menghapus data."
+      "correct": "Perintah `CLUSTER` di PostgreSQL menyortir dan menulis ulang baris-baris tabel secara fisik di disk mengikuti struktur pohon indeks spasial GiST. Hasilnya, data yang letak geografisnya berdekatan akan tersimpan di blok halaman disk yang sama, meminimalkan disk I/O head seeking secara masif.",
+      "A": "Benar. CLUSTER mengatur urutan fisik baris tabel sesuai kedekatan spasial indeks GiST.",
+      "B": "Salah. ORDER TABLE bukan sintaks SQL PostgreSQL.",
+      "C": "Salah. REORGANIZE ALL DATA bukan perintah PostgreSQL.",
+      "D": "Salah. DEFRAG DATABASE adalah istilah utilitas filesystem Windows, bukan SQL PostgreSQL."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-240",
     "level": "intermediate",
-    "topic": "PostGIS & Spatial Database",
-    "question": "Fungsi PostGIS apakah yang digunakan untuk memperbaiki geometri yang rusak atau tidak valid (seperti poligon berpita silang) menjadi geometri valid sesuai aturan OGC?",
+    "topic": "Leaflet Accessible Web Maps (A11y)",
+    "questionType": "best-practice",
+    "question": "Apa langkah penting dalam membuat peta interaktif web dapat diakses oleh pengguna penyandang disabilitas (Accessibility / A11y)?\n\n```javascript\n// Peningkatan aksesibilitas peta web:\n```",
+    "code": "// Peningkatan aksesibilitas peta web:",
     "options": {
-      "A": "ST_MakeValid(geom)",
-      "B": "ST_FixGeometry(geom)",
-      "C": "ST_Repair(geom)",
-      "D": "ST_CleanUp(geom)"
+      "A": "Menyediakan alternatif tampilan tabel data tekstual atau daftar list, navigasi kontrol via keyboard (Tab / Arrow keys), dan atribut aria-label pada tombol kontrol",
+      "B": "Membuat teks peta hanya bisa dibaca dengan kacamata inframerah",
+      "C": "Mematikan fungsi pembaca layar (Screen Reader)",
+      "D": "Menghapus seluruh warna pada peta"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ST_MakeValid menganalisis topologi geometri yang invalid dan merekonstruksinya menjadi geometri valid (misal memecah poligon pita silang menjadi MultiPolygon).",
-      "A": "Opsi A benar karena ST_MakeValid adalah fungsi perbaikan topologi resmi PostGIS.",
-      "B": "Opsi B salah karena bukan fungsi PostGIS.",
-      "C": "Opsi C salah karena bukan fungsi PostGIS.",
-      "D": "Opsi D salah karena bukan fungsi PostGIS."
+      "correct": "Pengguna dengan gangguan penglihatan mengandalkan pembaca layar (Screen Reader) yang tidak dapat menginterpretasikan elemen gambar peta interaktif. Menyediakan alternatif data tekstual tabel/list dan memastikan kontrol peta dapat dioperasikan via keyboard adalah standar aksesibilitas WCAG 2.1.",
+      "A": "Benar. Tabel tekstual alternatif, navigasi keyboard penuh, dan ARIA label menjamin kepatuhan standar WCAG.",
+      "B": "Salah. Aksesibilitas bertujuan mempermudah semua pengguna dengan perangkat standar.",
+      "C": "Salah. Mematikan screen reader melanggar hak aksesibilitas penyandang disabilitas.",
+      "D": "Salah. Menghilangkan warna justru mempersulit pengguna dengan penglihatan parsial; yang dibutuhkan adalah kontras yang cukup."
     },
     "jobId": "fullstack-gis"
   },
@@ -5045,6 +5443,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-241",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk menghasilkan poligon kotak batas (Bounding Box) persegi dari koordinat minimum dan maksimum: (minX, minY, maxX, maxY, srid)?",
     "options": {
       "A": "ST_MakeEnvelope(minX, minY, maxX, maxY, srid)",
@@ -5066,6 +5465,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-242",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Kapan Anda sebaiknya menggunakan fungsi predikat 'ST_DWithin(geomA, geomB, jarak)' dibandingkan 'ST_Distance(geomA, geomB) < jarak'?",
     "options": {
       "A": "ST_DWithin secara otomatis memanfaatkan indeks spasial GiST (menggunakan bounding box expansion internal), sedangkan ST_Distance mengharuskan perhitungan jarak pada seluruh baris tabel (full table scan)",
@@ -5087,6 +5487,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-243",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk mengekstrak titik tengah atau pusat massa (Centroid) dari sebuah poligon kompleks?",
     "options": {
       "A": "ST_Centroid(geom)",
@@ -5108,6 +5509,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-244",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Tabel metadata sistem apakah di PostGIS yang mencatat daftar semua tabel yang memiliki kolom spasial, nama kolom geometri, tipe geometri, dimensi, dan nilai SRID-nya?",
     "options": {
       "A": "geometry_columns",
@@ -5129,6 +5531,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-245",
     "level": "intermediate",
     "topic": "PostgreSQL/MySQL",
+    "questionType": "concept",
     "question": "Teknik apakah di database PostgreSQL yang membagi tabel spasial raksasa (puluhan juta data) menjadi tabel-tabel anak yang lebih kecil berdasarkan rentang nilai atau wilayah (seperti partisi tahunan atau provinsi)?",
     "options": {
       "A": "Table Partitioning (Declarative Partitioning)",
@@ -5150,6 +5553,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-246",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk membagi (subdivide) poligon yang memiliki puluhan ribu vertex menjadi poligon-poligon kecil yang lebih sederhana agar evaluasi indeks spasial berjalan jauh lebih cepat?",
     "options": {
       "A": "ST_Subdivide(geom, max_vertices)",
@@ -5171,6 +5575,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-247",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi agregat spasial PostGIS apakah yang digunakan untuk mengelompokkan sekumpulan titik fitur ke dalam cluster-cluster terpisah berdasarkan kedekatan spasial menggunakan algoritma DBSCAN?",
     "options": {
       "A": "ST_ClusterDBSCAN(geom, eps, minpoints) OVER ()",
@@ -5192,6 +5597,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-248",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk mengonversi geometri WKB (Well-Known Binary) kembali menjadi tipe geometri native PostGIS?",
     "options": {
       "A": "ST_GeomFromWKB(bytea_data, srid)",
@@ -5213,6 +5619,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-249",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk menghasilkan poligon pembungkus cembung terluar (Convex Hull) yang mencakup seluruh kumpulan titik geometri?",
     "options": {
       "A": "ST_ConvexHull(geom)",
@@ -5234,6 +5641,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-250",
     "level": "intermediate",
     "topic": "PostgreSQL/MySQL",
+    "questionType": "concept",
     "question": "Dalam PostgreSQL, apa manfaat menggunakan kueri bersarang dengan klausa 'LATERAL JOIN' pada kueri spasial?",
     "options": {
       "A": "Memungkinkan subquery di sisi kanan untuk merujuk ke kolom dari tabel di sisi kiri secara baris demi baris (sangat ideal untuk kueri KNN mencari N tetangga terdekat per setiap baris data induk)",
@@ -5255,6 +5663,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-251",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Dalam sistem proyeksi Universal Transverse Mercator (UTM), berapa derajat lebar zona bujur (longitude span) untuk setiap zona UTM dunia?",
     "options": {
       "A": "6 derajat bujur",
@@ -5276,6 +5685,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-252",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Wilayah DKI Jakarta dan Jawa Barat bagian barat berada pada zona UTM berapakah di belahan bumi selatan?",
     "options": {
       "A": "UTM Zone 48S (EPSG:32748)",
@@ -5297,6 +5707,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-253",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Mengapa pada proyeksi peta UTM diberikan nilai False Easting sebesar 500.000 meter pada Central Meridian setiap zona?",
     "options": {
       "A": "Untuk menghindari timbulnya angka koordinat X yang bernilai negatif di sebelah barat central meridian zona tersebut",
@@ -5318,6 +5729,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-254",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Apakah perbedaan geodetik antara 'Geoid' dan 'Ellipsoid' dalam pemodelan bentuk bumi?",
     "options": {
       "A": "Ellipsoid adalah model matematis permukaan bumi yang halus dan teratur (seperti WGS84), sedangkan Geoid adalah permukaan ekuipotensial medan gravitasi bumi nyata yang tidak teratur yang bertepatan dengan permukaan laut rata-rata (MSL)",
@@ -5339,6 +5751,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-255",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Dalam struktur piramida ubin peta web (Tile Pyramid), jika pada Zoom Level 0 seluruh dunia direpresentasikan oleh 1 tile (ubin tunggal), berapakah total jumlah tile pada Zoom Level 3?",
     "options": {
       "A": "64 tiles (rumus: 4^zoom = 4^3 = 64)",
@@ -5360,6 +5773,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-256",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Apakah perbedaan utama antara ubin peta 'Raster Tiles' (.png/.jpg) dan 'Vector Tiles' (.pbf / MVT) di aplikasi web GIS modern?",
     "options": {
       "A": "Raster Tiles adalah gambar piksel statis yang dirender di server, sedangkan Vector Tiles mengirimkan geometri vektor mentah berbobot ringan sehingga styling, filtering, dan rotasi peta dilakukan secara dinamis di klien menggunakan GPU",
@@ -5381,6 +5795,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-257",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Format data topologi spasial berbasis JSON apakah yang merupakan ekstensi dari GeoJSON yang menyimpan informasi keterhubungan batas (arcs) bersama sehingga menghilangkan redundansi garis perbatasan antar wilayah?",
     "options": {
       "A": "TopoJSON",
@@ -5402,6 +5817,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-258",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Apakah perbedaan mendasar antara citra satelit 'Optik' (seperti Sentinel-2/Landsat) dan citra satelit 'SAR' (Synthetic Aperture Radar, seperti Sentinel-1)?",
     "options": {
       "A": "Sensor optik mengandalkan pantulan cahaya matahari pasif dan terhalang oleh awan/malam hari, sedangkan SAR adalah sensor aktif berbasis gelombang mikro radar yang mampu menembus awan tebal dan beroperasi siang maupun malam",
@@ -5423,6 +5839,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-259",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Teknik pengolahan citra satelit apakah yang digunakan untuk menghilangkan atau menutupi piksel-piksel awan dan bayangan awan (cloud shadow) sebelum dilakukan analisis tren vegetasi?",
     "options": {
       "A": "Cloud Masking (menggunakan band Quality Assessment / Scene Classification Layer - SCL)",
@@ -5444,6 +5861,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-260",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Dalam analisis citra multispektral satelit, apa yang dimaksud dengan kombinasi 'False Color Composite' (misal Near-Infrared, Red, Green pada kanal R, G, B)?",
     "options": {
       "A": "Menampilkan pantulan spektrum tak kasat mata (seperti inframerah dekat/NIR) ke kanal warna merah visual manusia, sehingga vegetasi tanaman yang sehat akan tampak berwarna merah menyala",
@@ -5465,6 +5883,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-261",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Dalam PostGIS, apa fungsi dari klausul 'ST_GeomFromGeoJSON(geojson_text)'?",
     "options": {
       "A": "Mem-parse string teks GeoJSON dari request klien dan mengonversinya menjadi objek geometri PostGIS native yang siap disimpan ke tabel database",
@@ -5486,6 +5905,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-262",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk menguji apakah dua geometri saling bertetangga dan hanya bersentuhan pada batas terluarnya saja tanpa saling tumpang tindih pada interiornya?",
     "options": {
       "A": "ST_Touches(geomA, geomB)",
@@ -5507,6 +5927,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-263",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Dalam analisis penginderaan jauh, apakah yang dimaksud dengan koreksi radiometrik 'Top of Atmosphere' (TOA) versus 'Bottom of Atmosphere' (BOA / Surface Reflectance)?",
     "options": {
       "A": "TOA mengukur pantulan energi yang diterima sensor satelit di luar angkasa termasuk hamburan partikel atmosfer, sedangkan BOA (Surface Reflectance) telah menghilangkan efek gangguan atmosfer sehingga murni mewakili pantulan permukaan bumi nyata",
@@ -5528,6 +5949,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-264",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Indeks spektral apakah yang paling efektif digunakan untuk memetakan badan air permukaan (seperti danau, sungai, dan genangan banjir) menggunakan band Green dan NIR?",
     "options": {
       "A": "NDWI (Normalized Difference Water Index)",
@@ -5549,6 +5971,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-265",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang mengembalikan panjang garis (perimeter atau distance along path) dari sebuah LineString?",
     "options": {
       "A": "ST_Length(geom)",
@@ -5570,6 +5993,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-266",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Apakah yang dimaksud dengan 'Pansharpening' dalam pengolahan citra satelit (seperti pada Landsat 8/9)?",
     "options": {
       "A": "Teknik fusi penggabungan band multispektral berwarna beresolusi lebih rendah (30m) dengan band pankromatik hitam-putih beresolusi lebih tinggi (15m) untuk menghasilkan citra berwarna resolusi tinggi (15m)",
@@ -5591,6 +6015,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-267",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk mencari titik geometri pada sebuah garis yang memiliki posisi persentase tertentu (Linear Referencing, misal titik 50% jalur jalan)?",
     "options": {
       "A": "ST_LineInterpolatePoint(lineGeom, fraction)",
@@ -5612,6 +6037,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-268",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Dalam sistem radar satelit (SAR), apa yang dimaksud dengan 'Polarisasi' (seperti VV, VH, HH, HV)?",
     "options": {
       "A": "Orientasi bidang gelombang elektromagnetik yang dipancarkan dan diterima kembali oleh antena radar (V = Vertikal, H = Horizontal)",
@@ -5633,6 +6059,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-269",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk mengonversi koleksi data titik (Points) menjadi representasi poligon Voronoi Diagram (Thiessen Polygons)?",
     "options": {
       "A": "ST_VoronoiPolygons(multiPointGeom)",
@@ -5654,6 +6081,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-270",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Apa kepanjangan dari 'CRS' dan 'SRID' dalam Sistem Informasi Geografis?",
     "options": {
       "A": "CRS = Coordinate Reference System; SRID = Spatial Reference System Identifier",
@@ -5675,6 +6103,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-271",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk membagi (split) sebuah garis (LineString) menjadi dua bagian menggunakan geometri pemotong (titik atau garis pemotong)?",
     "options": {
       "A": "ST_Split(inputGeom, bladeGeom)",
@@ -5696,6 +6125,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-272",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Dalam analisis citra satelit penginderaan jauh, apakah yang dimaksud dengan 'Resolusi Radiometrik' (misal 8-bit, 12-bit, atau 16-bit)?",
     "options": {
       "A": "Tingkat sensitivitas sensor satelit dalam membedakan variasi energi pantulan cahaya, dinyatakan dalam jumlah bit tingkat keabuan (misal 12-bit = 4.096 tingkatan nilai piksel)",
@@ -5717,6 +6147,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-273",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk mengonversi sebuah string WKT (Well-Known Text) menjadi objek Geometri dengan menentukan kode SRID secara bersamaan?",
     "options": {
       "A": "ST_GeomFromText('POINT(106.8 -6.2)', 4326)",
@@ -5738,6 +6169,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-274",
     "level": "intermediate",
     "topic": "GIS Concepts",
+    "questionType": "concept",
     "question": "Apa dampak jika dua layer peta dengan sistem koordinat yang berbeda (misal layer A berproyeksi WGS84 EPSG:4326 dan layer B berproyeksi UTM EPSG:32748) di-overlay secara langsung tanpa proses 'On-the-Fly Reprojection'?",
     "options": {
       "A": "Kedua layer tidak akan pernah bertemu di lokasi yang sama pada layar (layer A berada di rentang koordinat -6 sampai 106, sedangkan layer B di rentang 500.000 sampai 9.000.000 meter)",
@@ -5759,6 +6191,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-275",
     "level": "intermediate",
     "topic": "PostGIS & Spatial Database",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk mengembalikan titik awal (start point) dari sebuah LineString?",
     "options": {
       "A": "ST_StartPoint(lineGeom)",
@@ -5780,6 +6213,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-276",
     "level": "intermediate",
     "topic": "Remote Sensing Fundamentals",
+    "questionType": "concept",
     "question": "Pada sensor SAR (Synthetic Aperture Radar), apa perbedaan utama antara polarisasi VV dan VH dalam interaksi gelombang mikro dengan permukaan bumi?",
     "options": {
       "A": "VV lebih sensitif terhadap kekasaran permukaan air, sedangkan VH lebih responsif terhadap hamburan volume kanopi vegetasi (volume scattering)",
@@ -5801,6 +6235,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-277",
     "level": "intermediate",
     "topic": "Indeks Spektral",
+    "questionType": "concept",
     "question": "Mengapa indeks MNDWI (Modified Normalized Difference Water Index) lebih unggul daripada NDWI Xu dalam membedakan perairan terbuka di kawasan perkotaan padat?",
     "options": {
       "A": "MNDWI mengganti band NIR dengan band SWIR sehingga secara signifikan menekan pantulan dari fitur bangunan dan tanah terbuka",
@@ -5822,6 +6257,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-278",
     "level": "intermediate",
     "topic": "Koreksi Citra",
+    "questionType": "concept",
     "question": "Apa perbedaan mendasar antara Top of Atmosphere (TOA) Reflectance dan Bottom of Atmosphere (BOA) Reflectance?",
     "options": {
       "A": "TOA belum dikoreksi terhadap efek hamburan dan absorpsi atmosfer, sedangkan BOA (Surface Reflectance) telah melalui koreksi atmosferik",
@@ -5843,6 +6279,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-279",
     "level": "intermediate",
     "topic": "Indeks Spektral",
+    "questionType": "concept",
     "question": "Formula Normalized Burn Ratio (NBR) yang umum digunakan untuk analisis keparahan kebakaran hutan adalah:",
     "options": {
       "A": "(NIR - SWIR2) / (NIR + SWIR2)",
@@ -5864,6 +6301,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-280",
     "level": "intermediate",
     "topic": "Fotogrametri & UAV",
+    "questionType": "concept",
     "question": "Berapa rekomendasi persentase overlap ke depan (forward overlap) dan overlap ke samping (side overlap) pada misi pemotretan udara drone untuk menghasilkan Digital Surface Model (DSM) yang akurat?",
     "options": {
       "A": "Forward overlap minimal 75-80% dan side overlap minimal 60-70%",
@@ -5885,6 +6323,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-281",
     "level": "intermediate",
     "topic": "Fotogrametri & UAV",
+    "questionType": "concept",
     "question": "Apa fungsi Ground Control Point (GCP) yang diukur dengan GPS Geodetik dalam pemrosesan citra fotogrametri drone?",
     "options": {
       "A": "Mengikat model 3D dan orthophoto ke sistem koordinat bumi yang absolut dan mengoreksi distorsi geometri",
@@ -5906,6 +6345,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-282",
     "level": "intermediate",
     "topic": "Fotogrametri & UAV",
+    "questionType": "concept",
     "question": "Apa perbedaan utama antara Digital Elevation Model (DEM), Digital Surface Model (DSM), dan Digital Terrain Model (DTM)?",
     "options": {
       "A": "DSM mencakup seluruh objek di atas tanah (pohon, bangunan), sedangkan DTM hanya mewakili permukaan tanah telanjang (bare earth)",
@@ -5927,6 +6367,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-283",
     "level": "intermediate",
     "topic": "Fotogrametri & UAV",
+    "questionType": "concept",
     "question": "Rumus perhitungan Ground Sample Distance (GSD) pada kamera UAV bergantung pada faktor:",
     "options": {
       "A": "Ketinggian terbang (flight height), focal length lensa, dan ukuran piksel sensor (sensor pitch)",
@@ -5948,6 +6389,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-284",
     "level": "intermediate",
     "topic": "Geodesi & Proyeksi",
+    "questionType": "concept",
     "question": "Wilayah Indonesia membentang dari 95° BT hingga 141° BT. Berapakah zona UTM yang mencakup wilayah daratan dan kepulauan Indonesia?",
     "options": {
       "A": "Zona 46 hingga Zona 54, baik Belahan Selatan (S) maupun Belahan Utara (N)",
@@ -5969,6 +6411,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-285",
     "level": "intermediate",
     "topic": "Geodesi & Proyeksi",
+    "questionType": "concept",
     "question": "Mengapa proyeksi Web Mercator (EPSG:3857) tidak disarankan untuk menghitung luas area atau jarak riil pada lintang tinggi?",
     "options": {
       "A": "Skala proyeksi terdistorsi secara eksponensial seiring bertambahnya lintang mendekati kutub (area tampak jauh lebih besar dari kenyataan)",
@@ -5990,6 +6433,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-286",
     "level": "intermediate",
     "topic": "Geodesi & Proyeksi",
+    "questionType": "concept",
     "question": "Apa parameter translasi 3 dimensi (dX, dY, dZ) dalam transformasi datum 7-parameter Helmert?",
     "options": {
       "A": "Pergeseran pusat elipsoid dari sistem koordinat sumber ke sistem koordinat target pada sumbu X, Y, dan Z",
@@ -6011,6 +6455,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-287",
     "level": "intermediate",
     "topic": "GIS Software & GDAL/OGR",
+    "questionType": "concept",
     "question": "Perintah GDAL manakah yang digunakan untuk melakukan reproyeksi citra raster dari EPSG:4326 ke EPSG:32748 dengan metode resampling bilinear?",
     "options": {
       "A": "gdalwarp -s_srs EPSG:4326 -t_srs EPSG:32748 -r bilinear input.tif output.tif",
@@ -6032,6 +6477,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-288",
     "level": "intermediate",
     "topic": "GIS Software & GDAL/OGR",
+    "questionType": "concept",
     "question": "Perintah OGR manakah yang digunakan untuk mengonversi file ESRI Shapefile menjadi format GeoJSON dengan memastikan koordinatnya berada pada EPSG:4326?",
     "options": {
       "A": "ogr2ogr -f \"GeoJSON\" -t_srs EPSG:4326 output.geojson input.shp",
@@ -6053,6 +6499,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-289",
     "level": "intermediate",
     "topic": "GIS Software & GDAL/OGR",
+    "questionType": "concept",
     "question": "Bagaimana cara melakukan filtering atribut menggunakan SQL query saat mengonversi file GeoPackage ke Shapefile dengan ogr2ogr?",
     "options": {
       "A": "ogr2ogr -f \"ESRI Shapefile\" output.shp input.gpkg -sql \"SELECT * FROM layers WHERE status = 'active'\"",
@@ -6074,6 +6521,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-290",
     "level": "intermediate",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Dalam PostGIS, query apakah yang paling efisien untuk mencari 5 fasilitas kesehatan terdekat dari titik lokasi pengguna menggunakan operator k-NN (k-Nearest Neighbors)?",
     "options": {
       "A": "SELECT id, name FROM faskes ORDER BY geom <-> ST_SetSRID(ST_Point(106.8, -6.2), 4326) LIMIT 5;",
@@ -6095,6 +6543,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-291",
     "level": "intermediate",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Fungsi PostGIS apakah yang digunakan untuk menggabungkan banyak poligon bertetangga yang memiliki nilai atribut sama menjadi satu kesatuan poligon multi/tunggal?",
     "options": {
       "A": "ST_Union(geom)",
@@ -6116,6 +6565,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-292",
     "level": "intermediate",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Apa kegunaan fungsi ST_ClusterDBSCAN pada PostGIS dalam analisis data spasial titik (point cloud / log pergerakan)?",
     "options": {
       "A": "Mengelompokkan titik-titik spasial ke dalam klaster berdasarkan kerapatan spasial (density-based) dengan toleransi jarak eps dan jumlah poin minimal minpoints",
@@ -6137,6 +6587,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-293",
     "level": "intermediate",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Dalam Leaflet.js, bagaimana cara menangani event klik pada setiap fitur GeoJSON yang dimuat via L.geoJSON?",
     "options": {
       "A": "Menggunakan callback onEachFeature untuk menambahkan event listener layer.on('click', handler)",
@@ -6158,6 +6609,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-294",
     "level": "intermediate",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Pada OpenLayers (ol), konsep komponen apa yang bertanggung jawab untuk mengambil dan mengurai data vektor dari server sebelum dirender oleh ol/layer/Vector?",
     "options": {
       "A": "ol/source/Vector",
@@ -6179,6 +6631,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-295",
     "level": "intermediate",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Dalam Mapbox GL JS / MapLibre GL JS, apa fungsi dari 'filter' dan 'paint' dalam definisi layer gaya (style spec)?",
     "options": {
       "A": "'filter' menyaring data fitur mana yang akan dirender, sedangkan 'paint' mendefinisikan properti visual seperti warna, opasitas, dan lebar garis",
@@ -6200,6 +6653,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-296",
     "level": "intermediate",
     "topic": "OGC Services & Web Services",
+    "questionType": "concept",
     "question": "Dalam spesifikasi OGC WFS (Web Feature Service), request manakah yang digunakan untuk melakukan operasi Create, Update, atau Delete fitur secara transaksional?",
     "options": {
       "A": "WFS Transaction (WFS-T) melalui request POST Transaction",
@@ -6221,6 +6675,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-297",
     "level": "intermediate",
     "topic": "OGC Services & Web Services",
+    "questionType": "concept",
     "question": "Apa keuntungan utama menggunakan OGC WMTS (Web Map Tile Service) dibandingkan WMS konvensional untuk layer basemap?",
     "options": {
       "A": "WMTS menyajikan potongan tile yang sudah dipra-render (pre-rendered/cached), sehingga respon jauh lebih cepat dan beban CPU server lebih rendah",
@@ -6242,6 +6697,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-298",
     "level": "intermediate",
     "topic": "Fullstack Web GIS Development",
+    "questionType": "concept",
     "question": "Pada backend Node.js / Express, bagaimana cara menghasilkan format Vector Tiles (MVT / .pbf) secara langsung dari database PostGIS?",
     "options": {
       "A": "Menggunakan kombinasi fungsi ST_AsMVT() dan ST_AsMVTGeom() dalam query SQL PostGIS",
@@ -6263,6 +6719,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-299",
     "level": "intermediate",
     "topic": "Cloud GIS & Big Data",
+    "questionType": "concept",
     "question": "Apa arsitektur utama Cloud Optimized GeoTIFF (COG) yang memungkinkan visualisasi raster cepat di web tanpa mendownload seluruh file?",
     "options": {
       "A": "Penggunaan internal tiling (tiled organization), overviews (piramida resolusi berkurang), dan HTTP Range Requests",
@@ -6284,6 +6741,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-300",
     "level": "intermediate",
     "topic": "DevOps & GIS Deployment",
+    "questionType": "concept",
     "question": "Saat menjalankan GeoServer di dalam Docker container di lingkungan produksi, praktik manakah yang penting dilakukan untuk persistensi data dan konfigurasi workspace?",
     "options": {
       "A": "Mem-mount direktori GEOSERVER_DATA_DIR dari host atau persistent volume ke dalam container",
@@ -6305,6 +6763,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-301",
     "level": "intermediate",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Mengapa penggunaan tipe data GEOGRAPHY pada PostGIS direkomendasikan jika ingin menghitung jarak riil dalam meter pada fitur yang tersebar melintasi benua?",
     "options": {
       "A": "GEOGRAPHY melakukan perhitungan jarak pada permukaan bola bumi (great-circle / geodesic) tanpa terdistorsi oleh proyeksi bidang datar",
@@ -6326,6 +6785,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-302",
     "level": "intermediate",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Fungsi PostGIS manakah yang digunakan untuk memperbaiki geometri poligon yang tidak valid (misalnya memiliki self-intersection atau ring collapse)?",
     "options": {
       "A": "ST_MakeValid(geom)",
@@ -6347,6 +6807,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-303",
     "level": "intermediate",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Apa perbedaan perilaku antara fungsi ST_Simplify dan ST_SimplifyPreserveTopology pada PostGIS?",
     "options": {
       "A": "ST_SimplifyPreserveTopology mencegah timbulnya self-intersection, overlapping, atau perubahan relasi spasial antar fitur selama generalisasi",
@@ -6368,6 +6829,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-304",
     "level": "intermediate",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Query PostGIS apakah yang digunakan untuk mencari poligon batas desa yang saling bertetangga (berbagi garis batas bersama tetapi tidak saling tumpang tindih)?",
     "options": {
       "A": "SELECT a.id, b.id FROM desa a, desa b WHERE ST_Touches(a.geom, b.geom) AND a.id != b.id;",
@@ -6389,6 +6851,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-305",
     "level": "intermediate",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Bagaimana model matriks relasi topologis DE-9IM (Dimensionally Extended 9-Intersection Model) merepresentasikan relasi spasial dua geometri?",
     "options": {
       "A": "Membandingkan irisan antara Interior, Boundary, dan Exterior geometri A terhadap Interior, Boundary, dan Exterior geometri B dalam matriks 3x3",
@@ -6410,6 +6873,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-306",
     "level": "intermediate",
     "topic": "Geodesi & Proyeksi",
+    "questionType": "concept",
     "question": "Mengapa koordinat UTM menggunakan sistem False Easting sebesar 500.000 meter pada Central Meridian setiap zona?",
     "options": {
       "A": "Untuk mencegah timbulnya nilai koordinat X (Easting) negatif pada wilayah di sebelah barat Central Meridian dalam zona tersebut",
@@ -6431,6 +6895,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-307",
     "level": "intermediate",
     "topic": "Geodesi & Proyeksi",
+    "questionType": "concept",
     "question": "Pada Belahan Bumi Selatan (Southern Hemisphere), berapakah nilai False Northing yang diterapkan pada sistem proyeksi UTM?",
     "options": {
       "A": "10.000.000 meter",
@@ -6452,6 +6917,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-308",
     "level": "intermediate",
     "topic": "Geodesi & Proyeksi",
+    "questionType": "concept",
     "question": "Apa perbedaan antara Tinggi Elipsoid (h), Tinggi Orthometrik (H), dan Undulasi Geoid (N)?",
     "options": {
       "A": "h = H + N, di mana h adalah tinggi di atas elipsoid acuan, H adalah tinggi di atas geoid (Mean Sea Level), dan N adalah jarak undulasi pemisah geoid terhadap elipsoid",
@@ -6473,6 +6939,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-309",
     "level": "intermediate",
     "topic": "OGC Services & Web Services",
+    "questionType": "concept",
     "question": "Bagaimana cara melakukan query informasi atribut fitur pada posisi koordinat klik di peta web menggunakan OGC Web Map Service (WMS)?",
     "options": {
       "A": "Mengirimkan request WMS GetFeatureInfo dengan menyertakan parameter I, J (atau X, Y piksel klik), BBOX, WIDTH, dan HEIGHT",
@@ -6494,6 +6961,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-310",
     "level": "intermediate",
     "topic": "OGC Services & Web Services",
+    "questionType": "concept",
     "question": "Dalam GeoServer, apa peran dari GeoWebCache (GWC)?",
     "options": {
       "A": "Meng-cache tile peta (WMS-C, WMTS, TMS) secara otomatis ke disk untuk mempercepat pengiriman dan mengurangi beban rendering berulang",
@@ -6515,6 +6983,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-311",
     "level": "intermediate",
     "topic": "OGC Services & Web Services",
+    "questionType": "concept",
     "question": "File standar berbasis XML apakah yang digunakan oleh GeoServer dan MapServer untuk mendefinisikan aturan simbol, warna, dan pelabelan fitur peta?",
     "options": {
       "A": "SLD (Styled Layer Descriptor)",
@@ -6536,6 +7005,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-312",
     "level": "intermediate",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Dalam Leaflet, jika Anda ingin menampilkan peta denah ruangan indoor atau citra medis non-geografis, sistem CRS apakah yang harus digunakan pada opsi map?",
     "options": {
       "A": "L.CRS.Simple",
@@ -6557,6 +7027,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-313",
     "level": "intermediate",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Library JavaScript manakah yang umum digunakan bersama Leaflet atau OpenLayers untuk melakukan reproyeksi koordinat on-the-fly di browser pengguna?",
     "options": {
       "A": "Proj4js (proj4)",
@@ -6578,6 +7049,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-314",
     "level": "intermediate",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Dalam visualisasi data spasial volume masif (misal 500.000 titik taksi realtime), teknologi rendering peta web manakah yang paling tepat digunakan untuk mencegah browser freeze?",
     "options": {
       "A": "WebGL berbasis GPU (misalnya deck.gl atau MapLibre GL JS)",
@@ -6599,6 +7071,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-315",
     "level": "intermediate",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Bagaimana cara kerja plugin MarkerCluster (seperti Leaflet.markercluster) dalam mengoptimalkan performa tampilan banyak titik marker?",
     "options": {
       "A": "Menggabungkan titik-titik yang posisinya berdekatan ke dalam satu icon cluster pada level zoom rendah, dan memecahnya kembali saat pengguna melakukan zoom-in",
@@ -6620,6 +7093,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-316",
     "level": "intermediate",
     "topic": "Fullstack Web GIS Development",
+    "questionType": "concept",
     "question": "Dalam framework React, pustaka manakah yang menyediakan komponen deklaratif (seperti <MapContainer>, <TileLayer>, <Marker>) sebagai wrapper resmi Leaflet?",
     "options": {
       "A": "react-leaflet",
@@ -6641,6 +7115,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-317",
     "level": "intermediate",
     "topic": "Fullstack Web GIS Development",
+    "questionType": "concept",
     "question": "Bagaimana cara menghindari memory leak saat menginisialisasi peta Leaflet atau Mapbox di dalam hook useEffect React?",
     "options": {
       "A": "Memanggil method map.remove() pada cleanup function yang di-return oleh useEffect",
@@ -6662,6 +7137,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-318",
     "level": "intermediate",
     "topic": "Fullstack Web GIS Development",
+    "questionType": "concept",
     "question": "Format data standar manakah yang digunakan oleh Mapbox Vector Tiles (MVT) untuk encoding data geometri dan atribut vektor dalam format binary yang sangat ringkas?",
     "options": {
       "A": "Google Protocol Buffers (Protobuf / .pbf)",
@@ -6683,6 +7159,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-319",
     "level": "intermediate",
     "topic": "Cloud GIS & Big Data",
+    "questionType": "concept",
     "question": "Dalam library Python Geopandas, fungsi apakah yang digunakan untuk melakukan spatial join antara dua GeoDataFrame berdasarkan relasi geometris (misal 'within' atau 'intersects')?",
     "options": {
       "A": "gpd.sjoin(left_df, right_df, predicate='intersects')",
@@ -6704,6 +7181,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-320",
     "level": "intermediate",
     "topic": "Cloud GIS & Big Data",
+    "questionType": "concept",
     "question": "Pustaka Python manakah yang merupakan pembungkus (wrapper) berkecepatan tinggi di atas C library GDAL untuk membaca dan menulis data citra raster sebagai array NumPy?",
     "options": {
       "A": "rasterio",
@@ -6725,6 +7203,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-321",
     "level": "intermediate",
     "topic": "Cloud GIS & Big Data",
+    "questionType": "concept",
     "question": "Apa fungsi spesifikasi STAC (SpatioTemporal Asset Catalog) dalam arsitektur cloud geospasial modern?",
     "options": {
       "A": "Menstandarisasi struktur metadata JSON untuk menemukan, mengindeks, dan mengakses dataset citra satelit dan data geospasial di cloud object storage",
@@ -6746,6 +7225,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-322",
     "level": "intermediate",
     "topic": "DevOps & GIS Deployment",
+    "questionType": "concept",
     "question": "Ketika aplikasi frontend Web GIS di domain http://localhost:3000 gagal memuat layer WMS dari GeoServer di http://geoserver.perusahaan.com:8080 dengan pesan CORS error, konfigurasi apa yang harus diaktifkan?",
     "options": {
       "A": "Mengaktifkan CORS filter pada file web.xml di GeoServer (org.apache.catalina.filters.CorsFilter atau jetty equivalent)",
@@ -6767,6 +7247,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-323",
     "level": "intermediate",
     "topic": "DevOps & GIS Deployment",
+    "questionType": "concept",
     "question": "Mengapa kompresi GZIP atau Brotli pada web server (Nginx/Apache) sangat penting untuk endpoint API yang menyajikan GeoJSON?",
     "options": {
       "A": "Struktur GeoJSON berbasis teks JSON yang repetitif dapat dikompresi hingga 70-85%, menghemat bandwidth dan mempercepat loading peta",
@@ -6788,6 +7269,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-324",
     "level": "intermediate",
     "topic": "DevOps & GIS Deployment",
+    "questionType": "concept",
     "question": "Dalam arsitektur CI/CD untuk aplikasi Web GIS, tes integrasi manakah yang krusial untuk memastikan migrasi database spasial berhasil?",
     "options": {
       "A": "Menjalankan migrasi PostGIS pada database test container dan memverifikasi ekstensi postgis aktif serta spatial index terbuat",
@@ -6809,6 +7291,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-325",
     "level": "intermediate",
     "topic": "GIS Software & GDAL/OGR",
+    "questionType": "concept",
     "question": "Perintah gdal_calc.py manakah yang tepat untuk menghitung Normalized Difference Vegetation Index (NDVI) dari citra Sentinel-2 (Band 8 = NIR, Band 4 = Red)?",
     "options": {
       "A": "gdal_calc.py -A B08.tif -B B04.tif --outfile=ndvi.tif --calc=\"(A.astype(float)-B.astype(float))/(A.astype(float)+B.astype(float))\"",
@@ -6830,6 +7313,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-326",
     "level": "intermediate",
     "topic": "Indeks Spektral",
+    "questionType": "concept",
     "question": "Mengapa indeks SAVI (Soil Adjusted Vegetation Index) menyertakan faktor penyesuaian L (biasanya bernilai 0.5)?",
     "options": {
       "A": "Untuk meminimalkan pengaruh pantulan kecerahan tanah latar belakang (soil brightness) pada area dengan kanopi vegetasi renggang",
@@ -6851,6 +7335,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-327",
     "level": "intermediate",
     "topic": "Citra Satelit & Radar",
+    "questionType": "concept",
     "question": "Manakah di antara sensor radar satelit berikut yang beroperasi pada pita frekuensi L-band (panjang gelombang ~23 cm) yang memiliki penetrasi kanopi hutan dalam?",
     "options": {
       "A": "ALOS-2 PALSAR-2",
@@ -6872,6 +7357,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-328",
     "level": "intermediate",
     "topic": "Citra Satelit & Radar",
+    "questionType": "concept",
     "question": "Apa fenomena spektral yang dikenal sebagai 'Red Edge' pada kurva pantulan spektral daun hijau sehat?",
     "options": {
       "A": "Peningkatan tajam nilai reflektansi vegetasi pada rentang panjang gelombang antara spektrum merah (Red, ~680 nm) dan inframerah dekat (NIR, ~730-780 nm)",
@@ -6893,6 +7379,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-329",
     "level": "intermediate",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Fungsi PostGIS manakah yang digunakan untuk memotong geometri A dengan batasan geometri B (spatial clipping) dan hanya mempertahankan bagian A yang berada di dalam B?",
     "options": {
       "A": "ST_Intersection(geomA, geomB)",
@@ -6914,6 +7401,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-330",
     "level": "intermediate",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Bagaimana cara membuat buffer selebar 500 meter di sekitar titik koordinat geografis (lon, lat) pada EPSG:4326 secara akurat dalam PostGIS?",
     "options": {
       "A": "ST_Buffer(geom::geography, 500)::geometry",
@@ -6935,6 +7423,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-331",
     "level": "intermediate",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Fungsi PostGIS manakah yang digunakan untuk mengonversi baris tabel spasial menjadi struktur JSON FeatureCollection yang siap dikonsumsi langsung oleh client frontend?",
     "options": {
       "A": "jsonb_build_object('type', 'FeatureCollection', 'features', jsonb_agg(ST_AsGeoJSON(t.*)::jsonb))",
@@ -6956,6 +7445,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-332",
     "level": "intermediate",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Dalam arsitektur peta berbasis tile TMS (Tile Map Service) vs XYZ Slippy Map, apa perbedaan orientasi sumbu koordinat Y?",
     "options": {
       "A": "TMS memiliki titik asal Y=0 di bagian bawah (selatan) dan bertambah ke atas, sedangkan XYZ Slippy Map (OSM/Google) memiliki Y=0 di bagian atas (utara) dan bertambah ke bawah",
@@ -6977,6 +7467,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-333",
     "level": "intermediate",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Pada Leaflet, bagaimanakah cara menambahkan popup dinamis yang menampilkan nama dan alamat fitur saat marker diklik?",
     "options": {
       "A": "marker.bindPopup(`<b>${feature.properties.nama}</b><br>${feature.properties.alamat}`)",
@@ -6998,6 +7489,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-334",
     "level": "intermediate",
     "topic": "OGC Services & Web Services",
+    "questionType": "concept",
     "question": "Ketika Anda memanggil servis WFS dengan parameter outputFormat, format manakah yang paling umum digunakan untuk pertukaran data vektor berbasis web modern?",
     "options": {
       "A": "application/json (GeoJSON)",
@@ -7019,6 +7511,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-335",
     "level": "intermediate",
     "topic": "Fullstack Web GIS Development",
+    "questionType": "concept",
     "question": "Dalam backend Python menggunakan FastAPI, pustaka apa yang paling tepat digunakan untuk membaca geometri GeoJSON dari request body dan memvalidasi skema datanya secara otomatis?",
     "options": {
       "A": "Pydantic bersama geojson-pydantic",
@@ -7040,6 +7533,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-336",
     "level": "intermediate",
     "topic": "Fullstack Web GIS Development",
+    "questionType": "concept",
     "question": "Teknologi server Vector Tile open source mandiri apakah yang ditulis dalam bahasa Rust/Go dan dapat terhubung langsung ke PostGIS untuk melayani tile .pbf secara berkecepatan tinggi?",
     "options": {
       "A": "Martin atau pg_tileserv",
@@ -7061,6 +7555,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-337",
     "level": "intermediate",
     "topic": "Cloud GIS & Big Data",
+    "questionType": "concept",
     "question": "Dalam Google Earth Engine (GEE), mengapa operasi perulangan 'for-loop' Python konvensional sangat tidak disarankan untuk iterasi citra dalam ImageCollection?",
     "options": {
       "A": "Operasi for-loop dieksekusi di sisi client lokal secara lambat, sedangkan metode .map() mengeksekusi komputasi secara paralel terdistribusi di server GEE cloud",
@@ -7082,6 +7577,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-338",
     "level": "intermediate",
     "topic": "Cloud GIS & Big Data",
+    "questionType": "concept",
     "question": "Fungsi GEE ImageCollection manakah yang digunakan untuk mengompositkan serangkaian citra temporal menjadi satu citra dengan memilih nilai median dari setiap piksel bebas awan?",
     "options": {
       "A": "collection.median()",
@@ -7103,6 +7599,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-339",
     "level": "intermediate",
     "topic": "Cloud GIS & Big Data",
+    "questionType": "concept",
     "question": "Aplikasi open-source modern berbasis FastAPI apakah yang sering digunakan untuk menyajikan dynamic tile dari Cloud Optimized GeoTIFF (COG) dan STAC langsung dari cloud storage (S3/GCS)?",
     "options": {
       "A": "TiTiler",
@@ -7124,6 +7621,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-340",
     "level": "intermediate",
     "topic": "DevOps & GIS Deployment",
+    "questionType": "concept",
     "question": "Strategi caching manakah yang paling efektif di depan server peta (Nginx / Cloudflare) untuk meningkatkan kecepatan loading tile basemap OSM atau orthophoto?",
     "options": {
       "A": "Menetapkan HTTP header 'Cache-Control: public, max-age=2592000' (30 hari) karena tile peta basemap bersifat statis",
@@ -7145,6 +7643,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-341",
     "level": "intermediate",
     "topic": "Fotogrametri & UAV",
+    "questionType": "concept",
     "question": "Apa kelemahan utama pemetaan drone menggunakan GPS receiver standar (stand-alone tanpa RTK/PPK)?",
     "options": {
       "A": "Akurasi posisi absolut geotag foto hanya berkisar 3 - 5 meter, sehingga memerlukan banyak Ground Control Point (GCP) di darat",
@@ -7166,6 +7665,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-342",
     "level": "intermediate",
     "topic": "Fotogrametri & UAV",
+    "questionType": "concept",
     "question": "Dalam workflow fotogrametri Structure from Motion (SfM), proses apakah yang menghubungkan ribuan titik fitur yang sama pada foto yang saling bertampalan (overlap)?",
     "options": {
       "A": "Tie Point matching (Feature extraction and matching)",
@@ -7187,6 +7687,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-343",
     "level": "intermediate",
     "topic": "GIS Software & GDAL/OGR",
+    "questionType": "concept",
     "question": "Bagaimana cara mengekstrak informasi elevasi titik koordinat tertentu dari file DEM GeoTIFF menggunakan utilitas GDAL?",
     "options": {
       "A": "gdallocationinfo -val_only -wgs84 dem.tif lon lat",
@@ -7208,6 +7709,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-344",
     "level": "intermediate",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Fungsi PostGIS manakah yang digunakan untuk memotong LineString menjadi beberapa segmen berdasarkan panjang maksimum tertentu?",
     "options": {
       "A": "ST_Segmentize(line, max_length)",
@@ -7229,6 +7731,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-345",
     "level": "intermediate",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Apa kegunaan fungsi ST_LineInterpolatePoint(line, fraction) pada PostGIS?",
     "options": {
       "A": "Menghasilkan titik (Point) pada posisi proporsi tertentu (0.0 sampai 1.0) sepanjang LineString",
@@ -7250,6 +7753,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-346",
     "level": "intermediate",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Dalam MapLibre GL JS, properti style apakah yang digunakan untuk mengatur elevasi 3D permukaan bumi berbasis raster DEM digital (terrain)?",
     "options": {
       "A": "setTerrain({ source: 'terrain-source', exaggeration: 1.5 })",
@@ -7271,6 +7775,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-347",
     "level": "intermediate",
     "topic": "Remote Sensing Fundamentals",
+    "questionType": "concept",
     "question": "Fenomena pergeseran posisi objek tinggi (seperti puncak gunung atau gedung) menjauhi titik nadir pada citra foto udara vertikal disebut:",
     "options": {
       "A": "Relief displacement",
@@ -7292,6 +7797,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-348",
     "level": "intermediate",
     "topic": "Koreksi Citra",
+    "questionType": "concept",
     "question": "Dalam pengolahan citra satelit resolusi tinggi, apa tujuan utama proses Orthorektifikasi (Orthorectification)?",
     "options": {
       "A": "Menghilangkan distorsi geometri akibat kemiringan sudut sensor (tilt) dan perbedaan variasi tinggi medan (topografi) menggunakan Digital Elevation Model (DEM)",
@@ -7313,6 +7819,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-349",
     "level": "intermediate",
     "topic": "Geodesi & Proyeksi",
+    "questionType": "concept",
     "question": "Sistem grid koordinat nasional Indonesia yang berbasis proyeksi Transverse Mercator dengan lebar zona bujur 3 derajat disebut:",
     "options": {
       "A": "TM-3° (Transverse Mercator 3 Derajat)",
@@ -7334,6 +7841,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-350",
     "level": "intermediate",
     "topic": "DevOps & GIS Deployment",
+    "questionType": "concept",
     "question": "Praktik keamanan penting apakah yang wajib diterapkan pada instalasi produksi GeoServer publik?",
     "options": {
       "A": "Mengubah password default user 'admin' (geoserver) dan membatasi akses URL /geoserver/web hanya dari IP internal/VPN",
@@ -7354,945 +7862,1035 @@ export const GIS_QUESTIONS: Question[] = [
   {
     "id": "GIS-351",
     "level": "advanced",
-    "topic": "Citra Satelit & Radar",
-    "question": "Dalam teknik InSAR (Interferometric Synthetic Aperture Radar), apa fungsi utama dari tahap 'Phase Unwrapping' (misalnya menggunakan algoritma SNAPHU)?",
+    "topic": "Spatial Clustering DBSCAN",
+    "questionType": "output",
+    "question": "Apa output dari fungsi ST_ClusterDBSCAN pada kueri pengelompokan spasial berikut?\n\n```sql\nSELECT id, ST_ClusterDBSCAN(geom, eps := 100, minpoints := 2) OVER () AS cid\nFROM sensor_locations;\n```",
+    "code": "SELECT id, ST_ClusterDBSCAN(geom, eps := 100, minpoints := 2) OVER () AS cid\nFROM sensor_locations;",
     "options": {
-      "A": "Mengonversi nilai fase interferogram yang terbungkus (wrapped) dalam rentang [-π, +π] menjadi variasi fase kontinu mutlak untuk merekonstruksi deformasi permukaan atau elevasi topografi",
-      "B": "Menghapus noise awan dari citra radar",
-      "C": "Mengubah resolusi spasial citra menjadi 1 meter",
-      "D": "Menggabungkan band merah, hijau, dan biru menjadi warna alami"
+      "A": "Angka integer ID kluster (0, 1, 2, ...) untuk titik anggota kluster, dan NULL untuk titik pencilan (noise/outlier)",
+      "B": "Tipe data Polygon untuk setiap kluster",
+      "C": "String nama algoritma",
+      "D": "Nilai koordinat titik pusat kluster"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Interferogram merekam beda fase modulo 2π (rentang -π hingga +π). Phase unwrapping menyelesaikan ambiguitas kelipatan bilangan bulat 2πn agar nilai perpindahan absolut (LOS displacement) dapat dihitung.",
-      "A": "Opsi A benar sesuai teori interferometri radar dan algoritma phase unwrapping (SNAPHU / Minimum Cost Flow).",
-      "B": "Opsi B salah karena gelombang mikro radar sudah dapat menembus awan.",
-      "C": "Opsi C salah karena unwrapping tidak mengubah resolusi geometris dasar.",
-      "D": "Opsi D salah karena citra radar bukan data optik RGB."
+      "correct": "`ST_ClusterDBSCAN` adalah window function di PostGIS yang mengelompokkan geometri berbasis kepadatan jarak (`eps`) dan jumlah minimal tetangga (`minpoints`). Titik yang tidak memenuhi syarat kluster (noise) diberi label `NULL`.",
+      "A": "Benar. Mengembalikan integer ID kluster unik (0-indexed) dan NULL untuk outlier.",
+      "B": "Salah. Hasilnya adalah ID integer pada masing-masing baris, bukan geometri poligon.",
+      "C": "Salah. Fungsi mengembalikan nilai numerik, bukan nama algoritma.",
+      "D": "Salah. Titik pusat dihitung dengan agregasi ST_Centroid terpisah, bukan nilai langsung ST_ClusterDBSCAN."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-352",
     "level": "advanced",
-    "topic": "Citra Satelit & Radar",
-    "question": "Metode PS-InSAR (Persistent Scatterer InSAR) sangat efektif untuk memantau amblesan tanah (land subsidence) perkotaan dengan akurasi milimeter karena:",
+    "topic": "Vector Tile MVT Generation",
+    "questionType": "output",
+    "question": "Format biner apakah yang dihasilkan oleh fungsi `ST_AsMVT` di PostGIS?\n\n```sql\nSELECT ST_AsMVT(mvtgeom.*) FROM (\n  SELECT id, ST_AsMVTGeom(geom, ST_TileEnvelope(10, 800, 500)) as geom\n  FROM roads\n) mvtgeom;\n```",
+    "code": "SELECT ST_AsMVT(mvtgeom.*) FROM (\n  SELECT id, ST_AsMVTGeom(geom, ST_TileEnvelope(10, 800, 500)) as geom\n  FROM roads\n) mvtgeom;",
     "options": {
-      "A": "Memilih target hamburan balik yang sangat stabil dan koheren tinggi secara temporal (seperti atap gedung atau struktur beton) sepanjang rangkaian deret waktu citra SAR",
-      "B": "Mengabaikan efek atmosfer dan rotasi bumi sepenuhnya tanpa kalibrasi",
-      "C": "Hanya membutuhkan satu citra satelit radar tunggal",
-      "D": "Mampu merekam pergerakan di bawah tanah hingga kedalaman 500 meter"
+      "A": "Biner Mapbox Vector Tile (MVT) terkompresi berbasis Google Protocol Buffers (pbf)",
+      "B": "File gambar JPEG 8-bit",
+      "C": "String teks XML GML mentah",
+      "D": "File arsip ZIP"
     },
     "answer": "A",
     "explanation": {
-      "correct": "PS-InSAR mengidentifikasi piksel dengan sifat reflektif elektromagnetik konstan (Persistent Scatterers seperti infrastruktur perkotaan) yang mempertahankan koherensi fase tinggi melintasi puluhan akuisisi citra, memisahkan sinyal deformasi dari fase atmosferik.",
-      "A": "Opsi A benar sesuai metodologi Ferretti et al. untuk PS-InSAR.",
-      "B": "Opsi B salah karena PS-InSAR secara eksplisit memodelkan dan mengestimasi Atmospheric Phase Screen (APS).",
-      "C": "Opsi C salah karena InSAR membutuhkan deret waktu banyak pasangan citra.",
-      "D": "Opsi D salah karena sinyal radar hanya berinteraksi dengan permukaan dan penetrasi beberapa cm."
+      "correct": "`ST_AsMVT` mengagregasi baris data dan mengubah geometri tile menjadi format biner `application/vnd.mapbox-vector-tile` berbasis Google Protocol Buffers (.pbf), yang siap dikirim langsung ke frontend MapLibre GL.",
+      "A": "Benar. ST_AsMVT menghasilkan format biner MVT Protocol Buffers.",
+      "B": "Salah. MVT adalah data vektor biner, bukan citra raster JPEG.",
+      "C": "Salah. MVT menggunakan Protocol Buffers biner berkecepatan tinggi, bukan XML teks.",
+      "D": "Salah. Format ini bukan arsip ZIP konvensional."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-353",
     "level": "advanced",
-    "topic": "Citra Satelit & Radar",
-    "question": "Dekomposisi polarimetrik 3-komponen Freeman-Durden pada data PolSAR kuad-polarisasi memecah matriks kovarians hamburan menjadi tiga mekanisme fisik, yaitu:",
+    "topic": "PostGIS Raster Analysis",
+    "questionType": "output",
+    "question": "Apa nilai yang dikembalikan oleh kueri ST_Value pada raster elevasi DEM berikut?\n\n```sql\nSELECT ST_Value(rast, 1, ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326))\nFROM srtm_dem WHERE ST_Intersects(rast, ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326));\n```",
+    "code": "SELECT ST_Value(rast, 1, ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326))\nFROM srtm_dem WHERE ST_Intersects(rast, ST_SetSRID(ST_MakePoint(106.8, -6.2), 4326));",
     "options": {
-      "A": "Surface/rough scattering, double-bounce scattering (pantulan ganda sudut bangunan/batang pohon), dan volume scattering (kanopi vegetasi)",
-      "B": "Refleksi, refraksi, dan difraksi optik",
-      "C": "Radiasi termal, ultraviolet, dan sinar gamma",
-      "D": "Transmisi, absorpsi, dan fluoresensi"
+      "A": "Nilai numerik piksel (ketinggian dpl dalam meter) dari band 1 pada koordinat tersebut",
+      "B": "Nama satelit pengambil citra",
+      "C": "Koordinat piksel dalam satuan centimeter",
+      "D": "Array warna RGB heksadesimal"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Model dekomposisi Freeman-Durden merepresentasikan daya total hamburan SAR ke dalam tiga komponen fisik: hamburan permukaan (Bragg scattering), pantulan ganda (double-bounce), dan hamburan kanopi acak (volume scattering).",
-      "A": "Opsi A benar sesuai formulasi PolSAR Freeman-Durden.",
-      "B": "Opsi B salah karena bukan dekomposisi polarimetri radar.",
-      "C": "Opsi C salah karena radar adalah gelombang mikro, bukan spektrum ionisasi.",
-      "D": "Opsi D salah karena bukan mekanisme dekomposisi hamburan SAR."
+      "correct": "`ST_Value(rast, band, pt)` mengekstrak nilai numerik sel/piksel raster pada band ke-1 yang beririsan dengan titik koordinat tertentu (dalam hal ini elevasi meter di atas permukaan laut).",
+      "A": "Benar. ST_Value mengembalikan nilai sel piksel raster spesifik pada band yang diminta.",
+      "B": "Salah. Metadata satelit disimpan di atribut terpisah, bukan di sel piksel data.",
+      "C": "Salah. ST_Value mengembalikan isi nilai data raster, bukan koordinat piksel.",
+      "D": "Salah. DEM band 1 adalah single band elevasi grayscale kontinu, bukan RGB."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-354",
     "level": "advanced",
-    "topic": "Remote Sensing Fundamentals",
-    "question": "Dalam klasifikasi tutupan lahan berbasis citra satelit, mengapa model U-Net berbasis Convolutional Neural Network (CNN) lebih unggul daripada Random Forest berbasis piksel?",
+    "topic": "Deck.gl ArcLayer",
+    "questionType": "output",
+    "question": "Dalam visualisasi spasial Deck.gl, properti apakah yang menentukan koordinat awal dan koordinat akhir untuk ArcLayer?\n\n```javascript\nnew ArcLayer({\n  id: \"flight-arcs\",\n  data: flights,\n  getSourcePosition: d => d.from,\n  getTargetPosition: d => d.to\n});\n```",
+    "code": "new ArcLayer({\n  id: \"flight-arcs\",\n  data: flights,\n  getSourcePosition: d => d.from,\n  getTargetPosition: d => d.to\n});",
     "options": {
-      "A": "U-Net mampu mempelajari konteks spasial lokal dan pola tekstur/bentuk lingkungan sekitar (spatial context) melalui lapisan konvolusi dan skip-connections, bukan hanya nilai spektral piksel terisolasi",
-      "B": "U-Net tidak membutuhkan data latih (training data) sama sekali",
-      "C": "U-Net dapat berjalan tanpa bantuan kartu grafis (GPU)",
-      "D": "Random Forest tidak dapat memproses lebih dari 3 band citra"
+      "A": "getSourcePosition dan getTargetPosition",
+      "B": "getStartPoint dan getEndPoint",
+      "C": "origin dan destination",
+      "D": "coordsA dan coordsB"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Klasifikasi piksel tradisional (seperti Random Forest) hanya melihat vektor spektral piksel tunggal tanpa mempertimbangkan pola spasial tetangga. Arsitektur U-Net menangkap representasi kontekstual multiskala dan merekonstruksi segmentasi spasial secara detail melalui skip connections.",
-      "A": "Opsi A benar sesuai keunggulan semantic segmentation CNN dalam Earth Observation.",
-      "B": "Opsi B salah karena U-Net adalah supervised learning yang memerlukan dataset anotasi berlabel.",
-      "C": "Opsi C salah karena U-Net membutuhkan GPU berkemampuan komputasi tinggi untuk pelatihan.",
-      "D": "Opsi D salah karena Random Forest mendukung ratusan fitur variabel."
+      "correct": "Deck.gl ArcLayer secara konsisten menggunakan accessor method `getSourcePosition` (koordinat awal [lng, lat, z?]) dan `getTargetPosition` (koordinat tujuan) untuk menggambar kurva lengkung 3D interaktif di GPU.",
+      "A": "Benar. getSourcePosition dan getTargetPosition adalah accessor resmi ArcLayer Deck.gl.",
+      "B": "Salah. getStartPoint bukan nama properti accessor resmi Deck.gl.",
+      "C": "Salah. origin dan destination bukan nama accessor method Deck.gl.",
+      "D": "Salah. coordsA/coordsB bukan nama properti bawaan Deck.gl."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-355",
     "level": "advanced",
-    "topic": "Remote Sensing Fundamentals",
-    "question": "Dalam Object-Based Image Analysis (OBIA), matriks statistik manakah yang umum digunakan untuk mengekstrak fitur tekstur permukaan tutupan lahan dari citra beresolusi tinggi?",
+    "topic": "PostGIS Voronoi Polygons",
+    "questionType": "output",
+    "question": "Geometri apakah yang dihasilkan oleh `ST_VoronoiPolygons(ST_Collect(geom))`?\n\n```sql\nSELECT ST_GeometryType(ST_VoronoiPolygons(ST_Collect(geom))) FROM weather_stations;\n```",
+    "code": "SELECT ST_GeometryType(ST_VoronoiPolygons(ST_Collect(geom))) FROM weather_stations;",
     "options": {
-      "A": "GLCM (Gray-Level Co-occurrence Matrix)",
-      "B": "Confusion Matrix",
-      "C": "DE-9IM Matrix",
-      "D": "Hessian Matrix"
+      "A": "ST_GeometryCollection berisi sekumpulan poligon Thiessen/Voronoi yang mempartisi ruang berdasarkan kedekatan dengan masing-masing stasiun",
+      "B": "ST_Point",
+      "C": "ST_MultiLineString",
+      "D": "Single ST_LineString tertutup"
     },
     "answer": "A",
     "explanation": {
-      "correct": "GLCM (Haralick et al.) menghitung frekuensi pasangan nilai piksel dengan jarak dan orientasi tertentu untuk menghasilkan metrik tekstur seperti kontras, disimilaritas, homogenitas, energi, dan korelasi.",
-      "A": "Opsi A benar sesuai standar analisis tekstur OBIA.",
-      "B": "Opsi B salah karena Confusion Matrix untuk evaluasi akurasi klasifikasi.",
-      "C": "Opsi C salah karena DE-9IM untuk relasi topologi vektor.",
-      "D": "Opsi D salah karena Hessian Matrix untuk turunan kedua kalkulus multivariat."
+      "correct": "Diagram Voronoi mempartisi bidang ruang menjadi sel-sel poligon di mana setiap titik di dalam suatu sel lebih dekat ke stasiun acuan tersebut daripada stasiun lainnya. PostGIS mengembalikannya sebagai `GEOMETRYCOLLECTION` of polygons.",
+      "A": "Benar. Menghasilkan GeometryCollection berisi poligon-poligon sel Thiessen/Voronoi.",
+      "B": "Salah. Diagram Voronoi menghasilkan bidang poligon, bukan titik.",
+      "C": "Salah. Bukan berupa multi linestring.",
+      "D": "Salah. Hasilnya adalah banyak poligon partisi, bukan garis tunggal."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-356",
     "level": "advanced",
-    "topic": "Spatial Database & PostGIS",
-    "question": "Saat melakukan spatial join pada tabel batas wilayah yang memiliki poligon dengan jutaan vertex (misal garis pantai detail), strategi apa yang paling efektif untuk mencegah query timeout dan memori habis di PostGIS?",
+    "topic": "PostGIS Trajectory Analysis ST_MakeLine",
+    "questionType": "output",
+    "question": "Apa output dari kueri rekonstruksi rute perjalanan kendaraan berikut?\n\n```sql\nSELECT vehicle_id, ST_MakeLine(geom ORDER BY recorded_at) as trajectory\nFROM gps_pings\nGROUP BY vehicle_id;\n```",
+    "code": "SELECT vehicle_id, ST_MakeLine(geom ORDER BY recorded_at) as trajectory\nFROM gps_pings\nGROUP BY vehicle_id;",
     "options": {
-      "A": "Menggunakan ST_Subdivide(geom, 256) untuk memotong poligon raksasa menjadi potongan-potongan poligon kecil sebelum diindeks dan di-join",
-      "B": "Menghapus spatial index GiST pada tabel",
-      "C": "Mengubah tipe kolom geometri menjadi VARCHAR",
-      "D": "Menggunakan operator LIKE '%POLYGON%'"
+      "A": "Geometri LINESTRING yang menghubungkan titik-titik ping GPS secara kronologis terurut waktu untuk setiap kendaraan",
+      "B": "POLYGON tertutup",
+      "C": "MULTIPOINT acak tanpa urutan",
+      "D": "Satu angka rata-rata kecepatan"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ST_Subdivide membagi poligon kompleks dengan vertex masif menjadi bagian-bagian kecil (maksimal 256 vertex). Bounding box setiap sub-poligon menjadi jauh lebih rapat, membuat indeks GiST sangat efisien dan evaluasi relasi spasial pointwise menjadi eksponensial lebih cepat.",
-      "A": "Opsi A benar sesuai best practice optimasi geometri raksasa PostGIS.",
-      "B": "Opsi B salah karena menghapus indeks GiST akan memicu full table scan yang sangat lambat.",
-      "C": "Opsi C salah karena VARCHAR menonaktifkan seluruh komputasi spasial.",
-      "D": "Opsi D salah karena regex/LIKE tidak mengevaluasi topologi spasial."
+      "correct": "`ST_MakeLine` yang digunakan sebagai fungsi agregat dengan klausa `ORDER BY recorded_at` menyusun titik-titik simpul GPS menjadi garis lintasan perjalanan tunggal (`LineString`) yang merefleksikan alur historis kendaraan.",
+      "A": "Benar. Menghasilkan LineString terurut waktu yang merepresentasikan lintasan pergerakan kendaraan.",
+      "B": "Salah. Lintasan perjalanan adalah garis terbuka, bukan poligon tertutup.",
+      "C": "Salah. ST_MakeLine menghasilkan linestring bersambung, bukan titik multipoint diskrit.",
+      "D": "Salah. ST_MakeLine mengembalikan objek spasial, bukan angka statistik skalar."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-357",
     "level": "advanced",
-    "topic": "Spatial Database & PostGIS",
-    "question": "Apa keunggulan indeks SP-GiST (Space-Partitioning GiST) dibandingkan GiST standar pada jenis data geospasial tertentu di PostgreSQL/PostGIS?",
+    "topic": "MapLibre GL Expression",
+    "questionType": "output",
+    "question": "Apa arti ekspresi styling MapLibre GL JS berikut?\n\n```javascript\n[\n  \"interpolate\", [\"linear\"], [\"zoom\"],\n  10, 2,\n  16, 12\n]\n```",
+    "code": "[\n  \"interpolate\", [\"linear\"], [\"zoom\"],\n  10, 2,\n  16, 12\n]",
     "options": {
-      "A": "SP-GiST mempartisi ruang secara rekursif dan non-overlapping (seperti quadtree / k-d tree), sangat efisien untuk dataset titik 2D dengan distribusi yang tidak merata (skewed clusters)",
-      "B": "SP-GiST hanya bekerja pada data teks dan string",
-      "C": "SP-GiST tidak membutuhkan ruang disk sama sekali",
-      "D": "SP-GiST mengabaikan koordinat Z dan M secara paksa"
+      "A": "Ketebalan/ukuran garis bertransisi secara halus dari 2 pixel pada zoom 10 hingga menjadi 12 pixel pada zoom 16",
+      "B": "Peta berhenti merender pada zoom 12",
+      "C": "Warna berubah dari hitam menjadi putih",
+      "D": "Data difilter hanya antara angka 10 dan 16"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Berbeda dengan GiST (R-tree) yang memungkinkan bounding box saling overlap, SP-GiST mengimplementasikan partisi ruang diskrit (misalnya quadtree untuk 2D points). Untuk dataset titik dengan pola distribusi padat di area tertentu, SP-GiST sering kali lebih cepat dan lebih hemat ruang.",
-      "A": "Opsi A benar sesuai arsitektur partisi ruang SP-GiST PostgreSQL.",
-      "B": "Opsi B salah karena SP-GiST mendukung tipe data geometrik PostGIS.",
-      "C": "Opsi C salah karena semua indeks memerlukan struktur penyimpanan disk.",
-      "D": "Opsi D salah karena dukungan dimensi sesuai tipe geometri yang diindeks."
+      "correct": "Ekspresi `interpolate` linear mengevaluasi nilai properti zoom kamera secara kontinu. Pada zoom level 10 nilainya 2px, pada zoom level 16 nilainya 12px, dan di antaranya diinterpolasi secara proporsional oleh GPU shader.",
+      "A": "Benar. Interpolasi linear mulus pada properti zoom antara level 10 (2px) dan 16 (12px).",
+      "B": "Salah. Ekspresi ini tidak menghentikan rendering peta.",
+      "C": "Salah. Angka 2 dan 12 adalah besaran numerik dimensi (pixel), bukan warna.",
+      "D": "Salah. Interpolate bukan filter ekspresi data."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-358",
     "level": "advanced",
-    "topic": "Spatial Database & PostGIS",
-    "question": "Parameter postgresql.conf manakah yang harus diturunkan nilainya (misalnya dari 4.0 menjadi 1.1) pada server PostgreSQL yang menggunakan media penyimpanan NVMe/SSD berkecepatan tinggi agar query planner lebih memilih Index Scan daripada Sequential Scan?",
+    "topic": "PostGIS 3D Distance",
+    "questionType": "output",
+    "question": "Apa output dari perbandingan ST_Distance vs ST_3DDistance pada dua titik yang memiliki koordinat X, Y identik tetapi ketinggian Z berbeda (misal puncak gedung vs lantai dasar)?\n\n```sql\nSELECT \n  ST_Distance(ST_MakePoint(0, 0, 100), ST_MakePoint(0, 0, 0)) as dist_2d,\n  ST_3DDistance(ST_MakePoint(0, 0, 100), ST_MakePoint(0, 0, 0)) as dist_3d;\n```",
+    "code": "SELECT \n  ST_Distance(ST_MakePoint(0, 0, 100), ST_MakePoint(0, 0, 0)) as dist_2d,\n  ST_3DDistance(ST_MakePoint(0, 0, 100), ST_MakePoint(0, 0, 0)) as dist_3d;",
     "options": {
-      "A": "random_page_cost",
-      "B": "work_mem",
-      "C": "shared_buffers",
-      "D": "max_connections"
+      "A": "dist_2d = 0, dist_3d = 100",
+      "B": "dist_2d = 100, dist_3d = 0",
+      "C": "dist_2d = 100, dist_3d = 100",
+      "D": "dist_2d = 0, dist_3d = 0"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Nilai default random_page_cost (4.0) mengasumsikan hard drive mekanik tradisional yang lambat dalam random seek. Pada NVMe/SSD, random access hampir sama cepatnya dengan sequential access, sehingga menetapkan random_page_cost = 1.1 mendorong planner memanfaatkan indeks GiST spasial.",
-      "A": "Opsi A benar sesuai panduan tuning performa PostgreSQL & PostGIS pada SSD.",
-      "B": "Opsi B salah karena work_mem mengatur alokasi memori per-operasi sorting/hash.",
-      "C": "Opsi C salah karena shared_buffers mengatur ukuran RAM cache basis data.",
-      "D": "Opsi D salah karena max_connections mengatur batas jumlah klien bersamaan."
+      "correct": "`ST_Distance` hanya memperhitungkan bidang proyeksi 2D (X dan Y). Karena koordinat X dan Y sama persis, jarak 2D adalah 0. Sedangkan `ST_3DDistance` memperhitungkan sumbu Z: akar(0^2 + 0^2 + 100^2) = 100.",
+      "A": "Benar. ST_Distance 2D mengabaikan sumbu Z (jarak 0), sedangkan ST_3DDistance menghitung jarak vertikal Z (jarak 100).",
+      "B": "Salah. dist_2d tidak memperhitungkan selisih Z sehingga bernilai 0.",
+      "C": "Salah. Nilai keduanya tidak sama karena sumbu 2D tidak melihat elevasi.",
+      "D": "Salah. Jarak 3D tidak bernilai nol."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-359",
     "level": "advanced",
-    "topic": "Spatial Database & PostGIS",
-    "question": "Dalam PostGIS Raster, fungsi SQL manakah yang memungkinkan eksekusi ekspresi matematika kustom antar piksel dari multi-band raster secara vectorized?",
+    "topic": "MapLibre Feature State",
+    "questionType": "output",
+    "question": "Apa kegunaan dari `map.setFeatureState` pada library MapLibre GL JS?\n\n```javascript\nmap.setFeatureState(\n  { source: \"states\", id: featureId },\n  { hover: true }\n);\n```",
+    "code": "map.setFeatureState(\n  { source: \"states\", id: featureId },\n  { hover: true }\n);",
     "options": {
-      "A": "ST_MapAlgebra(rast1, band1, rast2, band2, 'expression')",
-      "B": "ST_RasterMath()",
-      "C": "ST_NumpyCalc()",
-      "D": "ST_PixelShader()"
+      "A": "Memperbarui state visual dinamis (seperti status hover) untuk fitur individual langsung di GPU tanpa perlu mengunggah ulang (re-upload) seluruh data tile spasial",
+      "B": "Menghapus database server",
+      "C": "Menyimpan data ke cookie browser pengguna",
+      "D": "Memaksa browser me-restart sistem operasi"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ST_MapAlgebra adalah fungsi inti pemrosesan raster PostGIS yang mengeksekusi operasi aljabar peta lokal pada satu atau beberapa layer raster menggunakan ekspresi logika atau matematika.",
-      "A": "Opsi A benar sesuai modul PostGIS Raster.",
-      "B": "Opsi B salah karena bukan fungsi PostGIS.",
-      "C": "Opsi C salah karena bukan fungsi PostGIS.",
-      "D": "Opsi D salah karena bukan fungsi PostGIS."
+      "correct": "`setFeatureState` memungkinkan developer mengubah atribut tampilan fitur tertentu secara terisolasi dan instan di memory GPU buffer. Ini memberikan pengalaman hover/selection 60 FPS tanpa jeda re-render tile.",
+      "A": "Benar. setFeatureState memberikan update state dinamis tingkat fitur dengan performa GPU instan.",
+      "B": "Salah. Fitur ini murni manipulasi state grafis klien di WebGL.",
+      "C": "Salah. State disimpan di memory GPU/JS heap, bukan browser cookie.",
+      "D": "Salah. Browser tidak memiliki akses untuk me-restart sistem operasi."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-360",
     "level": "advanced",
-    "topic": "Spatial Database & PostGIS",
-    "question": "Mengapa klausa operator bounding box '&&' sering digabungkan sebelum fungsi topologi presisi seperti ST_Intersects dalam query PostGIS kompleks?",
+    "topic": "PostGIS ST_GeomFromTWKB",
+    "questionType": "output",
+    "question": "Format representasi geometri biner apakah TWKB (Tiny Well-Known Binary) di PostGIS?\n\n```sql\nSELECT ST_GeomFromTWKB(twkb_bytea) FROM compressed_telemetry;\n```",
+    "code": "SELECT ST_GeomFromTWKB(twkb_bytea) FROM compressed_telemetry;",
     "options": {
-      "A": "Meskipun ST_Intersects modern secara internal sudah mengikutsertakan indeks bounding box, eksplisit filter '&&' berguna pada konstruksi subquery atau fungsi spasial kustom untuk memastikan indeks GiST terpilih",
-      "B": "Operator '&&' menggabungkan dua baris tabel menjadi satu secara string",
-      "C": "Operator '&&' menghapus geometri duplikat dari database",
-      "D": "Operator '&&' mengonversi geometri menjadi format raster WKB"
+      "A": "Format biner kompresi tinggi yang memadatkan WKB standar dengan encoding variable-length zigzag integer dan deltas",
+      "B": "Format file teks HTML",
+      "C": "Format audio MP3 spasial",
+      "D": "Gambar bitmap monokrom"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Operator '&&' memeriksa apakah bounding box (MBR) kedua geometri berpotongan, memanfaatkan indeks spasial GiST secara langsung. Meskipun ST_Intersects memanggil operator && secara otomatis, pemahaman operator ini esensial dalam optimasi query kustom dan CTE.",
-      "A": "Opsi A benar sesuai mekanisme eksekusi query planner PostGIS.",
-      "B": "Opsi B salah karena bukan operator konkatenasi string (yang menggunakan ||).",
-      "C": "Opsi C salah karena bukan operasi deduplikasi.",
-      "D": "Opsi D salah karena bukan fungsi serialisasi biner."
+      "correct": "TWKB adalah ekstensi format biner yang dirancang untuk meminimalkan ukuran transfer byte geometri secara drastis (hingga 5x lebih kecil dari WKB standar) dengan menggunakan variable length integer dan selisih koordinat (delta coding).",
+      "A": "Benar. TWKB adalah format biner ultra-kompak untuk transmisi geometri hemat bandwidth.",
+      "B": "Salah. TWKB bukan representasi teks HTML.",
+      "C": "Salah. TWKB adalah encoding data spasial, bukan audio.",
+      "D": "Salah. TWKB menyimpan data vektor, bukan citra bitmap."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-361",
     "level": "advanced",
-    "topic": "Cloud GIS & Big Data",
-    "question": "Format Cloud Optimized Point Cloud (COPC) dibangun di atas format LAZ 1.4 dengan mengorganisasi data titik LiDAR ke dalam struktur pohon spasial apa?",
+    "topic": "Turf.js Tin (Triangulated Irregular Network)",
+    "questionType": "output",
+    "question": "Apa yang dihasilkan oleh fungsi `turf.tin(points, 'elevation')`?\n\n```javascript\nconst tin = turf.tin(pointCollection, \"elevation\");\nconsole.log(tin.features[0].geometry.type);\n```",
+    "code": "const tin = turf.tin(pointCollection, \"elevation\");\nconsole.log(tin.features[0].geometry.type);",
     "options": {
-      "A": "Octree bertingkat dengan chunk LAZ independen yang mendukung pembacaan bertahap sesuai resolusi (LOD)",
-      "B": "Array 1D datar tanpa hirarki",
-      "C": "B-Tree tunggal berbasis waktu GPS",
-      "D": "File teks CSV terkompresi ZIP"
+      "A": "Polygon (berupa segitiga-segitiga pembentuk permukaan medan 3D)",
+      "B": "Point",
+      "C": "MultiPoint",
+      "D": "LineString"
     },
     "answer": "A",
     "explanation": {
-      "correct": "COPC mengorganisasi titik-titik LiDAR ke dalam struktur ruang 3D Octree bertingkat di dalam kontainer standar LAZ 1.4. Hal ini memungkinkan visualisasi streaming point cloud 3D multi-resolusi melalui HTTP range requests.",
-      "A": "Opsi A benar sesuai spesifikasi COPC standard (copc.io).",
-      "B": "Opsi B salah karena array datar tidak mendukung streaming Level of Detail (LOD).",
-      "C": "Opsi C salah karena B-tree temporal tidak mempartisi ruang 3D.",
-      "D": "Opsi D salah karena COPC berbasis kompresi binary LASzip (LAZ), bukan CSV."
+      "correct": "TIN (Triangulated Irregular Network) membagi bidang permukaan menjadi kumpulan poligon segitiga yang saling berdampingan, di mana setiap fitur dalam FeatureCollection bertipe 'Polygon'.",
+      "A": "Benar. TIN menghasilkan jaring-jaring poligon segitiga yang merepresentasikan kontur medan.",
+      "B": "Salah. Hasilnya adalah poligon segitiga, bukan titik tunggal.",
+      "C": "Salah. Bukan kumpulan titik lepas.",
+      "D": "Salah. TIN membentuk bidang luasan tertutup (Polygon), bukan LineString."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-362",
     "level": "advanced",
-    "topic": "Cloud GIS & Big Data",
-    "question": "Dalam katalog STAC (SpatioTemporal Asset Catalog), apa hierarki struktural standar dari tingkat tertinggi hingga terendah?",
+    "topic": "Spatial SQL Lateral JOIN kNN",
+    "questionType": "output",
+    "question": "Apa output dan efisiensi dari kueri LATERAL JOIN kNN berikut?\n\n```sql\nSELECT b.id, n.store_id, n.dist\nFROM buyers b\nCROSS JOIN LATERAL (\n  SELECT s.id as store_id, ST_Distance(b.geom, s.geom) as dist\n  FROM stores s\n  ORDER BY s.geom <-> b.geom\n  LIMIT 3\n) n;\n```",
+    "code": "SELECT b.id, n.store_id, n.dist\nFROM buyers b\nCROSS JOIN LATERAL (\n  SELECT s.id as store_id, ST_Distance(b.geom, s.geom) as dist\n  FROM stores s\n  ORDER BY s.geom <-> b.geom\n  LIMIT 3\n) n;",
     "options": {
-      "A": "Catalog -> Collection -> Item -> Asset",
-      "B": "Asset -> Item -> Collection -> Catalog",
-      "C": "Item -> Asset -> Layer -> Workspace",
-      "D": "Database -> Table -> Row -> Column"
+      "A": "Mengambil 3 toko terdekat secara eksak untuk setiap pembeli menggunakan traversal indeks spasial GiST independen per baris pembeli",
+      "B": "Mengambil seluruh kombinasi cartesian toko dan pembeli tanpa batas",
+      "C": "Menghapus semua pembeli yang jaraknya > 3 km",
+      "D": "Error karena LATERAL tidak mendukung klausa ORDER BY"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Spesifikasi STAC mendefinisikan hirarki: Catalog (pengelompokan umum) berisi Collection (himpunan item sejenis dengan skema dan ekstensi umum), berisi Item (fitur GeoJSON berwaktu dan bergeometri), yang merujuk pada Asset (file biner riil seperti COG .tif).",
-      "A": "Opsi A benar sesuai spesifikasi inti STAC.",
-      "B": "Opsi B salah karena urutan terbalik.",
-      "C": "Opsi C salah karena bukan terminologi hierarki STAC.",
-      "D": "Opsi D salah karena merupakan model basis data relasional."
+      "correct": "`CROSS JOIN LATERAL` mengeksekusi subquery untuk setiap baris `buyers`. Karena subquery menggunakan `ORDER BY s.geom <-> b.geom LIMIT 3`, PostgreSQL memanfaatkan indeks GiST toko untuk mengambil 3 nearest neighbors dalam waktu beberapa mikrodetik per pembeli.",
+      "A": "Benar. LATERAL subquery mengevaluasi kNN index scan secara efisien untuk setiap baris tabel luar.",
+      "B": "Salah. Klausa LIMIT 3 membatasi output hanya 3 toko terdekat per pembeli.",
+      "C": "Salah. Kueri hanya melakukan pembacaan (SELECT), bukan penghapusan (DELETE).",
+      "D": "Salah. Sintaks LATERAL dengan ORDER BY <-> LIMIT adalah idiom kNN standar PostgreSQL."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-363",
     "level": "advanced",
-    "topic": "Cloud GIS & Big Data",
-    "question": "Format penyimpanan multidimensi chunked Zarr dan library Python Xarray sangat populer dalam arsitektur Data Cube iklim/geospasial karena:",
+    "topic": "H3 Hexagonal Hierarchical Spatial Index",
+    "questionType": "output",
+    "question": "Berapa jumlah resolusi hierarki yang didukung oleh sistem indeks spasial hexagonal Uber H3?\n\n```javascript\n// Uber H3 Spatial Indexing System:\n// Berapa tingkatan resolusi dari 0 (terbesar) hingga maksimum?\n```",
+    "code": "// Uber H3 Spatial Indexing System:\n// Berapa tingkatan resolusi dari 0 (terbesar) hingga maksimum?",
     "options": {
-      "A": "Mampu membagi data raster spasial-temporal berdimensi tinggi (X, Y, Time, Band/Depth) ke dalam chunk independen terkompresi yang efisien dibaca secara paralel di cloud object storage",
-      "B": "Hanya dapat dibuka menggunakan program Microsoft Paint",
-      "C": "Secara otomatis membatasi ukuran dataset maksimum 100 Megabyte",
-      "D": "Menghapus metadata proyeksi koordinat agar file lebih ringan"
+      "A": "16 level resolusi (resolusi 0 hingga 15)",
+      "B": "3 level",
+      "C": "100 level",
+      "D": "Tak terbatas"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Zarr menyimpan array N-dimensi dalam chunk-chunk kecil yang dapat diakses secara asinkron dan paralel dari S3/GCS. Bersama Xarray, pengguna dapat melakukan slicing spasiotemporal (misal waktu dan koordinat) tanpa memuat seluruh dataset ke memori.",
-      "A": "Opsi A benar sesuai arsitektur modern Open Data Cube dan Pangeo.",
-      "B": "Opsi B salah karena Zarr diakses melalui pustaka ilmiah Python/C/Rust.",
-      "C": "Opsi C salah karena Zarr dirancang untuk dataset multi-terabyte hingga petabyte.",
-      "D": "Opsi D salah karena Zarr dan Xarray menyimpan atribut koordinat dan metadata lengkap."
+      "correct": "Sistem indeks heksagonal Uber H3 memiliki 16 tingkatan resolusi diskrit (0 hingga 15). Resolusi 0 mencakup luas benua (~4.000.000 km2), sedangkan resolusi 15 memiliki presisi luas heksagon ~0.9 meter persegi.",
+      "A": "Benar. H3 mendefinisikan 16 level resolusi terstruktur dari level 0 hingga 15.",
+      "B": "Salah. 3 level terlalu sedikit untuk cakupan global hingga detail sub-meter.",
+      "C": "Salah. H3 menggunakan pembagian heksagon tetap dengan 16 tingkatan, bukan 100.",
+      "D": "Salah. H3 adalah sistem grid diskrit berbatas hingga resolusi 15."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-364",
     "level": "advanced",
-    "topic": "Web Mapping",
-    "question": "Dalam visualisasi 3D geospasial pada browser modern, format standar OGC manakah yang dirancang khusus untuk streaming dan rendering dataset 3D heterogen masif (seperti point cloud, gedung 3D BIM, photogrammetry mesh)?",
+    "topic": "PostGIS ST_ChaikinSmoothing",
+    "questionType": "output",
+    "question": "Apa efek dari fungsi `ST_ChaikinSmoothing(geom, 3)` pada garis linestring yang bergerigi tajam?\n\n```sql\nSELECT ST_ChaikinSmoothing(rough_track_geom, 3) FROM vehicle_tracks;\n```",
+    "code": "SELECT ST_ChaikinSmoothing(rough_track_geom, 3) FROM vehicle_tracks;",
     "options": {
-      "A": "OGC 3D Tiles",
-      "B": "OGC WMS 1.1.1",
-      "C": "OGC GeoPackage 1D",
-      "D": "OGC SLD 1.0"
+      "A": "Menghaluskan sudut-sudut tajam pada garis secara rekursif (3 iterasi algoritma Chaikin) dengan memotong sudut vertex",
+      "B": "Membuat garis menjadi lurus sempurna antara titik awal dan akhir",
+      "C": "Menghapus 3 titik acak dari garis",
+      "D": "Mengonversi garis menjadi format raster geotiff"
     },
     "answer": "A",
     "explanation": {
-      "correct": "OGC 3D Tiles (dipelopori oleh Cesium) adalah standar terbuka berbasis struktur spasial bertingkat (hierarchical spatial data structure / bounding volume hierarchy) untuk streaming model 3D kota, mesh fotogrametri, dan point cloud berkecepatan tinggi ke WebGL.",
-      "A": "Opsi A benar sesuai spesifikasi OGC 3D Tiles Community Standard.",
-      "B": "Opsi B salah karena WMS melayani gambar peta datar 2D.",
-      "C": "Opsi C salah karena GeoPackage adalah SQLite database.",
-      "D": "Opsi D salah karena SLD adalah styling 2D."
+      "correct": "Algoritma Chaikin adalah teknik kurva subdivision yang menghasilkan garis lengkung halus dengan memotong sudut tajam setiap vertex secara rekursif sebanyak parameter iterasi (level 3).",
+      "A": "Benar. Menghaluskan lintasan garis dengan melunakkan sudut tajam melalui iterasi pemotongan sudut Chaikin.",
+      "B": "Salah. Chaikin smoothing mempertahankan kontur lintasan garis, tidak menjadikannya satu garis lurus.",
+      "C": "Salah. Tidak menghapus titik secara acak, melainkan menambahkan simpul penghalus kurva.",
+      "D": "Salah. Fungsi menghasilkan geometri vektor LINESTRING yang halus, bukan raster."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-365",
     "level": "advanced",
-    "topic": "Web Mapping",
-    "question": "Pada library visualisasi GPU Deck.gl, layer manakah yang digunakan untuk memvisualisasikan lintasan pergerakan dinamis (seperti jejak rute penerbangan atau kendaraan GPS) dengan animasi timestamp?",
+    "topic": "MapLibre GL Terrain 3D",
+    "questionType": "output",
+    "question": "Properti apakah pada `map.setTerrain()` yang menghubungkan lapisan elevasi raster DEM untuk menghasilkan topografi 3D di MapLibre GL?\n\n```javascript\nmap.setTerrain({ source: \"mapbox-dem\", exaggeration: 1.5 });\n```",
+    "code": "map.setTerrain({ source: \"mapbox-dem\", exaggeration: 1.5 });",
     "options": {
-      "A": "TripsLayer",
-      "B": "ScatterplotLayer",
-      "C": "GeoJsonLayer",
-      "D": "ArcLayer"
+      "A": "source dan exaggeration",
+      "B": "demLayer dan height",
+      "C": "elevationMap dan scale",
+      "D": "mesh dan zFactor"
     },
     "answer": "A",
     "explanation": {
-      "correct": "TripsLayer di Deck.gl mengevaluasi koordinat 3D/4D beserta timestamp kedatangan untuk menggambar ekor animasi lintasan pergerakan dinamis menggunakan GPU vertex shaders.",
-      "A": "Opsi A benar sesuai dokumentasi Deck.gl TripsLayer.",
-      "B": "Opsi B salah karena ScatterplotLayer untuk titik statis lingkaran 2D.",
-      "C": "Opsi C salah karena GeoJsonLayer untuk geometri statis GeoJSON umum.",
-      "D": "Opsi D salah karena ArcLayer untuk garis lengkung penghubung dua titik tetap."
+      "correct": "API `map.setTerrain({ source: string, exaggeration?: number })` menghubungkan sumber raster DEM (RGB terrain tile) dan menetapkan faktor pengali ketinggian vertikal (`exaggeration`) untuk menghasilkan rendering topografi bukit/gunung 3D.",
+      "A": "Benar. source mendefinisikan layer raster DEM dan exaggeration menentukan eksagerasi ketinggian vertikal.",
+      "B": "Salah. demLayer/height bukan nama properti resmi MapLibre setTerrain.",
+      "C": "Salah. elevationMap/scale bukan konfigurasi resmi MapLibre.",
+      "D": "Salah. mesh/zFactor adalah istilah perangkat lunak desktop GIS lama."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-366",
     "level": "advanced",
-    "topic": "Web Mapping",
-    "question": "Dalam arsitektur dynamic vector tiles, jika Anda menggunakan MapLibre GL JS, properti ekspresi (expression) manakah yang tepat untuk mewarnai fitur poligon secara bertahap (choropleth) berdasarkan nilai kepadatan penduduk?",
+    "topic": "PostGIS Coordinate Wrapping Antimeridian",
+    "questionType": "debug",
+    "question": "Geometri garis penerbangan internasional melintasi Antimeridian (garis bujur 180 derajat) merentang horizontal melintasi seluruh peta dunia. Fungsi PostGIS apa yang memotong geometri ini menjadi dua bagian di batas tanggal internasional?\n\n```sql\nSELECT ST____(flight_path_geom);\n```",
+    "code": "SELECT ST____(flight_path_geom);",
     "options": {
-      "A": "['interpolate', ['linear'], ['get', 'pop_density'], 0, '#ffffff', 1000, '#ff0000']",
-      "B": "['filter', 'pop_density', 'red']",
-      "C": "['select', 'color', 'red']",
-      "D": "['loop', 0, 1000, 'red']"
+      "A": "ShiftLongitude atau WrapX",
+      "B": "DeleteAntimeridian",
+      "C": "MakeValid",
+      "D": "ScaleZero"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Mapbox/MapLibre Style Expressions mendukung kurva interpolasi kontinu menggunakan operator ['interpolate', ['linear'], ['get', 'property'], stop1, val1, stop2, val2].",
-      "A": "Opsi A benar sesuai sintaks resmi style expressions MapLibre GL JS.",
-      "B": "Opsi B salah karena bukan ekspresi pewarnaan kontinu yang valid.",
-      "C": "Opsi C salah karena operator 'select' bukan ekspresi styling.",
-      "D": "Opsi D salah karena ekspresi styling tidak memiliki operator loop imperatif."
+      "correct": "`ST_ShiftLongitude(geom)` menggeser koordinat dari range [-180, 180] menjadi [0, 360], atau `ST_WrapX` memotong geometri yang melintasi antimeridian sehingga tidak merender garis aneh melintasi seluruh bola dunia.",
+      "A": "Benar. ST_ShiftLongitude / ST_WrapX menangani kontinuitas antimeridian 180 derajat.",
+      "B": "Salah. DeleteAntimeridian bukan nama fungsi PostGIS.",
+      "C": "Salah. MakeValid memperbaiki topologi poligon rusak, tetapi tidak mengatasi wrapping proyeksi antimeridian.",
+      "D": "Salah. ScaleZero merusak koordinat."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-367",
     "level": "advanced",
-    "topic": "DevOps & GIS Deployment",
-    "question": "Dalam membangun klaster GeoServer High-Availability (HA) multi-node di lingkungan Kubernetes/Docker, bagaimana penanganan GEOSERVER_DATA_DIR yang tepat?",
+    "topic": "Vector Tile MVT Extent Clipping",
+    "questionType": "debug",
+    "question": "Fitur garis di perbatasan antar tile terpotong (clipped) secara kasar dan tidak bersambung dengan tile sebelahnya saat digeser di browser. Parameter apa pada `ST_AsMVTGeom` yang harus disetel untuk memberikan margin penyangga?\n\n```sql\nSELECT ST_AsMVTGeom(geom, tile_bounds, 4096, buffer_size, clip_geom);\n```",
+    "code": "SELECT ST_AsMVTGeom(geom, tile_bounds, 4096, buffer_size, clip_geom);",
     "options": {
-      "A": "Menggunakan shared network storage (ReadWriteMany PVC via NFS / AWS EFS) dengan plugin geoserver-clustering (Hazelcast/ActiveMQ) untuk sinkronisasi reload katalog in-memory antar pod",
-      "B": "Membiarkan setiap pod memiliki data dir terisolasi tanpa ada sinkronisasi",
-      "C": "Menyimpan seluruh konfigurasi pada cookie browser pengguna",
-      "D": "Menjalankan GeoServer hanya pada satu node tunggal tanpa backup"
+      "A": "Parameter `buffer_size` (misal disetel 64 atau 256 pixel) agar geometri meluas sedikit melewati batas tile sebelum dipotong",
+      "B": "Menghapus seluruh baris data di perbatasan",
+      "C": "Menyetel clip_geom menjadi FALSE secara permanen di seluruh query",
+      "D": "Mengganti resolusi tile menjadi 1 pixel"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Ketika beberapa instance GeoServer membaca data dir bersama, perubahan layer pada satu node tidak otomatis diketahui memori instance lain kecuali ada messaging bus (Hazelcast/ActiveMQ clustering plugin) yang menyiarkan event catalog reload ke semua node.",
-      "A": "Opsi A benar sesuai arsitektur resmi GeoServer Enterprise Clustering.",
-      "B": "Opsi B salah karena konfigurasi antar node akan mengalami desinkronisasi (split-brain).",
-      "C": "Opsi C salah karena browser cookie tidak dapat menyimpan katalog layer server.",
-      "D": "Opsi D salah karena single-node bukan high availability."
+      "correct": "Tile vektor membutuhkan margin penyangga (buffer di luar batas tile, biasanya 64-256 unit pada extent 4096). Buffer ini memastikan simbol garis tebal atau marker tidak terpotong di tepi garis batas tile saat dirender.",
+      "A": "Benar. Menambahkan buffer_size memberikan ruang rendering tepi antar tile yang mulus.",
+      "B": "Salah. Menghapus data perbatasan justru menghilangkan informasi jalan/sungai.",
+      "C": "Salah. Mematikan clipping total menyebabkan payload membesar drastis tanpa batas.",
+      "D": "Salah. Resolusi 1 pixel merusak geometri."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-368",
     "level": "advanced",
-    "topic": "DevOps & GIS Deployment",
-    "question": "Dalam arsitektur microservices Web GIS, apa tujuan penerapan Vector Tile Caching proxy (seperti Tegola, Martin di balik Cloudflare/Fastly)?",
+    "topic": "PostGIS ST_GeomFromText Precision Loss",
+    "questionType": "debug",
+    "question": "Koordinat presisi tinggi GPS mengalami pembulatan saat dikonversi menjadi WKT teks via `ST_AsText()`. Fungsi apakah yang mempertahankan jumlah desimal maksimal?\n\n```sql\n-- Masalah: ST_AsText(geom) membulatkan angka desimal secara default\n-- Solusi:\n```",
+    "code": "-- Masalah: ST_AsText(geom) membulatkan angka desimal secara default\n-- Solusi:",
     "options": {
-      "A": "Mencegah query ST_AsMVT berulang dieksekusi ke PostgreSQL untuk tile yang sama, sehingga database terlindungi dari lonjakan jutaan request bersamaan",
-      "B": "Mengonversi seluruh koordinat ke sistem biner non-standar",
-      "C": "Menghapus proteksi firewall server",
-      "D": "Membatasi kecepatan koneksi pengguna menjadi 56 kbps"
+      "A": "ST_AsText(geom, maxdecimaldigits) dengan menentukan angka presisi kedua (misal: ST_AsText(geom, 9))",
+      "B": "Menggunakan string replace manual di PostgreSQL",
+      "C": "Menonaktifkan database driver",
+      "D": "Menggunakan ST_Area"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Menghasilkan vector tile secara on-the-fly membutuhkan komputasi CPU dan I/O database yang signifikan. Caching tile di Edge CDN / reverse proxy menyerap hingga 99% lalu lintas tile berulang.",
-      "A": "Opsi A benar sesuai prinsip skalabilitas sistem spasial web modern.",
-      "B": "Opsi B salah karena MVT tetap menggunakan format standar Protobuf.",
-      "C": "Opsi C salah karena proxy cache tidak meniadakan konfigurasi keamanan.",
-      "D": "Opsi D salah karena tujuannya justru memaksimalkan kecepatan throughput data."
+      "correct": "Fungsi `ST_AsText` memiliki parameter overload kedua opsional: `ST_AsText(geometry g, integer maxdecimaldigits)`. Menentukan nilai presisi (seperti 8 atau 9) mencegah pemotongan angka desimal penting.",
+      "A": "Benar. Parameter maxdecimaldigits menentukan jumlah digit angka di belakang koma secara presisi.",
+      "B": "Salah. String replace manual tidak dapat memulihkan angka yang sudah terpotong.",
+      "C": "Salah. Driver database tidak mengontrol pembulatan format internal WKT PostGIS.",
+      "D": "Salah. ST_Area menghitung luas."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-369",
     "level": "advanced",
-    "topic": "Fullstack Web GIS Development",
-    "question": "Saat mengirimkan dataset spasial poligon batas kabupaten yang sangat besar (> 50 MB) dari server ke frontend, pola arsitektur manakah yang paling efisien?",
+    "topic": "Deck.gl Memory Leak with WebGL Context",
+    "questionType": "debug",
+    "question": "Aplikasi dashboard analitik spasial melempar error 'Too many active WebGL contexts' saat berganti-ganti tab visualisasi. Apa penyebabnya?\n\n```javascript\n// Deck.gl component unmount lifecycle:\n// Apa yang harus dipanggil saat komponen Deck instance dihancurkan?\n```",
+    "code": "// Deck.gl component unmount lifecycle:\n// Apa yang harus dipanggil saat komponen Deck instance dihancurkan?",
     "options": {
-      "A": "Menyajikan data dalam bentuk Vector Tiles (MVT) secara dinamis per zoom level dan bounding box, bukan mengirim satu file GeoJSON monolitik utuh",
-      "B": "Mengirimkan seluruh file 50 MB langsung via HTTP GET GeoJSON biasa",
-      "C": "Mengirimkan file Shapefile mentah dalam format .zip untuk diekstrak oleh browser",
-      "D": "Mengonversi poligon menjadi string teks CSV panjang"
+      "A": "deck.finalize() untuk melepaskan resource GPU dan menghancurkan konteks WebGL",
+      "B": "window.location.reload()",
+      "C": "deck.draw()",
+      "D": "delete deck.props"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Mengirim GeoJSON puluhan megabyte memblokir network transfer dan main thread browser untuk JSON parsing. Vector tiles memotong data berdasarkan zoom level dengan simplifikasi geometri adaptif, hanya mentransfer kilobyte data yang terlihat di layar.",
-      "A": "Opsi A benar sesuai arsitektur performa Web GIS modern.",
-      "B": "Opsi B salah karena memuat 50 MB GeoJSON akan menyebabkan browser lag dan memory bloat.",
-      "C": "Opsi C salah karena browser tidak efisien memproses shapefile binary mentah.",
-      "D": "Opsi D salah karena CSV poligon WKT tidak efisien dan tidak terindeks spasial."
+      "correct": "Browser membatasi jumlah WebGL context aktif (biasanya maksimal 8-16 context simultan). Membuat instance Deck.gl baru tanpa memanggil `deck.finalize()` pada instance lama akan meninggalkan context menggantung di GPU hingga batas terlampaui.",
+      "A": "Benar. deck.finalize() melepaskan WebGL context dan membersihkan buffer GPU.",
+      "B": "Salah. Melakukan reload halaman merusak user experience Single Page Application.",
+      "C": "Salah. deck.draw() menggambar ulang frame baru, bukan membersihkan memori.",
+      "D": "Salah. Menghapus props tidak membebaskan WebGL context hardware."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-370",
     "level": "advanced",
-    "topic": "Geodesi & Proyeksi",
-    "question": "Dalam transformasi datum terestrial antar era (misal ITRF2014 ke DGN95 / SRGI2013 di Indonesia), mengapa model deformasi pergeseran tektonik (velocity field / deformation model) wajib diikutsertakan?",
+    "topic": "PostGIS Spatial Index on Expressions",
+    "questionType": "debug",
+    "question": "Kueri berikut tidak menggunakan indeks GiST pada kolom `geom`. Apa penyebabnya?\n\n```sql\n-- Indeks dibuat: CREATE INDEX idx_geom ON parcels USING GIST(geom);\nSELECT * FROM parcels WHERE ST_Transform(geom, 3857) && ST_MakeEnvelope(0, 0, 1000, 1000, 3857);\n```",
+    "code": "-- Indeks dibuat: CREATE INDEX idx_geom ON parcels USING GIST(geom);\nSELECT * FROM parcels WHERE ST_Transform(geom, 3857) && ST_MakeEnvelope(0, 0, 1000, 1000, 3857);",
     "options": {
-      "A": "Indonesia berada pada pertemuan empat lempeng tektonik aktif utama yang bergerak beberapa sentimeter setiap tahun serta mengalami gempa bumi co-seismic dan post-seismic",
-      "B": "Bentuk bumi berubah menjadi kubus setiap 10 tahun",
-      "C": "Satelit GPS mengubah orbitnya setiap 100 hari",
-      "D": "Khatulistiwa bergeser sejauh 500 kilometer ke arah selatan"
+      "A": "Kolom `geom` dibungkus oleh fungsi ST_Transform di dalam klausa WHERE sehingga PostgreSQL tidak dapat menggunakan indeks pada kolom mentah (solusi: buat Expression Index atau transformasikan envelope)",
+      "B": "SRID 3857 dilarang di klausa WHERE",
+      "C": "Indeks GiST hanya bisa digunakan di malam hari",
+      "D": "Envelope harus berbentuk lingkaran"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Wilayah Indonesia sangat dinamis secara tektonik (Lempeng Eurasia, Indo-Australia, Pasifik, Laut Filipina). SRGI2013 mengadopsi semi-kinematic datum yang memperhitungkan laju kecepatan lempeng tahunan dan gempa bumi melalui deformation grid model.",
-      "A": "Opsi A benar sesuai konsep Sistem Referensi Geospasial Indonesia (SRGI2013) oleh BIG.",
-      "B": "Opsi B salah karena bumi tetap berbentuk elipsoid oblat.",
-      "C": "Opsi C salah karena orbit GPS dipantau dan dikoreksi secara berkala oleh stasiun monitor bumi.",
-      "D": "Opsi D salah karena khatulistiwa geografis stabil pada bidang rotasi bumi."
+      "correct": "Memanggil fungsi pada kolom indeks (`ST_Transform(geom, ...)`) mencegah penggunaan indeks B-Tree/GiST standar kolom tersebut. Cara yang benar: transformasikan konstantanya: `geom && ST_Transform(ST_MakeEnvelope(...), 4326)` atau buat expression index: `CREATE INDEX ... USING GIST(ST_Transform(geom, 3857))`.",
+      "A": "Benar. Indeks kolom tidak dapat digunakan jika kolom tersebut dimodifikasi oleh fungsi di klausa WHERE.",
+      "B": "Salah. SRID 3857 sepenuhnya legal.",
+      "C": "Salah. Perencana kueri database bekerja tanpa terpengaruh waktu sistem.",
+      "D": "Salah. Envelope secara definisi OGC berbentuk persegi empat."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-371",
     "level": "advanced",
-    "topic": "Fotogrametri & UAV",
-    "question": "Mengapa efek rolling shutter pada kamera sensor CMOS tanpa mechanical shutter dapat menyebabkan error fotogrametri 3D yang signifikan pada drone berkecepatan tinggi?",
+    "topic": "MapLibre Source Data Race Condition",
+    "questionType": "debug",
+    "question": "Kode berikut melempar error 'Source with id points does not exist' saat memanggil `map.addLayer()`. Mengapa?\n\n```javascript\nmap.addSource(\"points\", { type: \"geojson\", data: \"/api/data.geojson\" });\nmap.addLayer({ id: \"points-layer\", type: \"circle\", source: \"points\" });\n```",
+    "code": "map.addSource(\"points\", { type: \"geojson\", data: \"/api/data.geojson\" });\nmap.addLayer({ id: \"points-layer\", type: \"circle\", source: \"points\" });",
     "options": {
-      "A": "Setiap baris piksel pada sensor terekam pada waktu yang sedikit berbeda saat drone bergerak cepat, mendistorsi geometri frame foto dan merusak akurasi bundle adjustment",
-      "B": "Warna foto berubah menjadi monokrom secara otomatis",
-      "C": "Drone akan kehilangan sinyal radio pemancar",
-      "D": "File foto akan terhapus otomatis setelah mendarat"
+      "A": "Kode dieksekusi sebelum style peta selesai dimuat (harus menunggu event 'map.on(\"load\", ...)')",
+      "B": "Tipe circle dilarang di MapLibre",
+      "C": "addSource hanya bisa menerima file CSV",
+      "D": "Nama id source harus berupa angka bulat"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Sensor rolling shutter merekam gambar baris per baris. Jika platform UAV bergerak maju dengan cepat, objek di bagian bawah frame terekam beberapa milidetik setelah bagian atas, menciptakan distorsi geometri internal. Kamera global shutter direkomendasikan untuk fotogrametri.",
-      "A": "Opsi A benar sesuai analisis efek rolling shutter dalam fotogrametri udara UAV.",
-      "B": "Opsi B salah karena rolling shutter tidak menghilangkan channel warna.",
-      "C": "Opsi C salah karena tidak berhubungan dengan link komunikasi radio UAV.",
-      "D": "Opsi D salah karena tidak ada penghapusan file otomatis."
+      "correct": "Di MapLibre/Mapbox GL JS, memanipulasi layer dan source sebelum style peta selesai diinisialisasi akan menyebabkan crash. Seluruh penambahan source dan layer awal wajib diletakkan di dalam callback `map.on('load', () => { ... })`.",
+      "A": "Benar. Menunggu event 'load' peta menjamin style sheet dasar sudah siap menerima source/layer baru.",
+      "B": "Salah. Tipe layer 'circle' adalah tipe bawaan resmi MapLibre GL.",
+      "C": "Salah. GeoJSON adalah format standar untuk source data MapLibre.",
+      "D": "Salah. Nama ID source bertipe string alfanumerik bebas."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-372",
     "level": "advanced",
-    "topic": "GIS Software & GDAL/OGR",
-    "question": "Perintah gdalwarp manakah yang digunakan untuk membuat Cloud Optimized GeoTIFF (COG) berstandar modern dengan kompresi DEFLATE, ubinan dalam (tiling), dan overviews?",
+    "topic": "PostGIS Geodesic Distance Inaccuracy",
+    "questionType": "debug",
+    "question": "Perhitungan jarak geodesik antar dua titik dekat kutub menghasilkan kesalahan beberapa kilometer saat dihitung menggunakan ST_DistanceSphere. Apa solusi fungsi yang menggunakan elipsoid WGS 84 riil presisi sub-milimeter?\n\n```sql\n-- Perhitungan jarak geodesik paling akurat di PostGIS:\n```",
+    "code": "-- Perhitungan jarak geodesik paling akurat di PostGIS:",
     "options": {
-      "A": "gdal_translate input.tif output_cog.tif -of COG -co COMPRESS=DEFLATE",
-      "B": "ogr2ogr -f COG input.tif output_cog.tif",
-      "C": "gdalinfo -cog input.tif output_cog.tif",
-      "D": "gdalmanage copy input.tif output_cog.tif"
+      "A": "ST_Distance pada tipe `geography` (menggunakan algoritma elipsoid Karney) atau ST_DistanceSpheroid",
+      "B": "ST_Distance pada tipe geometry tanpa proyeksi",
+      "C": "Menghitung manual menggunakan perkalian matriks 2D",
+      "D": "ST_Length 2D"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Sejak versi GDAL 3.1+, driver resmi '-of COG' tersedia langsung pada gdal_translate untuk menghasilkan Cloud Optimized GeoTIFF yang telah ditata tiling, overviews, dan kompresinya secara otomatis.",
-      "A": "Opsi A benar sesuai dokumentasi GDAL COG driver.",
-      "B": "Opsi B salah karena ogr2ogr adalah driver vektor.",
-      "C": "Opsi C salah karena gdalinfo hanya menampilkan ringkasan metadata.",
-      "D": "Opsi D salah karena gdalmanage tidak melakukan konversi format COG."
+      "correct": "`ST_DistanceSphere` mengasumsikan bumi adalah bola bulat sempurna (sphere), sehingga mengalami deviasi hingga 0.5% pada garis lintang tinggi/kutub. Menggunakan tipe `geography` atau `ST_DistanceSpheroid` menghitung jarak pada elipsoid oblat WGS 84 nyata dengan akurasi sub-milimeter.",
+      "A": "Benar. Tipe geography mengimplementasikan algoritma geodesik Karney pada elipsoid sejati.",
+      "B": "Salah. Geometry tanpa proyeksi di 4326 mengembalikan derajat sudut, bukan meter.",
+      "C": "Salah. Perkalian matriks 2D mengabaikan kelengkungan elipsoid bumi.",
+      "D": "Salah. ST_Length 2D adalah planar Cartesian."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-373",
     "level": "advanced",
-    "topic": "Spatial Database & PostGIS",
-    "question": "Fungsi PostGIS manakah yang digunakan untuk menghitung garis kerangka tengah (medial axis / straight skeleton) dari poligon kompleks untuk penempatan label sungai atau koridor jalan?",
+    "topic": "MapLibre Canvas Context Loss",
+    "questionType": "debug",
+    "question": "Peta WebGL MapLibre tiba-tiba blank hitam saat pengguna meminimalkan browser atau membuka banyak tab 3D berat, dan console menampilkan warning 'WebGL context lost'. Bagaimana cara menanganinya secara graceful?\n\n```javascript\n// WebGL Context Lost recovery di MapLibre:\n```",
+    "code": "// WebGL Context Lost recovery di MapLibre:",
     "options": {
-      "A": "ST_StraightSkeleton(geom)",
-      "B": "ST_CenterLine(geom)",
-      "C": "ST_MidAxis(geom)",
-      "D": "ST_Spine(geom)"
+      "A": "Mendengarkan event canvas 'webglcontextrestored' dan memuat ulang gaya serta layer peta",
+      "B": "Mematikan monitor komputer",
+      "C": "Menghapus cache DNS server",
+      "D": "Menonaktifkan memori virtual OS"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ST_StraightSkeleton (atau ST_ApproximateMedialAxis dalam modul sfcgal) menghitung garis kerangka lurus yang berada tepat di tengah bentuk geometri poligon.",
-      "A": "Opsi A benar sesuai fungsi PostGIS SFCGAL / topology.",
-      "B": "Opsi B salah karena bukan nama fungsi PostGIS standar.",
-      "C": "Opsi C salah karena bukan nama fungsi PostGIS standar.",
-      "D": "Opsi D salah karena bukan nama fungsi PostGIS standar."
+      "correct": "Ketika GPU mengalami kehabisan resource (VRAM pressure), OS dapat mencabut konteks WebGL browser ('webglcontextlost'). Mendengarkan event 'webglcontextlost' dan 'webglcontextrestored' memungkinkan aplikasi melakukan re-instansiasi resource WebGL secara mulus.",
+      "A": "Benar. Menangani siklus restorasi WebGL context memungkinkan aplikasi pulih tanpa perlu refresh halaman manual.",
+      "B": "Salah. Mematikan monitor tidak menyelesaikan penanganan state WebGL di browser.",
+      "C": "Salah. DNS tidak berhubungan dengan resource alokasi VRAM GPU lokal.",
+      "D": "Salah. Menonaktifkan virtual memory justru memperparah crash OS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-374",
     "level": "advanced",
-    "topic": "Remote Sensing Fundamentals",
-    "question": "Dalam koreksi radiometrik sensor optik, apa fungsi utama dari metode FLAASH (Fast Line-of-sight Atmospheric Analysis of Spectral Hypercubes)?",
+    "topic": "PostGIS ST_Snap Distortion",
+    "questionType": "debug",
+    "question": "Dua poligon bertetangga tidak tersambung sempurna dan memiliki celah kecil (gap) karena toleransi `ST_Snap` diatur terlalu besar, menyebabkan bentuk bangunan terdistorsi menjadi aneh. Apa aturan penentuan parameter toleransi pada `ST_Snap`?\n\n```sql\nSELECT ST_Snap(poly_a, poly_b, tolerance);\n```",
+    "code": "SELECT ST_Snap(poly_a, poly_b, tolerance);",
     "options": {
-      "A": "Melakukan koreksi atmosferik berbasis model radiative transfer MODTRAN untuk mengeliminasi pengaruh aerosol, kelembaban, dan hamburan Rayleigh secara presisi fisik",
-      "B": "Menaikkan resolusi citra dari 30 meter menjadi 1 meter",
-      "C": "Membuat peta kontur 3D dari foto udara",
-      "D": "Menghitung luas hutan secara instan"
+      "A": "Toleransi harus diatur sekecil mungkin sesuai jarak gap maksimal yang ingin ditutup (misal: 0.001 meter pada UTM), tidak boleh lebih besar dari panjang sisi terpendek bangunan",
+      "B": "Toleransi harus selalu diisi 1000",
+      "C": "Toleransi harus bertipe string 'maximum'",
+      "D": "Toleransi harus bernilai negatif"
     },
     "answer": "A",
     "explanation": {
-      "correct": "FLAASH adalah algoritma koreksi atmosferik first-principles berbasis MODTRAN code yang mengonversi radiansi TOA menjadi surface reflectance (BOA) dengan mempertimbangkan variasi uap air dan hamburan atmosfer per-piksel.",
-      "A": "Opsi A benar sesuai prinsip pemodelan transfer radiatif FLAASH.",
-      "B": "Opsi B salah karena FLAASH adalah koreksi spektral/radiometrik, bukan algoritma super-resolution.",
-      "C": "Opsi C salah karena kontur memerlukan data elevasi/stereoskopis.",
-      "D": "Opsi D salah karena FLAASH bukan alat klasifikasi tutupan hutan."
+      "correct": "`ST_Snap(input, target, tolerance)` menarik simpul input ke simpul target dalam radius toleransi. Jika toleransi terlalu besar, vertex yang tidak bersangkutan akan ikut tertarik dan merusak bentuk asli poligon.",
+      "A": "Benar. Nilai toleransi harus sedikit lebih besar dari gap fisik namun jauh lebih kecil dari detail geometri terkecil.",
+      "B": "Salah. Angka 1000 akan menarik seluruh vertex dalam radius 1 km dan menghancurkan geometri.",
+      "C": "Salah. Toleransi menerima nilai numerik float (double precision).",
+      "D": "Salah. Jarak toleransi spasial harus bernilai non-negatif."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-375",
     "level": "advanced",
-    "topic": "Indeks Spektral",
-    "question": "Indeks Burned Area Index (BAI) dirancang dengan memanfaatkan sifat spektral arang dan abu bekas kebakaran hutan yang ditandai oleh:",
+    "topic": "PostGIS Out of Memory on ST_Union",
+    "questionType": "debug",
+    "question": "Operasi `ST_Union` pada 5.000.000 poligon wilayah mengalami crash karena Out of Memory (OOM). Pendekatan pembagian hierarki kueri apakah yang paling efektif?\n\n```sql\n-- Menghindari OOM pada penggabungan jutaan geometri masif:\n```",
+    "code": "-- Menghindari OOM pada penggabungan jutaan geometri masif:",
     "options": {
-      "A": "Konvergensi nilai reflektansi menuju titik referensi arang pada panjang gelombang merah (~0.7 µm) dan inframerah dekat (~0.85 µm)",
-      "B": "Peningkatan emisi radiasi ultraviolet",
-      "C": "Penurunan suhu permukaan tanah menjadi di bawah nol derajat",
-      "D": "Pantulan gelombang radio frekuensi tinggi"
+      "A": "Menggunakan ST_UnaryUnion dengan cascade clustering, atau membagi operasi menggunakan grid spasial (ST_SnapToGrid) per kuadran",
+      "B": "Menjalankan query di command prompt DOS",
+      "C": "Mengurangi memory RAM server menjadi 512 MB",
+      "D": "Menghapus semua baris data poligon"
     },
     "answer": "A",
     "explanation": {
-      "correct": "BAI = 1.0 / ((0.1 - Red)^2 + (0.06 - NIR)^2). Formula ini menghitung jarak spektral terhadap titik reflektansi konvergensi arang terbakar untuk mendeteksi bekas kebakaran secara sensitif.",
-      "A": "Opsi A benar sesuai formulasi Chuvieco et al. untuk BAI.",
-      "B": "Opsi B salah karena sensor observasi bumi tidak mengukur emisi UV kebakaran permukaan.",
-      "C": "Opsi C salah karena tanah terbakar justru memiliki suhu permukaan (LST) lebih tinggi akibat hilangnya kanopi peneduh.",
-      "D": "Opsi D salah karena BAI adalah indeks spektral optik."
+      "correct": "Penggabungan geometri masif dalam satu pemanggilan memori tunggal memakan ruang pohon GEOS yang sangat besar. Membagi proses ke dalam kelompok spasial regional (misalnya partisi grid per kecamatan atau ST_ClusterKMeans) dan menggabungkan hasilnya secara bertingkat mencegah OOM.",
+      "A": "Benar. Cascaded hierarchical union per region spasial menjaga footprint memori tetap stabil dan terkontrol.",
+      "B": "Salah. Lingkungan shell terminal tidak mengubah batas memori backend database.",
+      "C": "Salah. Menurunkan RAM server justru mempercepat terjadinya OutOfMemoryError.",
+      "D": "Salah. Menghapus data membatalkan tujuan analisis bisnis."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-376",
     "level": "advanced",
-    "topic": "Spatial Database & PostGIS",
-    "question": "Fungsi PostGIS manakah yang digunakan untuk memotong geometri LineString pada titik koordinat terdekat dengan Point tertentu (linear dynamic segmentation)?",
+    "topic": "PostGIS Cluster KMeans",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi window PostGIS berikut untuk membagi sebaran armada taksi menjadi 5 kluster geografis:\n\n```sql\nSELECT id, ST_Cluster____(geom, 5) OVER () AS cluster_id FROM taxis;\n```",
+    "code": "SELECT id, ST_Cluster____(geom, 5) OVER () AS cluster_id FROM taxis;",
     "options": {
-      "A": "ST_Split(line, ST_ClosestPoint(line, point))",
-      "B": "ST_BreakLine(line, point)",
-      "C": "ST_ChopAt(line, point)",
-      "D": "ST_Cut(line, point)"
+      "A": "KMeans",
+      "B": "DBSCAN",
+      "C": "Hierarchical",
+      "D": "MeanShift"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ST_Split memotong geometri input (garis) menggunakan bilah pemotong (cutter). Titik pemotong harus berada tepat pada garis, sehingga ST_ClosestPoint atau ST_Snap sering dipadukan agar pemotongan berhasil secara topologis.",
-      "A": "Opsi A benar sesuai fungsi pemotongan geometri PostGIS.",
-      "B": "Opsi B salah karena bukan fungsi PostGIS.",
-      "C": "Opsi C salah karena bukan fungsi PostGIS.",
-      "D": "Opsi D salah karena bukan fungsi PostGIS."
+      "correct": "`ST_ClusterKMeans(geom, k)` mempartisi kumpulan geometri menjadi tepat `k` buah kluster menggunakan algoritma k-Means spasial 2D.",
+      "A": "Benar. ST_ClusterKMeans adalah implementasi resmi k-Means clustering di PostGIS.",
+      "B": "Salah. DBSCAN berbasis radius kepadatan (eps/minpoints), bukan jumlah kluster k tetap.",
+      "C": "Salah. Hierarchical bukan nama fungsi clustering PostGIS.",
+      "D": "Salah. MeanShift bukan fungsi spasial bawaan PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-377",
     "level": "advanced",
-    "topic": "Spatial Database & PostGIS",
-    "question": "Bagaimana cara melakukan spatial clustering berbasis k-means langsung di PostGIS untuk mengelompokkan 100.000 titik ATM menjadi 20 zona klaster?",
+    "topic": "PostGIS ST_TileEnvelope",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi pembuatan batas kotak tile Web Mercator (EPSG:3857) untuk pembuatan Vector Tile kustom:\n\n```sql\nSELECT ST_____Envelope(z, x, y);\n```",
+    "code": "SELECT ST_____Envelope(z, x, y);",
     "options": {
-      "A": "SELECT ST_ClusterKMeans(geom, 20) OVER() AS cluster_id, geom FROM atm;",
-      "B": "SELECT ST_MakeClusters(geom, 20) FROM atm;",
-      "C": "SELECT KMeans(geom, 20) FROM atm GROUP BY geom;",
-      "D": "SELECT ST_ClusterByDistance(geom, 20) FROM atm;"
+      "A": "Tile",
+      "B": "Box",
+      "C": "Grid",
+      "D": "Cell"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ST_ClusterKMeans adalah fungsi window 2D k-means di PostGIS yang mengembalikan cluster ID (0 hingga k-1) untuk setiap baris fitur berdasarkan kedekatan spasial geometrinya.",
-      "A": "Opsi A benar sesuai dokumentasi resmi PostGIS ST_ClusterKMeans.",
-      "B": "Opsi B salah karena bukan fungsi PostGIS.",
-      "C": "Opsi C salah karena bukan sintaks fungsi window PostGIS.",
-      "D": "Opsi D salah karena bukan nama fungsi PostGIS."
+      "correct": "`ST_TileEnvelope(z, x, y)` menghasilkan batas bounding box poligon Web Mercator (EPSG:3857) yang sesuai dengan koordinat tile Slippy Map `(z, x, y)`.",
+      "A": "Benar. ST_TileEnvelope menghasilkan geometri polygon batas tile standar web.",
+      "B": "Salah. BoxEnvelope bukan nama fungsi PostGIS.",
+      "C": "Salah. GridEnvelope bukan fungsi PostGIS yang valid.",
+      "D": "Salah. CellEnvelope bukan nama fungsi resmi PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-378",
     "level": "advanced",
-    "topic": "Spatial Database & PostGIS",
-    "question": "Apa manfaat pembuatan indeks BRIN (Block Range Index) dibandingkan GiST pada tabel histori log GPS kendaraan dengan miliaran baris data yang diurutkan secara fisik berdasarkan waktu dan lokasi?",
+    "topic": "PostGIS Raster Clipping",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi pemotongan raster berdasarkan batas poligon administratif di PostGIS Raster:\n\n```sql\nSELECT ST____(rast, geom, true) FROM dem_elevation, admin_boundary WHERE ST_Intersects(rast, geom);\n```",
+    "code": "SELECT ST____(rast, geom, true) FROM dem_elevation, admin_boundary WHERE ST_Intersects(rast, geom);",
     "options": {
-      "A": "Ukuran indeks BRIN ratusan kali lebih kecil daripada GiST dan sangat cepat dibuat, dengan kinerja pemindaian rentang blok yang sangat efisien pada data berurutan fisik (physically sorted data)",
-      "B": "BRIN dapat mengoreksi geometri poligon secara otomatis",
-      "C": "BRIN hanya membutuhkan memori 1 byte di RAM",
-      "D": "BRIN tidak memerlukan database PostgreSQL"
+      "A": "Clip",
+      "B": "Crop",
+      "C": "Mask",
+      "D": "Cut"
     },
     "answer": "A",
     "explanation": {
-      "correct": "BRIN mencatat nilai minimum dan maksimum per rentang halaman disk (misal 128 halaman). Untuk tabel log spasial-temporal append-only berukuran terabyte yang terurut secara alami, indeks BRIN hanya berukuran beberapa megabyte dan memangkas block I/O secara masif.",
-      "A": "Opsi A benar sesuai keunggulan arsitektural indeks BRIN di PostgreSQL.",
-      "B": "Opsi B salah karena indeks bukan fungsi validasi geometri.",
-      "C": "Opsi C salah karena ukuran BRIN proporsional dengan jumlah block range.",
-      "D": "Opsi D salah karena BRIN adalah fitur bawaan inti PostgreSQL."
+      "correct": "`ST_Clip(rast, geom, crop)` memotong raster menggunakan geometri poligon dan secara opsional memotong ukuran bounding box raster hasil potongan (`crop := true`).",
+      "A": "Benar. ST_Clip adalah fungsi resmi pemotongan data raster di PostGIS Raster.",
+      "B": "Salah. Crop bukan nama fungsi raster PostGIS.",
+      "C": "Salah. Mask bukan fungsi pemotong raster PostGIS.",
+      "D": "Salah. Cut bukan nama fungsi spasial PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-379",
     "level": "advanced",
-    "topic": "Spatial Database & PostGIS",
-    "question": "Fungsi PostGIS manakah yang digunakan untuk mengonversi kumpulan titik menjadi poligon batas terluar yang mengikuti kontur cekung (concave hull / alpha shape)?",
+    "topic": "MapLibre Vector Source Configuration",
+    "questionType": "completion",
+    "question": "Lengkapi konfigurasi penambahan tile source vektor dari server MVT di MapLibre GL:\n\n```javascript\nmap.addSource(\"traffic-data\", {\n  type: \"____\",\n  tiles: [\"https://tiles.example.com/{z}/{x}/{y}.pbf\"],\n  minzoom: 6,\n  maxzoom: 14\n});\n```",
+    "code": "map.addSource(\"traffic-data\", {\n  type: \"____\",\n  tiles: [\"https://tiles.example.com/{z}/{x}/{y}.pbf\"],\n  minzoom: 6,\n  maxzoom: 14\n});",
     "options": {
-      "A": "ST_ConcaveHull(ST_Collect(geom), target_percent, false)",
-      "B": "ST_ConvexHull(geom)",
-      "C": "ST_BoundingBox(geom)",
-      "D": "ST_OuterRing(geom)"
+      "A": "vector",
+      "B": "geojson",
+      "C": "raster",
+      "D": "image"
     },
     "answer": "A",
     "explanation": {
-      "correct": "ST_ConcaveHull menghasilkan poligon batas cekung (alpha-shape) yang melingkupi kumpulan titik dengan lebih rapat mengikuti bentuk footprint sebenarnya dibanding ST_ConvexHull (karet gelang cembung).",
-      "A": "Opsi A benar sesuai spesifikasi fungsi PostGIS ST_ConcaveHull.",
-      "B": "Opsi B salah karena ConvexHull menghasilkan batas cembung tanpa lekukan ke dalam.",
-      "C": "Opsi C salah karena BoundingBox menghasilkan kotak segiempat tegak.",
-      "D": "Opsi D salah karena ST_OuterRing mengambil cincin terluar dari sebuah Polygon yang sudah ada."
+      "correct": "Tipe source `vector` digunakan untuk memuat Vector Tiles biner (biasanya file `.pbf` atau `.mvt`) yang disajikan melalui URL template Slippy Map.",
+      "A": "Benar. type: 'vector' mendefinisikan sumber vector tiles.",
+      "B": "Salah. geojson digunakan untuk file GeoJSON tunggal di memori, bukan tile {z}/{x}/{y}.",
+      "C": "Salah. raster digunakan untuk citra tile raster gambar (PNG/JPEG).",
+      "D": "Salah. image digunakan untuk gambar statis georeferensi tunggal 4 titik."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-380",
     "level": "advanced",
-    "topic": "Cloud GIS & Big Data",
-    "question": "Dalam Google Earth Engine, bagaimana cara mengekspor citra hasil komposit multispektral resolusi tinggi langsung ke Google Cloud Storage (GCS) atau Google Drive?",
+    "topic": "PostGIS Topological Geodesic Area",
+    "questionType": "completion",
+    "question": "Lengkapi pemanggilan fungsi untuk menghitung luas benua di atas elipsoid bumi WGS 84 dalam satuan METER PERSEGI:\n\n```sql\nSELECT ST_Area(geom::____) FROM continents;\n```",
+    "code": "SELECT ST_Area(geom::____) FROM continents;",
     "options": {
-      "A": "Export.image.toCloudStorage({ image: finalImage, description: 'export_job', bucket: 'my-bucket', scale: 10, region: aoi })",
-      "B": "finalImage.downloadToHardDrive()",
-      "C": "print(finalImage.toJPEG())",
-      "D": "window.saveAs(finalImage)"
+      "A": "geography",
+      "B": "geometry",
+      "C": "polygon3d",
+      "D": "srid4326"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Earth Engine memproses ekspor skala besar melalui batch task API: Export.image.toCloudStorage() atau Export.image.toDrive() dengan menentukan skala piksel (scale), bounding box (region), dan format CRS.",
-      "A": "Opsi A benar sesuai dokumentasi Google Earth Engine Batch Export API.",
-      "B": "Opsi B salah karena GEE tidak menyediakan metode synchronous lokal downloadToHardDrive.",
-      "C": "Opsi C salah karena print() hanya menampilkan representasi metadata ke console.",
-      "D": "Opsi D salah karena window.saveAs adalah method client-side DOM non-GEE."
+      "correct": "Casting ke tipe `geography` (`geom::geography`) memerintahkan PostGIS untuk menghitung luas di permukaan kurva elipsoid bola bumi dalam satuan meter persegi (bukan derajat kuadrat).",
+      "A": "Benar. Tipe geography mengembalikan perhitungan luas permukaan bumi nyata dalam meter persegi.",
+      "B": "Salah. Tipe geometry planar 4326 mengembalikan derajat persegi (square degrees).",
+      "C": "Salah. polygon3d bukan nama tipe dasar PostGIS.",
+      "D": "Salah. srid4326 bukan nama tipe data casting."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-381",
     "level": "advanced",
-    "topic": "Cloud GIS & Big Data",
-    "question": "Dalam library Dask-GeoPandas, bagaimana data geospasial diproses secara terdistribusi di beberapa core CPU atau node cluster?",
+    "topic": "Deck.gl GeoJsonLayer Picking",
+    "questionType": "completion",
+    "question": "Lengkapi opsi konfigurasi Deck.gl GeoJsonLayer agar layer dapat mendeteksi event klik dan hover pengguna:\n\n```javascript\nnew GeoJsonLayer({\n  id: \"airports\",\n  data: \"/api/airports.json\",\n  ____: true,\n  onClick: info => console.log(info.object)\n});\n```",
+    "code": "new GeoJsonLayer({\n  id: \"airports\",\n  data: \"/api/airports.json\",\n  ____: true,\n  onClick: info => console.log(info.object)\n});",
     "options": {
-      "A": "Dataset dibagi menjadi partisi-partisi spasial (spatial partitions) dengan bounding box yang terdefinisi sehingga operasi spatial join dan filtering hanya dieksekusi pada partisi yang saling bertindihan",
-      "B": "Setiap baris data dikirimkan ke satelit untuk dihitung",
-      "C": "Semua data dimuat utuh ke dalam memori RAM setiap node tanpa dipartisi",
-      "D": "Dask mengubah data menjadi gambar JPEG sebelum komputasi"
+      "A": "pickable",
+      "B": "clickable",
+      "C": "interactive",
+      "D": "selectable"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Dask-GeoPandas memperluas GeoPandas dengan membagi GeoDataFrame menjadi partisi spasial (misal menggunakan Hilbert curve atau KD-tree). Pengetahuan batas bounding box per partisi meminimalkan shuffle data antar worker saat spatial join.",
-      "A": "Opsi A benar sesuai arsitektur komputasi terdistribusi Dask-GeoPandas.",
-      "B": "Opsi B salah karena komputasi terdistribusi berjalan di cluster server lokal/cloud.",
-      "C": "Opsi C salah karena memuat seluruh data ke setiap node meniadakan skalabilitas paralel.",
-      "D": "Opsi D salah karena Dask memproses struktur tabel vektor asli."
+      "correct": "Di Deck.gl, properti `pickable: true` mengaktifkan frame buffer off-screen GPU picking untuk mendeteksi fitur mana yang berada di bawah kursor mouse pengguna secara instan.",
+      "A": "Benar. pickable: true mengaktifkan mekanisme GPU color picking di Deck.gl.",
+      "B": "Salah. clickable bukan nama properti konfigurasi Deck.gl.",
+      "C": "Salah. interactive adalah opsi Leaflet, bukan Deck.gl.",
+      "D": "Salah. selectable bukan opsi inti Deck.gl."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-382",
     "level": "advanced",
-    "topic": "Web Mapping",
-    "question": "Dalam WebGL shaders untuk Web GIS (misalnya kustomisasi custom layer di Mapbox GL JS), apa peran dari 'Vertex Shader' dan 'Fragment Shader'?",
+    "topic": "PostGIS ST_AsGeoJSON Feature Builder",
+    "questionType": "completion",
+    "question": "Lengkapi argumen fungsi `json_build_object` di PostgreSQL untuk mengemas properti dan geometri menjadi objek GeoJSON Feature yang valid:\n\n```sql\nSELECT json_build_object(\n  'type', 'Feature',\n  'geometry', ST_AsGeoJSON(geom)::json,\n  '____', json_build_object('name', name, 'status', status)\n) FROM assets;\n```",
+    "code": "SELECT json_build_object(\n  'type', 'Feature',\n  'geometry', ST_AsGeoJSON(geom)::json,\n  '____', json_build_object('name', name, 'status', status)\n) FROM assets;",
     "options": {
-      "A": "Vertex Shader mentransformasikan koordinat geospasial 3D ke koordinat layar 2D (screen space), sedangkan Fragment Shader menghitung warna dan pencahayaan setiap piksel pada layar",
-      "B": "Vertex Shader mengatur koneksi database, Fragment Shader mengirim email",
-      "C": "Vertex Shader menghapus data poligon, Fragment Shader membuat backup",
-      "D": "Vertex Shader hanya digunakan untuk teks, Fragment Shader untuk audio"
+      "A": "properties",
+      "B": "attributes",
+      "C": "data",
+      "D": "metadata"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Pipeline WebGL GPU terdiri dari dua shader utama: Vertex shader memproses geometri titik dan proyeksi matriks kamera, sedangkan Fragment shader (pixel shader) mewarnai setiap fragmen piksel yang dirender pada layar.",
-      "A": "Opsi A benar sesuai arsitektur grafis WebGL/OpenGL.",
-      "B": "Opsi B salah karena shaders dieksekusi di GPU, bukan backend server.",
-      "C": "Opsi C salah karena bukan fungsi pipeline grafis.",
-      "D": "Opsi D salah karena tidak berhubungan dengan pemrosesan audio."
+      "correct": "Sesuai standar formal RFC 7946, objek Feature GeoJSON wajib menyimpan data atribut non-spasial di bawah properti bernama `properties`.",
+      "A": "Benar. properties adalah kunci resmi spesifikasi GeoJSON RFC 7946.",
+      "B": "Salah. attributes adalah istilah ESRI Shapefile, bukan GeoJSON standar.",
+      "C": "Salah. data bukan kunci standar Feature GeoJSON.",
+      "D": "Salah. metadata bukan nama key resmi OGC GeoJSON."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-383",
     "level": "advanced",
-    "topic": "Web Mapping",
-    "question": "Bagaimana geotiff.js memungkinkan decoding dan visualisasi citra multispektral 16-bit atau data DEM float secara langsung di sisi browser tanpa server perender (serverless Web GIS)?",
+    "topic": "MapLibre Shader Filter Expression",
+    "questionType": "completion",
+    "question": "Lengkapi ekspresi filter MapLibre GL untuk hanya menampilkan jalan raya yang memiliki atribut 'class' bernilai 'motorway' atau 'trunk':\n\n```javascript\nfilter: [\"in\", [\"get\", \"class\"], [\"literal\", [\"motorway\", \"trunk\"]]]\n// Operator pembanding keanggotaan array: ____\n```",
+    "code": "filter: [\"in\", [\"get\", \"class\"], [\"literal\", [\"motorway\", \"trunk\"]]]\n// Operator pembanding keanggotaan array: ____",
     "options": {
-      "A": "Membaca header dan metadata TIFF via HTTP Range Requests, mendekompresi tile piksel secara langsung di JavaScript/WebAssembly, dan merendernya ke elemen HTML Canvas via WebGL",
-      "B": "Mengonversi file TIFF menjadi file Word di browser",
-      "C": "Mengirimkan seluruh file 2 GB ke RAM browser seketika",
-      "D": "Mengharuskan browser menginstal aplikasi QGIS desktop"
+      "A": "in",
+      "B": "matches",
+      "C": "contains",
+      "D": "has"
     },
     "answer": "A",
     "explanation": {
-      "correct": "geotiff.js adalah parser GeoTIFF murni dalam JavaScript. Bersama Cloud Optimized GeoTIFF (COG), geotiff.js membaca byte rentang tertentu via range requests dan mendekompresi piksel (LZW/Deflate) langsung di client thread/worker.",
-      "A": "Opsi A benar sesuai arsitektur serverless web raster rendering dengan geotiff.js.",
-      "B": "Opsi B salah karena bukan konversi dokumen teks.",
-      "C": "Opsi C salah karena range request mencegah pembacaan seluruh file raksasa.",
-      "D": "Opsi D salah karena berjalan murni di dalam browser modern standar."
+      "correct": "Ekspresi `[\"in\", needle, haystack]` di MapLibre/Mapbox GL memeriksa apakah suatu nilai termuat di dalam kumpulan daftar nilai literal yang ditentukan.",
+      "A": "Benar. Ekspresi 'in' adalah operator pengecekan keanggotaan koleksi di MapLibre style spec.",
+      "B": "Salah. matches bukan nama operator filter MapLibre style expression.",
+      "C": "Salah. contains bukan operator resmi MapLibre expression.",
+      "D": "Salah. has memeriksa keberadaan properti key pada objek, bukan kesesuaian nilai elemen array."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-384",
     "level": "advanced",
-    "topic": "OGC Services & Web Services",
-    "question": "Dalam standar OGC API - Features (yang merupakan suksesor modern dari WFS), format pertukaran data dan protokol komunikasi apa yang diwajibkan?",
+    "topic": "PostGIS ST_LineSubstring",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi PostGIS untuk memotong bagian garis dari fraksi 20% (0.2) hingga fraksi 80% (0.8) dari total panjang garis:\n\n```sql\nSELECT ST_Line____(geom, 0.2, 0.8) FROM highway_network;\n```",
+    "code": "SELECT ST_Line____(geom, 0.2, 0.8) FROM highway_network;",
     "options": {
-      "A": "Arsitektur RESTful JSON/GeoJSON berbasis OpenAPI 3.0 dan HTTP standar (GET, POST, PUT, DELETE)",
-      "B": "SOAP berbasis XML murni dengan protokol WSDL",
-      "C": "Protokol FTP biner tanpa HTTP",
-      "D": "Koneksi socket TCP raw tanpa enkripsi"
+      "A": "Substring",
+      "B": "Slice",
+      "C": "Trim",
+      "D": "ClipPercent"
     },
     "answer": "A",
     "explanation": {
-      "correct": "OGC API - Features (ISO 19168-1) beralih dari RPC/XML WFS lama menuju arsitektur web modern yang ramah pengembang: RESTful endpoints (/collections/{collectionId}/items), JSON/GeoJSON, dan dokumentasi OpenAPI 3.0.",
-      "A": "Opsi A benar sesuai standar OGC API - Features.",
-      "B": "Opsi B salah karena SOAP XML adalah teknologi lama yang ditinggalkan pada generasi OGC API.",
-      "C": "Opsi C salah karena OGC API Features sepenuhnya berbasis web HTTP/HTTPS.",
-      "D": "Opsi D salah karena bukan protokol raw TCP."
+      "correct": "`ST_LineSubstring(geom, startfraction, endfraction)` mengembalikan sub-garis dari titik awal fraksi hingga titik akhir fraksi yang ditentukan.",
+      "A": "Benar. ST_LineSubstring memotong segmen linestring berdasarkan persentase rentang panjang garis.",
+      "B": "Salah. LineSlice adalah fungsi Turf.js, bukan fungsi SQL PostGIS.",
+      "C": "Salah. LineTrim bukan nama fungsi PostGIS.",
+      "D": "Salah. ClipPercent bukan fungsi resmi PostGIS."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-385",
     "level": "advanced",
-    "topic": "Fullstack Web GIS Development",
-    "question": "Ketika membangun API pencarian spasial autocomplete (seperti pencarian nama tempat atau POI di peta) dengan toleransi salah ketik (fuzzy search), kombinasi teknologi PostgreSQL manakah yang paling ideal?",
+    "topic": "PostGIS ST_ConcaveHull",
+    "questionType": "completion",
+    "question": "Lengkapi fungsi pembuat selubung cekung (Concave Hull / Alpha Shape) yang mengikuti kontur lekukan sebaran titik dengan parameter target percent 0.8:\n\n```sql\nSELECT ST_Concave____(ST_Collect(geom), 0.8) FROM crime_incidents;\n```",
+    "code": "SELECT ST_Concave____(ST_Collect(geom), 0.8) FROM crime_incidents;",
     "options": {
-      "A": "Ekstensi pg_trgm (Trigram Similarity) dipadukan dengan PostGIS dan indeks GIN pada kolom nama serta GiST pada geom",
-      "B": "Operator '=' persis tanpa indeks",
-      "C": "Memanggil API Google Maps berulang kali untuk setiap penekanan tombol tanpa caching",
-      "D": "Menyimpan seluruh data nama dalam file teks lokal dan membacanya dengan readFileSync"
+      "A": "Hull",
+      "B": "Shape",
+      "C": "Boundary",
+      "D": "Envelope"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Ekstensi pg_trgm menyediakan pencarian substring dan kesamaan trigram dengan indeks GIN (Generalized Inverted Index), memungkinkan fuzzy search instan (< 10 ms) yang dapat dibatasi oleh filter jarak spasial PostGIS.",
-      "A": "Opsi A benar sesuai arsitektur geocoding/autocomplete performa tinggi di PostgreSQL.",
-      "B": "Opsi B salah karena pencarian eksak tidak mentoleransi typo atau partial match.",
-      "C": "Opsi C salah karena menimbulkan latensi tinggi dan biaya API eksternal yang mahal.",
-      "D": "Opsi D salah karena pembacaan file sinkron memblokir event loop Node.js."
+      "correct": "`ST_ConcaveHull(geom, target_percent, allow_holes)` membuat poligon cekung yang melingkupi titik dengan mengikuti lekukan dan rongga nyata sebaran spasial.",
+      "A": "Benar. ST_ConcaveHull adalah fungsi PostGIS resmi untuk kalkulasi alpha-shape/concave hull.",
+      "B": "Salah. ConcaveShape bukan nama fungsi PostGIS.",
+      "C": "Salah. ConcaveBoundary bukan nama fungsi PostGIS.",
+      "D": "Salah. ConcaveEnvelope bukan fungsi spasial."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-386",
     "level": "advanced",
-    "topic": "Fullstack Web GIS Development",
-    "question": "Dalam backend Node.js atau Python yang melayani data GeoJSON, mengapa penting untuk membatasi presisi desimal koordinat (misal menjadi 5 atau 6 angka di belakang koma) sebelum serialisasi JSON?",
+    "topic": "High Throughput Spatial Ingestion",
+    "questionType": "best-practice",
+    "question": "Untuk menangani ingestion data telemetri GPS dari 100.000 kendaraan bergerak yang mengirim data setiap 1 detik (100.000 events/sec), arsitektur pipeline manakah yang paling scalable?\n\n```sql\n// Arsitektur Ingestion Skala Tinggi:\n```",
+    "code": "// Arsitektur Ingestion Skala Tinggi:",
     "options": {
-      "A": "6 angka desimal pada derajat WGS84 sudah mewakili presisi ~0.1 meter (10 cm), sedangkan desimal 15 angka membuang bandwidth secara sia-sia hingga 40-50% ukuran file",
-      "B": "JavaScript tidak dapat membaca angka yang memiliki lebih dari 2 desimal",
-      "C": "Format GeoJSON menolak angka lebih dari 4 desimal",
-      "D": "Desimal berlebih menyebabkan satelit GPS salah menghitung waktu"
+      "A": "Message Broker (Kafka) -> Stream Processing (Flink/Spark) -> Database Time-Series Spasial terdistribusi (TimescaleDB / ClickHouse) dengan partisi waktu dan geohash",
+      "B": "REST API tunggal yang langsung melakukan INSERT sinkron satu per satu ke database MySQL shared hosting",
+      "C": "Menulis setiap titik lokasi ke file teks .txt terpisah di disk lokal",
+      "D": "Mengirim seluruh koordinat via email massal ke admin"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Pada lintang khatulistiwa, 0.00001° ~ 1.1 meter dan 0.000001° ~ 0.11 meter. Nilai koordinat floating point default (15-17 digit) memperbesar ukuran teks JSON tanpa memberikan nilai akurasi fisik yang bermakna.",
-      "A": "Opsi A benar sesuai kaidah optimasi payload geospasial web.",
-      "B": "Opsi B salah karena JavaScript IEEE 754 float mendukung presisi ganda hingga 17 digit signifikan.",
-      "C": "Opsi C salah karena spesifikasi RFC 7946 GeoJSON merekomendasikan pembatasan presisi namun tidak membatasi secara kaku.",
-      "D": "Opsi D salah karena serialisasi JSON backend tidak mempengaruhi satelit GPS di orbit."
+      "correct": "Beban 100k events/sec membutuhkan decoupling arsitektur via Kafka untuk buffering lonjakan, Flink untuk pembersihan stream real-time, dan time-series database kolumnar yang mampu melakukan micro-batch insert hingga jutaan baris per detik.",
+      "A": "Benar. Kombinasi Kafka + Stream Engine + TimescaleDB/ClickHouse adalah standar arsitektur IoT spasial berkinerja tinggi.",
+      "B": "Salah. INSERT sinkron per event di database relasional tunggal akan mengalami connection bottleneck dan timeout pada beban 1.000 req/s.",
+      "C": "Salah. Jutaan file teks kecil menghancurkan performa inode filesystem OS.",
+      "D": "Salah. Protokol email tidak dirancang untuk transmisi telemetri berlatensi rendah."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-387",
     "level": "advanced",
-    "topic": "DevOps & GIS Deployment",
-    "question": "Bagaimana cara menangani load balancing koneksi database dari puluhan worker aplikasi GIS ke PostgreSQL/PostGIS untuk mencegah kehabisan connection pool (exhausted connections)?",
+    "topic": "Dynamic MVT Tile Server Architecture",
+    "questionType": "best-practice",
+    "question": "Mengapa menggunakan generator Vector Tiles dinamis ringan seperti `pg_tileserv` (atau Martin) langsung di atas PostgreSQL sering kali lebih disukai daripada stack GeoServer WFS tradisional untuk aplikasi web modern?\n\n```sql\n// pg_tileserv / Martin vs GeoServer WFS:\n```",
+    "code": "// pg_tileserv / Martin vs GeoServer WFS:",
     "options": {
-      "A": "Menggunakan connection pooler khusus seperti PgBouncer dengan mode transaction pooling",
-      "B": "Menyetel max_connections di PostgreSQL menjadi 1.000.000",
-      "C": "Membuka koneksi baru untuk setiap query dan tidak pernah menutupnya",
-      "D": "Menghapus database PostgreSQL dan menggantinya dengan SQLite lokal di setiap container"
+      "A": "Ditulis dalam bahasa Go/Rust yang ultra-ringan (low memory footprint), langsung mengeksekusi ST_AsMVT di PostgreSQL, dan memotong overhead abstraksi Java enterprise yang berat",
+      "B": "pg_tileserv tidak memerlukan koneksi jaringan internet",
+      "C": "GeoServer dilarang digunakan di Linux",
+      "D": "pg_tileserv bisa memprediksi masa depan pergerakan bumi"
     },
     "answer": "A",
     "explanation": {
-      "correct": "PostgreSQL mengalokasikan proses terpisah per koneksi yang mengonsumsi RAM dan memicu context switching jika berlebihan (> ratusan). PgBouncer dengan transaction pooling mengizinkan ribuan klien berbagi sejumlah kecil koneksi aktif server secara efisien.",
-      "A": "Opsi A benar sesuai best practice arsitektur produksi database PostgreSQL.",
-      "B": "Opsi B salah karena menetapkan max_connections ekstrem akan memicu memory exhaustion dan crash OS.",
-      "C": "Opsi C salah karena connection leak akan membuat server menolak koneksi baru dalam hitungan menit.",
-      "D": "Opsi D salah karena SQLite tidak mendukung konkurensi write terdistribusi multi-worker."
+      "correct": "Tile server modern berbasis Go/Rust (seperti pg_tileserv dan Martin) hanya bertindak sebagai gateway HTTP stateless ultra-cepat yang memetakan URL `{z}/{x}/{y}.pbf` langsung ke fungsi native `ST_AsMVT` database, menghasilkan latensi sub-50ms dengan konsumsi RAM di bawah 50MB.",
+      "A": "Benar. Performa latensi tinggi dan footprint memori minimal karena delegasi tiling langsung ke engine native PostGIS.",
+      "B": "Salah. Tile server tetap melayani traffic HTTP melalui jaringan internet.",
+      "C": "Salah. GeoServer berjalan sangat baik di Linux.",
+      "D": "Salah. Perangkat lunak ini tidak memiliki fungsi mistis."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-388",
     "level": "advanced",
-    "topic": "Citra Satelit & Radar",
-    "question": "Pada sensor satelit Landsat 8/9 TIRS (Thermal Infrared Sensor), apa prinsip utama algoritma 'Split-Window' untuk mengestimasi Land Surface Temperature (LST)?",
+    "topic": "Spatial Caching Layer with Redis Geohash",
+    "questionType": "best-practice",
+    "question": "Bagaimana struktur data Geo di Redis (`GEOADD`, `GEORADIUS` / `GEOSEARCH`) dimanfaatkan dalam arsitektur Ride-Hailing (seperti Gojek/Grab) untuk menemukan pengemudi terdekat?\n\n```javascript\n// Caching posisi armada di Redis:\n```",
+    "code": "// Caching posisi armada di Redis:",
     "options": {
-      "A": "Memanfaatkan perbedaan serapan uap air atmosfer antara dua band termal yang berdekatan (Band 10: 10.6-11.19 µm dan Band 11: 11.5-12.51 µm) untuk mengeliminasi efek atenuasi atmosfer",
-      "B": "Membuka jendela fisik pada badan satelit saat melintas di atas ekuator",
-      "C": "Membagi citra menjadi dua bagian kiri dan kanan",
-      "D": "Mengukur suhu udara menggunakan termometer merkuri di orbit"
+      "A": "Menyimpan posisi terakhir pengemudi di memory RAM Redis menggunakan 52-bit integer Geohash di dalam Sorted Set (ZSET), memungkinkan pencarian radius terdekat dalam waktu sub-milidetik",
+      "B": "Menyimpan posisi pengemudi sebagai file foto satelit",
+      "C": "Menghapus data pengemudi setiap kali aplikasi dibuka",
+      "D": "Menggunakan Redis hanya sebagai kalkulator aritmatika biasa"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Algoritma Split-Window memanfaatkan perbedaan karakteristik transmisi radiasi dan absorpsi uap air di atmosfer pada dua saluran termal bertetangga untuk memisahkan kontribusi radiasi permukaan bumi dari radiasi atmosfer.",
-      "A": "Opsi A benar sesuai teori estimasi LST split-window (Sobrino et al., Rozenstein et al.).",
-      "B": "Opsi B salah karena satelit tidak memiliki jendela fisik yang membuka di ruang hampa.",
-      "C": "Opsi C salah karena split-window adalah teknik pemisahan spektral gelombang, bukan pemotongan geometrik citra.",
-      "D": "Opsi D salah karena satelit mengukur radiansi inframerah termal dari jauh, bukan kontak fisik merkuri."
+      "correct": "Redis Geospatial meng-encode koordinat (longitude, latitude) menjadi nilai numerik 52-bit Geohash yang disimpan di dalam struktur Sorted Set (ZSET). Pencarian radius (`GEOSEARCH`) mengevaluasi rentang skor ZSET dalam memori RAM murni dengan latensi < 1 milidetik.",
+      "A": "Benar. Geohash ZSET di memory RAM memungkinkan query proximity real-time berkecepatan mikrodetik.",
+      "B": "Salah. Redis Geo tidak menyimpan citra foto satelit.",
+      "C": "Salah. Posisi pengemudi harus dipertahankan secara dinamis untuk pencocokan order.",
+      "D": "Salah. Redis menyediakan perintah geospasial native khusus."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-389",
     "level": "advanced",
-    "topic": "Geodesi & Proyeksi",
-    "question": "Mengapa dalam pengukuran deformasi tektonik presisi tinggi menggunakan GNSS/GPS diwajibkan menggunakan orbit satelit tipe 'IGS Final Orbits' daripada 'Broadcast Orbits'?",
+    "topic": "OGC API Features vs Legacy WFS",
+    "questionType": "best-practice",
+    "question": "Apa perbaikan arsitektur terpenting dari standar OGC API Features (OGC API - Features / WFS3) dibandingkan WFS versi 1.1 / 2.0 terdahulu?\n\n```javascript\n// Standar OGC API Features:\n```",
+    "code": "// Standar OGC API Features:",
     "options": {
-      "A": "Broadcast Orbits memiliki akurasi posisi orbit satelit sekitar ~100 cm dan diprediksi secara realtime, sedangkan IGS Final Orbits ditentukan secara post-processing dengan akurasi < 2.5 cm",
-      "B": "Broadcast Orbits tidak memiliki informasi waktu GPS",
-      "C": "IGS Final Orbits hanya dapat diakses melalui sinyal radio FM",
-      "D": "Broadcast Orbits hanya berlaku untuk wilayah kutub utara"
+      "A": "Mengadopsi prinsip arsitektur RESTful modern, dokumentasi OpenAPI 3.0 / Swagger, URI semantik, dan format default JSON/GeoJSON yang native bagi developer web",
+      "B": "Kembali menggunakan format file binary COBOL",
+      "C": "Menghapus seluruh fitur keamanan sistem",
+      "D": "Hanya bisa diakses melalui kabel serial RS-232"
     },
     "answer": "A",
     "explanation": {
-      "correct": "International GNSS Service (IGS) merilis produk orbit final (~12-14 hari pasca-akuisisi) dengan akurasi posisi pusat massa satelit ~2 cm dan koreksi jam satelit ~0.1 ns, esensial untuk geodesi tektonik mm-level.",
-      "A": "Opsi A benar sesuai standar perbandingan produk orbit GNSS ilmiah.",
-      "B": "Opsi B salah karena navigasi satelit bergantung penuh pada sinkronisasi waktu.",
-      "C": "Opsi C salah karena orbit IGS diunduh via server FTP/HTTP IGS.",
-      "D": "Opsi D salah karena konstelasi GPS dan produk orbitnya bersifat global."
+      "correct": "WFS lama sangat terikat pada protokol XML/SOAP/GML yang rumit dan kaku. OGC API Features dirancang ulang agar sepenuhnya RESTful, menggunakan JSON/GeoJSON sebagai first-class citizen, serta terdefinisi dengan OpenAPI 3.0 yang mudah dikonsumsi library web frontend.",
+      "A": "Benar. RESTful, OpenAPI native, JSON-first, dan ramah integrasi developer web modern.",
+      "B": "Salah. OGC API mengadopsi standar web mutakhir, bukan COBOL kuno.",
+      "C": "Salah. Keamanan ditingkatkan dengan standar OAuth2 dan HTTPS.",
+      "D": "Salah. Berjalan di atas protokol HTTP/HTTPS web standar."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-390",
     "level": "advanced",
-    "topic": "Koreksi Citra",
-    "question": "Dalam koreksi geometrik citra satelit beresolusi sangat tinggi (VHR), apa fungsi dari Rational Polynomial Coefficients (RPC)?",
+    "topic": "Simplification on Zoom Level",
+    "questionType": "best-practice",
+    "question": "Mengapa menyajikan tingkat detail geometri yang berbeda (Level of Detail / LOD) berdasarkan zoom level merupakan praktik terbaik absolut dalam web GIS?\n\n```sql\n// Penyajian data multi-resolusi geometri:\n```",
+    "code": "// Penyajian data multi-resolusi geometri:",
     "options": {
-      "A": "Memodelkan hubungan matematis antara koordinat geodetik permukaan bumi (latitude, longitude, height) dan koordinat piksel citra (row, column) sebagai rasio dua polinomial orde tiga tanpa membocorkan parameter fisik sensor satelit yang dirahasiakan",
-      "B": "Mengatur kontras kecerahan warna citra",
-      "C": "Menghapus bayangan awan dengan algoritma machine learning",
-      "D": "Mengurangi ukuran file TIFF menjadi MP4"
+      "A": "Mencegah pengiriman poligon pantai dengan jutaan vertex saat pengguna berada di zoom level benua (zoom 3) di mana 1 pixel layar mewakili 100 kilometer daratan",
+      "B": "Membuat komputer pengguna restart otomatis",
+      "C": "Mengurangi warna tampilan peta",
+      "D": "Menghapus nama pulau dari peta dunia"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Vendor satelit komersial (WorldView, Pleiades) menyediakan file RPC sebagai model pengganti kamera fisik (rigorous physical sensor model) yang menyederhanakan orthorektifikasi fotogrametris dengan tetap merahasiakan desain optik optomekanik satelit.",
-      "A": "Opsi A benar sesuai prinsip pemodelan sensor RPC pada fotogrametri satelit.",
-      "B": "Opsi B salah karena RPC adalah model koreksi geometrik, bukan radiometrik.",
-      "C": "Opsi C salah karena RPC tidak berkaitan dengan masking awan.",
-      "D": "Opsi D salah karena RPC bukan kompresi video."
+      "correct": "Pada tingkat zoom rendah (misal seluruh Indonesia di layar ponsel), layar hanya memiliki resolusi ~1080 pixel lebar. Mengirim poligon dengan 500.000 vertex adalah pemborosan total karena ribuan simpul jatuh di piksel yang sama. Penyederhanaan dinamis (LOD) menghemat bandwidth dan CPU secara masif.",
+      "A": "Benar. Menyesuaikan kompleksitas vertex dengan kapasitas resolusi piksel layar (LOD) mengoptimalkan performa transfer dan render.",
+      "B": "Salah. Tidak memicu restart komputer.",
+      "C": "Salah. Warna diatur oleh style layer terpisah dari struktur vertex geometri.",
+      "D": "Salah. Label nama pulau dikendalikan oleh layer anotasi, bukan penyederhanaan bentuk garis."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-391",
     "level": "advanced",
-    "topic": "Spatial Database & PostGIS",
-    "question": "Fungsi PostGIS manakah yang digunakan untuk membagi tabel poligon besar ke dalam sel grid heksagonal seragam untuk visualisasi analisis kerapatan spasial?",
+    "topic": "Distributed Spatial Joins with Apache Sedona",
+    "questionType": "best-practice",
+    "question": "Framework komputasi terdistribusi apakah yang memperluas Apache Spark untuk melakukan query spasial berskala petabyte (seperti join spasial miliaran titik terhadap miliaran poligon)?\n\n```sql\n// Big Spatial Data Engine:\n```",
+    "code": "// Big Spatial Data Engine:",
     "options": {
-      "A": "ST_HexagonGrid(cell_size, geom)",
-      "B": "ST_SquareGrid()",
-      "C": "ST_MakeHex()",
-      "D": "ST_PolygonGrid()"
+      "A": "Apache Sedona (sebelumnya GeoSpark)",
+      "B": "Apache Lucene",
+      "C": "Node.js Express",
+      "D": "jQuery"
     },
     "answer": "A",
     "explanation": {
-      "correct": "PostGIS 3.1+ memperkenalkan ST_HexagonGrid yang menghasilkan kisi heksagonal reguler yang menutupi batas geometri input. Heksagon ideal untuk agregasi spasial karena meminimalkan distorsi jarak ke tetangga.",
-      "A": "Opsi A benar sesuai fitur tessellation grid modern PostGIS.",
-      "B": "Opsi B salah karena ST_SquareGrid menghasilkan grid kotak, bukan heksagonal.",
-      "C": "Opsi C salah karena bukan fungsi PostGIS.",
-      "D": "Opsi D salah karena bukan fungsi PostGIS."
+      "correct": "Apache Sedona adalah cluster computing engine yang menambahkan Spatial RDD / Spatial DataFrame, spatial partitioning (K-D B-Tree), dan spatial query processing (ST_*) terdistribusi di atas ekosistem Apache Spark.",
+      "A": "Benar. Apache Sedona adalah standar industri pemrosesan Big Data geospasial terdistribusi di Spark.",
+      "B": "Salah. Lucene adalah search library pencarian teks.",
+      "C": "Salah. Express adalah web framework Node.js ringan untuk REST API.",
+      "D": "Salah. jQuery adalah library DOM frontend legacy."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-392",
     "level": "advanced",
-    "topic": "Web Mapping",
-    "question": "Dalam standar arsitektur OGC API - Tiles, bagaimana mekanisme URL templating untuk meminta tile vektor atau raster?",
+    "topic": "PostGIS Parallel Spatial Safety",
+    "questionType": "best-practice",
+    "question": "Mengapa fungsi buatan sendiri (Custom SQL Function) yang memproses geometri di PostgreSQL harus diberi label `PARALLEL SAFE` agar kueri dapat memanfaatkan multi-core CPU?\n\n```sql\nCREATE FUNCTION my_spatial_calc(...) RETURNS boolean ... PARALLEL SAFE;\n-- Mengapa deklarasi PARALLEL SAFE penting?\n```",
+    "code": "CREATE FUNCTION my_spatial_calc(...) RETURNS boolean ... PARALLEL SAFE;\n-- Mengapa deklarasi PARALLEL SAFE penting?",
     "options": {
-      "A": "/collections/{collectionId}/tiles/{tileMatrixSetId}/{tileMatrix}/{tileRow}/{tileCol}",
-      "B": "/get_tile.php?id=123",
-      "C": "/tiles/download/all.zip",
-      "D": "/wms?request=GetMap&format=tiles"
+      "A": "Memberitahu perencana kueri bahwa fungsi tidak memodifikasi state database dan aman dieksekusi secara paralel di berbagai worker thread latar belakang tanpa race condition",
+      "B": "Menghapus seluruh file log database",
+      "C": "Mengizinkan fungsi diakses tanpa password",
+      "D": "Memaksa fungsi berjalan di satu thread saja"
     },
     "answer": "A",
     "explanation": {
-      "correct": "OGC API - Tiles mendefinisikan URI template standar RESTful: /collections/{collectionId}/tiles/{tileMatrixSetId}/{tileMatrix}/{tileRow}/{tileCol} yang memetakan matriks tingkat zoom, baris, dan kolom secara eksplisit.",
-      "A": "Opsi A benar sesuai spesifikasi OGC API - Tiles Standard.",
-      "B": "Opsi B salah karena query string PHP lama bukan standar OGC API.",
-      "C": "Opsi C salah karena bukan mekanisme tile matrix streaming.",
-      "D": "Opsi D salah karena sintaks WMS 1.3.0 lama."
+      "correct": "Secara default, fungsi user-defined di PostgreSQL dianggap `PARALLEL UNSAFE`. Menandai fungsi dengan `PARALLEL SAFE` mengizinkan query planner menyertakan fungsi tersebut di dalam worker thread paralel tanpa menonaktifkan parallel execution plan.",
+      "A": "Benar. PARALLEL SAFE mengizinkan eksekusi paralel multi-core CPU pada query planner PostgreSQL.",
+      "B": "Salah. Tidak menghapus file log.",
+      "C": "Salah. Izin eksekusi diatur oleh hak akses GRANT/REVOKE, bukan parallel safety.",
+      "D": "Salah. PARALLEL SAFE justru mengaktifkan multi-threading, bukan single thread."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-393",
     "level": "advanced",
-    "topic": "Fullstack Web GIS Development",
-    "question": "Ketika membuat aplikasi Web GIS real-time tracking armada dengan puluhan ribu pembaruan koordinat per detik, arsitektur data stream manakah yang paling tangguh?",
+    "topic": "Cloud Optimized GeoTIFF (COG)",
+    "questionType": "best-practice",
+    "question": "Apa keunggulan revolusioner format Cloud Optimized GeoTIFF (COG) untuk penyimpanan dan analisis data citra satelit skala global?\n\n```sql\n// Format penyimpanan citra penginderaan jauh modern:\n```",
+    "code": "// Format penyimpanan citra penginderaan jauh modern:",
     "options": {
-      "A": "GPS Tracker -> MQTT/Kafka Broker -> Node.js/Go Consumer -> Redis (In-Memory Geo Spatial GEOADD) / PostGIS -> WebSocket -> WebGL Client",
-      "B": "GPS Tracker -> HTTP POST -> PHP -> Tulis file TXT -> Polling Ajax setiap detik",
-      "C": "GPS Tracker -> Kirim SMS ke admin -> Admin ketik manual ke database",
-      "D": "GPS Tracker langsung terhubung langsung ke database PostgreSQL tanpa firewall"
+      "A": "Mendukung HTTP Range Requests sehingga klien/cloud engine dapat membaca fragmen ubin dan overview resolusi citra secara langsung dari Amazon S3/Cloud Storage tanpa perlu mengunduh seluruh file citra berukuran Gigabyte",
+      "B": "COG hanya bisa disimpan di disket magnetik 1.44 MB",
+      "C": "COG mengubah foto satelit menjadi format vektor SVG",
+      "D": "COG tidak mendukung data georeferensi"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Kafka/MQTT menangani throughput penulisan masif tanpa blocking. Redis GEOADD menyimpan posisi terbaru secara in-memory untuk query geofencing latensi mikrodetik, dan WebSocket mendorong pembaruan secara real-time ke GPU WebGL tanpa overhead polling HTTP.",
-      "A": "Opsi A benar sesuai arsitektur modern enterprise real-time tracking.",
-      "B": "Opsi B salah karena file IO dan HTTP polling berulang akan mengalami bottleneck berat.",
-      "C": "Opsi C salah karena proses manual tidak mungkin menangani puluhan ribu koordinat per detik.",
-      "D": "Opsi D salah karena koneksi langsung tanpa proteksi memicu connection storm dan celah keamanan kritis."
+      "correct": "COG mengorganisir data raster internal ke dalam piramida overview dan tiling terstruktur. Menggunakan HTTP GET Range Header, klien web dapat mengambil hanya beberapa byte yang diperlukan untuk menampilkan tampilan zoom tertentu dari cloud storage tanpa mendownload file 10GB utuh.",
+      "A": "Benar. HTTP Range Requests memungkinkan streaming fraksional langsung dari object storage cloud tanpa full download.",
+      "B": "Salah. File COG sering kali berukuran ratusan Megabyte hingga puluhan Gigabyte.",
+      "C": "Salah. COG tetap merupakan data raster murni (citra piksel), bukan vektor.",
+      "D": "Salah. COG menyimpan metadata georeferensi dan proyeksi spasial penuh."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-394",
     "level": "advanced",
-    "topic": "Cloud GIS & Big Data",
-    "question": "Format file tabular geospasial berbasis Apache Arrow / Parquet apakah yang dirancang untuk kueri analitik big data kolom masif dengan dukungan kompresi tinggi dan bounding box indexing?",
+    "topic": "SpatioTemporal Asset Catalog (STAC)",
+    "questionType": "best-practice",
+    "question": "Apa peran spesifikasi STAC (SpatioTemporal Asset Catalog) dalam ekosistem data penginderaan jauh modern?\n\n```javascript\n// Spesifikasi STAC dalam pencarian citra satelit:\n```",
+    "code": "// Spesifikasi STAC dalam pencarian citra satelit:",
     "options": {
-      "A": "GeoParquet",
-      "B": "GeoTIFF",
-      "C": "Shapefile",
-      "D": "KML"
+      "A": "Menyediakan bahasa JSON standar terpadu untuk mendeskripsikan, mencari, dan mengindeks aset geospasial (satelit Sentinel, Landsat, MODIS, drone) lintas vendor cloud",
+      "B": "Mengatur resolusi layar smartphone",
+      "C": "Menghapus data satelit yang berusia lebih dari 1 tahun",
+      "D": "Mengganti bahasa pemrograman Python dengan Assembly"
     },
     "answer": "A",
     "explanation": {
-      "correct": "GeoParquet menambahkan metadata geospasial standar ke format Parquet Apache Arrow, memungkinkan penyimpanan columnar yang sangat terkompresi, pembacaan partisi kolom parsial, dan kueri analitik spasial skala awan berkecepatan tinggi.",
-      "A": "Opsi A benar sesuai spesifikasi modern GeoParquet (geoparquet.org).",
-      "B": "Opsi B salah karena GeoTIFF adalah format raster.",
-      "C": "Opsi C salah karena Shapefile memiliki batasan file 2 GB dan berbasis format dBase lama.",
-      "D": "Opsi D salah karena KML adalah teks XML untuk visualisasi sederhana."
+      "correct": "STAC menstandarkan metadata temporal dan spasial dari dataset citra raster global. Dengan STAC API, developer dapat mencari 'semua citra satelit tutupan awan < 10% di atas Jakarta bulan lalu' dengan format kueri API yang seragam di AWS, GCP, maupun Planet Labs.",
+      "A": "Benar. Standar universal pengindeksan dan discovery data penginderaan jauh lintas penyedia.",
+      "B": "Salah. STAC tidak mengontrol display layar hardware.",
+      "C": "Salah. STAC tidak menghapus dataset arsip historis satelit.",
+      "D": "Salah. STAC adalah spesifikasi API data berbasis JSON."
     },
     "jobId": "fullstack-gis"
   },
   {
     "id": "GIS-395",
     "level": "advanced",
-    "topic": "DevOps & GIS Deployment",
-    "question": "Apa fungsi dari utilitas 'mbtiles-extract' atau 'tilelive' dalam arsitektur deployment peta offline (offline Web GIS / PWA)?",
+    "topic": "PostGIS Partition Pruning with Constraint Exclusion",
+    "questionType": "best-practice",
+    "question": "Saat mempartisi tabel spasial di PostgreSQL berdasarkan wilayah administratif atau grid spasial (Spatial Partitioning), apa yang harus dipastikan agar query optimizer hanya memindai partisi yang relevan?\n\n```sql\n-- Partisi tabel spasial berbasis BBOX region:\n```",
+    "code": "-- Partisi tabel spasial berbasis BBOX region:",
     "options": {
-      "A": "Mengekstrak dan mengemas ribuan vector tile ke dalam single-file SQLite container (.mbtiles) untuk disimpan secara lokal di browser via IndexedDB atau perangkat mobile",
-      "B": "Mengganti koordinat peta dengan nomor acak",
-      "C": "Menghapus seluruh fitur vektor dari database",
-      "D": "Menghubungkan komputer ke jaringan satelit mata-mata"
+      "A": "Menambahkan CHECK constraint geometri pada setiap tabel partisi anak (misal: CHECK (ST_Within(geom, region_geom))) dan memastikan `enable_partition_pruning = on`",
+      "B": "Menghapus primary key pada semua tabel partisi",
+      "C": "Menonaktifkan indeks GiST",
+      "D": "Mengisi seluruh data partisi dengan angka nol"
     },
     "answer": "A",
     "explanation": {
-      "correct": "Spesifikasi MBTiles menyimpan ribuan tile peta dalam basis data SQLite tunggal. Ini mempermudah transfer dan penyimpanan tile offline pada aplikasi Progressive Web Apps (PWA) atau mobile field survey.",
-      "A": "Opsi A benar sesuai penggunaan spesifikasi MBTiles untuk offline caching.",
-      "B": "Opsi B salah karena tidak merusak koordinat.",
-      "C": "Opsi C salah karena MBTiles mengemas data, bukan menghapusnya.",
-      "D": "Opsi D salah karena tidak berhubungan dengan satelit mata-mata."
+      "correct": "CHECK constraint spasial pada partisi anak memberi tahu query planner batas bounding box eksklusif masing-masing partisi. Jika kueri mencari area di Jakarta, planner secara instan mengabaikan (prunes) partisi Jawa Timur, Bali, dan Sumatra, memangkas 90% waktu scan disk.",
+      "A": "Benar. CHECK constraint geometrik memungkinkan perencana kueri mengabaikan partisi yang tidak beririsan (Partition Pruning).",
+      "B": "Salah. Primary key tetap penting untuk integritas baris data partisi.",
+      "C": "Salah. Indeks GiST lokal pada setiap partisi tetap wajib untuk akselerasi kueri dalam partisi.",
+      "D": "Salah. Data partisi harus berisi data spasial yang sebenarnya."
     },
     "jobId": "fullstack-gis"
   },
@@ -8300,6 +8898,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-396",
     "level": "advanced",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Fungsi PostGIS manakah yang digunakan untuk menghitung jarak terpendek dan mengembalikan segmen garis penghubung 3D antara dua geometri 3D (Z)?",
     "options": {
       "A": "ST_3DShortestLine(geomA, geomB)",
@@ -8321,6 +8920,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-397",
     "level": "advanced",
     "topic": "Remote Sensing Fundamentals",
+    "questionType": "concept",
     "question": "Dalam citra hiperspektral (hyperspectral imaging) yang memiliki ratusan band spektral sempit dan berurutan, tantangan komputasi dan statistik yang dikenal sebagai 'Hughes Phenomenon' (Curse of Dimensionality) terjadi ketika:",
     "options": {
       "A": "Akurasi klasifikasi justru menurun seiring penambahan jumlah band spektral jika jumlah sampel data latih (training samples) tidak ditambah secara proporsional",
@@ -8342,6 +8942,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-398",
     "level": "advanced",
     "topic": "Remote Sensing Fundamentals",
+    "questionType": "concept",
     "question": "Transformasi Minimum Noise Fraction (MNF) sering digunakan pada data hiperspektral sebelum klasifikasi untuk:",
     "options": {
       "A": "Melakukan dua putaran reduksi dimensi PCA secara berurutan: pertama untuk memutihkan noise (noise whitening) dan kedua untuk mengurutkan komponen berdasarkan signal-to-noise ratio (SNR)",
@@ -8363,6 +8964,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-399",
     "level": "advanced",
     "topic": "Indeks Spektral",
+    "questionType": "concept",
     "question": "Indeks NDRE (Normalized Difference Red Edge Index) sering dipilih dibanding NDVI konvensional untuk monitoring kesehatan tanaman pada fase kanopi lebat karena:",
     "options": {
       "A": "NDVI mengalami fenomena 'saturasi spektral' (saturation effect) pada indeks biomassa kanopi tinggi, sedangkan gelombang Red Edge mampu menembus lapisan kanopi lebih dalam tanpa cepat jenuh",
@@ -8384,6 +8986,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-400",
     "level": "advanced",
     "topic": "Fotogrametri & UAV",
+    "questionType": "concept",
     "question": "Dalam kalibrasi kamera fotogrametri (Camera Self-Calibration / Interior Orientation), parameter apa sajakah yang diestimasi secara simultan dalam bundle adjustment?",
     "options": {
       "A": "Principal point offset (cx, cy), focal length terkalibrasi (fx, fy), koefisien distorsi radial (k1, k2, k3), dan koefisien distorsi tangensial (p1, p2)",
@@ -8405,6 +9008,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-401",
     "level": "advanced",
     "topic": "Geodesi & Proyeksi",
+    "questionType": "concept",
     "question": "Dalam geodesi satelit modern, peran teknik Space Geodesy VLBI (Very Long Baseline Interferometry) sangat krusial bagi Realisasi ITRF karena:",
     "options": {
       "A": "VLBI mengamati sinyal radio dari quasar ekstragalaksi yang sangat jauh, menyediakan satu-satunya teknik yang mampu menentukan parameter orientasi bumi (Earth Orientation Parameters / EOP) dan International Celestial Reference Frame (ICRF) tanpa drift",
@@ -8426,6 +9030,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-402",
     "level": "advanced",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Dalam modul PostGIS Topology, apa keuntungan fundamental menggunakan struktur data TopoGeometry (Node, Edge, Face) dibandingkan geometri Simple Features standar?",
     "options": {
       "A": "Menjamin batas batas wilayah bersebelahan terhubung secara topologis tanpa celah (slivers) atau tumpang tindih (overlaps), dan pengeditan satu batas garis (edge) otomatis memperbarui kedua bidang (faces) yang berbagi batas tersebut",
@@ -8447,6 +9052,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-403",
     "level": "advanced",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Ekstensi pgRouting menyediakan fungsi pgr_dijkstra() untuk mencari rute terpendek dalam graf jaringan jalan. Parameter input apa yang wajib disiapkan pada tabel edge jaringan jalan?",
     "options": {
       "A": "source (integer ID node awal), target (integer ID node tujuan), dan cost (bobot jarak atau waktu tempuh)",
@@ -8468,6 +9074,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-404",
     "level": "advanced",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Fungsi PostGIS manakah yang digunakan untuk menghasilkan diagram poligon Voronoi / Thiessen dari kumpulan titik lokasi fasilitas?",
     "options": {
       "A": "ST_VoronoiPolygons(ST_Collect(geom))",
@@ -8489,6 +9096,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-405",
     "level": "advanced",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Untuk membuat spatial index GiST pada kolom geometri yang memiliki dimensi 3D (X, Y, Z) agar query pencarian bounding box volume 3D (&&&) berjalan optimal, operator class apa yang harus ditentukan?",
     "options": {
       "A": "gist_geometry_ops_nd",
@@ -8510,6 +9118,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-406",
     "level": "advanced",
     "topic": "Fullstack Web GIS Development",
+    "questionType": "concept",
     "question": "Format data spasial biner modern 'FlatGeobuf' (.fgb) semakin populer untuk aplikasi web karena:",
     "options": {
       "A": "Mendukung pembacaan streaming biner (zero-copy parsing) dan spatial filtering client-side via packed Hilbert R-tree index melalui HTTP Range Requests tanpa perlu mengunduh seluruh file",
@@ -8531,6 +9140,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-407",
     "level": "advanced",
     "topic": "Fullstack Web GIS Development",
+    "questionType": "concept",
     "question": "Ketika aplikasi Web GIS frontend perlu melakukan komputasi spasial berat (seperti buffering 10.000 poligon atau perpotongan geometri Turf.js), bagaimana cara terbaik mencegah antarmuka UI freeze?",
     "options": {
       "A": "Menjalankan komputasi Turf.js di dalam Web Worker terpisah di background thread browser",
@@ -8552,6 +9162,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-408",
     "level": "advanced",
     "topic": "GIS Software & GDAL/OGR",
+    "questionType": "concept",
     "question": "File VRT (GDAL Virtual Format) berbasis XML sangat berharga dalam pipeline pemrosesan citra satelit skala besar karena:",
     "options": {
       "A": "Memungkinkan mosaik, stacking band, reproyeksi, dan filtering dari ratusan file raster raksasa tanpa menduplikasi data fisik piksel di disk (zero disk space overhead)",
@@ -8573,6 +9184,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-409",
     "level": "advanced",
     "topic": "GIS Software & GDAL/OGR",
+    "questionType": "concept",
     "question": "Dalam script Python pengolahan citra satelit, driver GDAL manakah yang digunakan untuk membuat dataset raster sementara di dalam memori RAM tanpa menulis ke disk fisik?",
     "options": {
       "A": "gdal.GetDriverByName('MEM')",
@@ -8594,6 +9206,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-410",
     "level": "advanced",
     "topic": "Citra Satelit & Radar",
+    "questionType": "concept",
     "question": "Dalam klasifikasi tanaman pangan (misal padi sawah), mengapa fusi temporal citra SAR Sentinel-1 dan optik Sentinel-2 menghasilkan akurasi yang lebih tinggi dibanding hanya menggunakan citra optik saja?",
     "options": {
       "A": "Citra optik sering terkendala tutupan awan tinggi di wilayah tropis selama fase tanam/vegetatif, sementara sinyal SAR mampu menembus awan dan mendeteksi fase penggenangan air (fase sawah) secara akurat melalui hamburan balik yang sangat rendah",
@@ -8615,6 +9228,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-411",
     "level": "advanced",
     "topic": "Remote Sensing Fundamentals",
+    "questionType": "concept",
     "question": "Dalam konteks deep learning untuk segmentasi citra satelit resolusi tinggi, apa fungsi dari 'Focal Loss' dalam mengatasi ketidakseimbangan kelas (class imbalance) yang ekstrem (misal deteksi kapal laut kecil di tengah samudra luas)?",
     "options": {
       "A": "Menurunkan bobot gradien dari contoh yang mudah diklasifikasikan (background luas) dan memfokuskan pelatihan model pada contoh yang langka dan sulit (foreground target)",
@@ -8636,6 +9250,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-412",
     "level": "advanced",
     "topic": "Geodesi & Proyeksi",
+    "questionType": "concept",
     "question": "Mengapa permukaan elipsoid referensi GRS80 dan WGS84 sedikit berbeda pada parameter sumbu semi-minor (b) meskipun memiliki nilai semi-major axis (a = 6.378.137,0 m) yang identik?",
     "options": {
       "A": "Keduanya menggunakan konstanta bentuk dinamis bumi (J2) dari model geodesi gravitasi yang sedikit berbeda saat penetapan awal konvensi IERS",
@@ -8657,6 +9272,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-413",
     "level": "advanced",
     "topic": "Cloud GIS & Big Data",
+    "questionType": "concept",
     "question": "Inisiatif openEO bertujuan untuk menyelesaikan fragmentasi platform pengolahan data geospasial cloud dengan cara:",
     "options": {
       "A": "Menyediakan API standar terbuka (OpenAPI) yang memungkinkan pengguna menulis kode analisis geospasial sekali dan mengeksekusinya di backend cloud mana pun (GEE, Sentinel Hub, Open Data Cube, WCPS)",
@@ -8678,6 +9294,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-414",
     "level": "advanced",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Apa fungsi dari protokol Web Map Context (WMC) atau format QGIS Web Map Client (QWC) dalam interoperabilitas aplikasi GIS perusahaan?",
     "options": {
       "A": "Menyimpan dan membagikan status sesi peta (daftar layer, bounding box, urutan layer, transparansi, dan styling SLD) sehingga dapat dimuat identik pada aplikasi GIS web maupun desktop yang berbeda",
@@ -8699,6 +9316,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-415",
     "level": "advanced",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Fungsi PostGIS manakah yang digunakan untuk mengelompokkan geometri titik atau poligon yang berjarak kurang dari d meter satu sama lain ke dalam satu GeometryCollection atau Multi-Geometry tanpa komputasi k-means?",
     "options": {
       "A": "ST_ClusterWithin(geom, distance)",
@@ -8720,6 +9338,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-416",
     "level": "advanced",
     "topic": "DevOps & GIS Deployment",
+    "questionType": "concept",
     "question": "Dalam Dockerfile untuk aplikasi web geospasial berbasis Python GDAL / Rasterio, teknik 'multi-stage build' diterapkan terutama untuk:",
     "options": {
       "A": "Mengkompilasi dependensi C/C++ GDAL, GEOS, dan PROJ pada stage builder lalu hanya menyalin binary hasil kompilasi ke stage runtime minimal, memangkas ukuran image container dari 2 GB menjadi ~200 MB",
@@ -8741,6 +9360,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-417",
     "level": "advanced",
     "topic": "Indeks Spektral",
+    "questionType": "concept",
     "question": "Indeks NBR2 (Normalized Burn Ratio 2) menggunakan kombinasi band SWIR1 dan SWIR2 untuk membedakan material pasca-kebakaran hutan karena:",
     "options": {
       "A": "Mendeteksi kadar kelembaban air tanah dan abu/arang tanpa terdistorsi oleh sisa kandungan klorofil vegetasi hidup yang sensitif pada band NIR",
@@ -8762,6 +9382,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-418",
     "level": "advanced",
     "topic": "Fotogrametri & UAV",
+    "questionType": "concept",
     "question": "Mengapa Ground Control Points (GCP) dan Check Points (CP) harus dipisahkan secara independen dalam proyek fotogrametri drone?",
     "options": {
       "A": "GCP digunakan untuk mengikat dan mengalibrasi model bundle block adjustment, sedangkan CP sengaja tidak diikutkan dalam perhitungan model agar menjadi tolok ukur pengujian akurasi absolut (RMSE) yang objektif",
@@ -8783,6 +9404,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-419",
     "level": "advanced",
     "topic": "Citra Satelit & Radar",
+    "questionType": "concept",
     "question": "Apa fenomena distorsi geometrik 'Layover' pada citra SAR radar di daerah perbukitan terjal?",
     "options": {
       "A": "Puncak gunung berada lebih dekat ke sensor radar dibanding bagian kakinya dalam arah miring (slant range), sehingga puncak gunung terekam dan direkonstruksi seolah-olah rebah menimpa area di depannya",
@@ -8804,6 +9426,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-420",
     "level": "advanced",
     "topic": "Citra Satelit & Radar",
+    "questionType": "concept",
     "question": "Apa perbedaan antara fenomena 'Foreshortening' dan 'Radar Shadow' pada perekaman citra SAR?",
     "options": {
       "A": "Foreshortening adalah pemendekan skala lereng yang menghadap sensor, sedangkan Radar Shadow adalah area tanpa pantulan sinyal (hitam pekat) di belakang lereng curam yang terhalang dari pulsa radar",
@@ -8825,6 +9448,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-421",
     "level": "advanced",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Fungsi PostGIS manakah yang digunakan untuk menghitung matriks kedekatan jaringan (Distance Matrix / OD Cost Matrix) antara banyak titik asal (origins) dan tujuan (destinations) di atas graf pgRouting?",
     "options": {
       "A": "pgr_dijkstraCostMatrix('SELECT id, source, target, cost FROM edge_table', ARRAY[1,2,3], false)",
@@ -8846,6 +9470,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-422",
     "level": "advanced",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Dalam spesifikasi Vector Tile (MVT), mengapa koordinat vertex disimpan dalam format koordinat integer lokal (misalnya rentang 0 hingga 4096 pada extent default) dan bukan derajat lintang bujur WGS84?",
     "options": {
       "A": "Kuantisasi koordinat lokal ke integer ringkas meminimalkan ukuran file binary protobuf dan mempercepat decoding GPU vertex attribute secara masif",
@@ -8867,6 +9492,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-423",
     "level": "advanced",
     "topic": "Fullstack Web GIS Development",
+    "questionType": "concept",
     "question": "Bagaimana cara menangani sinkronisasi data offline-ke-online pada aplikasi field survey Web GIS (misal Progressive Web App) saat koneksi internet kembali pulih?",
     "options": {
       "A": "Menyimpan perubahan fitur dan geometri ke dalam IndexedDB di browser, mencatat antrean operasi (queue action) dengan UUID unik, lalu menyinkronkannya ke endpoint API backend menggunakan mekanisme resolusi konflik versi (misal timestamp / vector clocks)",
@@ -8888,6 +9514,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-424",
     "level": "advanced",
     "topic": "Cloud GIS & Big Data",
+    "questionType": "concept",
     "question": "Dalam Google Earth Engine, fungsi reducer manakah yang digunakan untuk mengekstrak statistik histogram frekuensi tutupan lahan pada setiap poligon batas wilayah administratif?",
     "options": {
       "A": "ee.Reducer.frequencyHistogram() bersama image.reduceRegions()",
@@ -8909,6 +9536,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-425",
     "level": "advanced",
     "topic": "Remote Sensing Fundamentals",
+    "questionType": "concept",
     "question": "Koreksi Topografis (Topographic Correction / Illumination Correction) pada citra optik di wilayah pegunungan (seperti metode Minnaert atau C-Correction) bertujuan untuk:",
     "options": {
       "A": "Menghilangkan efek perbedaan iluminasi sinar matahari antara lereng yang menghadap matahari (terlalu terang) dan lereng yang membelakangi matahari (terlalu gelap) sehingga nilai reflektansi tutupan vegetasi seragam di kedua lereng",
@@ -8930,6 +9558,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-426",
     "level": "advanced",
     "topic": "Citra Satelit & Radar",
+    "questionType": "concept",
     "question": "Koherensi interferometrik (interferometric coherence / gamma) pada InSAR adalah nilai rentang [0, 1] yang mengindikasikan:",
     "options": {
       "A": "Tingkat korelasi fase dan amplitudo antara dua akuisisi citra radar, di mana nilai mendekati 1 menunjukkan fase sangat stabil dan nilai mendekati 0 menunjukkan terjadinya decorrelation spasial/temporal",
@@ -8951,6 +9580,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-427",
     "level": "advanced",
     "topic": "Citra Satelit & Radar",
+    "questionType": "concept",
     "question": "Apa keunggulan utama teknik SBAS (Small Baseline Subset) InSAR dibandingkan PS-InSAR dalam pemantauan deformasi di luar area perkotaan padat?",
     "options": {
       "A": "SBAS memanfaatkan pasangan citra dengan baseline spasial dan temporal yang kecil untuk membatasi efek decorrelation pada target hamburan terdistribusi (distributed scatterers seperti vegetasi rendah dan tanah terbuka)",
@@ -8972,6 +9602,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-428",
     "level": "advanced",
     "topic": "Geodesi & Proyeksi",
+    "questionType": "concept",
     "question": "Dalam penentuan posisi teliti PPP (Precise Point Positioning) GNSS, kombinasi linier apa yang digunakan untuk mengeliminasi efek bias refraksi ionosferik orde pertama secara matematis?",
     "options": {
       "A": "Kombinasi Ionosphere-Free (L3 / LC) yang memadukan frekuensi ganda L1 dan L2",
@@ -8993,6 +9624,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-429",
     "level": "advanced",
     "topic": "Geodesi & Proyeksi",
+    "questionType": "concept",
     "question": "Model Geoid global presisi tinggi berbasis kombinasi data satelit GRACE, GOCE, dan altimetri laut seperti EGM2008 menguraikan medan potensial gravitasi bumi ke dalam:",
     "options": {
       "A": "Deret fungsi harmonik bola (Spherical Harmonics) hingga derajat dan orde 2159 (resolusi spasial ~9 km)",
@@ -9014,6 +9646,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-430",
     "level": "advanced",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Fungsi PostGIS manakah yang digunakan untuk menghitung matriks perpotongan poligon terhadap ribuan garis jalan secara paralel menggunakan multiple worker threads di PostgreSQL 12+?",
     "options": {
       "A": "ST_Intersects() yang dipanggil dalam query dengan konfigurasi max_parallel_workers_per_gather > 0 pada tabel yang diindeks GiST",
@@ -9035,6 +9668,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-431",
     "level": "advanced",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Dalam PostGIS Raster, bagaimana cara melakukan zonal statistics (menghitung rata-rata nilai elevasi raster di dalam setiap poligon batas wilayah)?",
     "options": {
       "A": "SELECT p.id, (ST_SummaryStatsAgg(ST_Clip(r.rast, p.geom), 1, true)).mean FROM raster_table r JOIN polygon_table p ON ST_Intersects(r.rast, p.geom) GROUP BY p.id;",
@@ -9056,6 +9690,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-432",
     "level": "advanced",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Fungsi PostGIS manakah yang digunakan untuk menguji apakah geometri 3D A memuat geometri 3D B di dalam ruang volumetrik 3 dimensi?",
     "options": {
       "A": "ST_3DIntersects(geomA, geomB) bersama ST_Contains(geomA, geomB) pada PolyhedralSurface",
@@ -9077,6 +9712,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-433",
     "level": "advanced",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Dalam WebGL dan shader kartu grafis untuk Mapbox / MapLibre, teknik apakah yang digunakan untuk merender jutaan titik partikel angin atau arus laut yang bergerak secara dinamis dan mulus pada 60 FPS?",
     "options": {
       "A": "Particle Simulation menggunakan texture ping-pong framebuffer (FBO) dan GPU compute/transform feedback di WebGL",
@@ -9098,6 +9734,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-434",
     "level": "advanced",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Dalam MapLibre GL JS, apa kegunaan 'feature-state' API (misal map.setFeatureState)?",
     "options": {
       "A": "Memperbarui status interaktif fitur tertentu (seperti 'hover: true' atau 'selected: true') secara instan di GPU tanpa harus mem-parse ulang atau merender ulang seluruh dataset vector tiles",
@@ -9119,6 +9756,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-435",
     "level": "advanced",
     "topic": "Fullstack Web GIS Development",
+    "questionType": "concept",
     "question": "Saat mendesain REST API geospasial berbasis microservices, mengapa format bounding box standar 'bbox=[minX,minY,maxX,maxY]' lebih disukai pada query parameter dibanding mengirimkan geometri poligon kompleks di URL GET request?",
     "options": {
       "A": "Batas panjang URL browser/HTTP server (biasanya ~2048 karakter) dapat terlampaui oleh poligon kompleks, sedangkan 4 angka bbox sangat ringkas, cepat diparsing, dan langsung memicu spatial index filter",
@@ -9140,6 +9778,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-436",
     "level": "advanced",
     "topic": "Fullstack Web GIS Development",
+    "questionType": "concept",
     "question": "Ketika menampilkan layer batas administrasi bertingkat (Provinsi, Kabupaten, Kecamatan, Desa) di peta web, praktik kartografi multi-resolusi apa yang wajib diterapkan pada layer style?",
     "options": {
       "A": "Menetapkan batas zoom level ('minzoom' dan 'maxzoom') untuk setiap tingkatan administrasi sehingga layer detail (desa) hanya muncul saat pengguna melakukan zoom-in mendalam",
@@ -9161,6 +9800,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-437",
     "level": "advanced",
     "topic": "Cloud GIS & Big Data",
+    "questionType": "concept",
     "question": "Dalam integrasi cloud geospatial data pipeline, arsitektur event-driven manakah yang paling efektif untuk memproses citra satelit baru yang diunggah ke AWS S3 bucket secara otomatis?",
     "options": {
       "A": "S3 ObjectCreated Event -> AWS SNS/SQS -> AWS Lambda / ECS Fargate (menjalankan container GDAL untuk konversi ke COG dan ekstrak metadata STAC) -> Simpan ke PostGIS / STAC API",
@@ -9182,6 +9822,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-438",
     "level": "advanced",
     "topic": "Cloud GIS & Big Data",
+    "questionType": "concept",
     "question": "Apa keunggulan indexing sistem grid spasial diskrit H3 (Uber's Hexagonal Hierarchical Spatial Index) untuk agregasi analitik big data perkotaan?",
     "options": {
       "A": "Setiap sel heksagon memiliki tetangga dengan jarak pusat-ke-pusat yang identik seragam ke semua 6 arah (tidak ada distorsi diagonal seperti pada grid bujur sangkar), dan mendukung partisi hierarki multi-resolusi 0-15 yang dikodekan sebagai integer 64-bit tunggal",
@@ -9203,6 +9844,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-439",
     "level": "advanced",
     "topic": "DevOps & GIS Deployment",
+    "questionType": "concept",
     "question": "Dalam orkestrasi Kubernetes untuk klaster aplikasi Web GIS berskala jutaan pengguna, metrik apa yang paling tepat dikonfigurasi pada Horizontal Pod Autoscaler (HPA) untuk pod vector tile server?",
     "options": {
       "A": "CPU utilization persentase tinggi dan custom metric HTTP request rate (RPS) dari Prometheus",
@@ -9224,6 +9866,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-440",
     "level": "advanced",
     "topic": "DevOps & GIS Deployment",
+    "questionType": "concept",
     "question": "Bagaimana cara mencegah 'Tile Bombing' atau Denial of Service (DoS) pada dynamic vector tile server publik yang terhubung langsung ke PostGIS?",
     "options": {
       "A": "Menerapkan Rate Limiting per IP di Edge/Reverse Proxy, membatasi zoom level maksimum yang diizinkan untuk kueri dinamis, dan menetapkan database query statement_timeout yang ketat (misal 3 detik)",
@@ -9245,6 +9888,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-441",
     "level": "advanced",
     "topic": "Fotogrametri & UAV",
+    "questionType": "concept",
     "question": "Mengapa dalam rekonstruksi 3D fotogrametri udara, area permukaan perairan terbuka yang tenang atau atap seng yang seragam mulus sering kali mengalami kegagalan pembuatan Dense Point Cloud (lubang bolong)?",
     "options": {
       "A": "Algoritma dense matching (seperti Semi-Global Matching / SGM) memerlukan tekstur visual yang kaya dan bervariasi untuk mencocokkan piksel antar foto, sedangkan air tenang dan permukaan homogen tidak memiliki variasi gradien tekstur yang unik",
@@ -9266,6 +9910,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-442",
     "level": "advanced",
     "topic": "Citra Satelit & Radar",
+    "questionType": "concept",
     "question": "Dalam pengolahan citra SAR, filter adaptif manakah (seperti Lee, Frost, atau Gamma-MAP) yang digunakan untuk mereduksi noise speckle tanpa mengaburkan garis tepi objek (edge-preserving speckle filtering)?",
     "options": {
       "A": "Filter Lee yang menyesuaikan bobot penghalusan berdasarkan koefisien variasi lokal di sekitar piksel",
@@ -9287,6 +9932,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-443",
     "level": "advanced",
     "topic": "Remote Sensing Fundamentals",
+    "questionType": "concept",
     "question": "Apa kelemahan utama metode klasifikasi supervised Maximum Likelihood Classification (MLC) dibandingkan algoritma ensemble machine learning modern (seperti XGBoost)?",
     "options": {
       "A": "MLC mengasumsikan data spektral setiap kelas terdistribusi normal (Gaussian distribution), asumsi yang sering kali dilanggar oleh citra satelit multimodal dan data fitur non-parametrik (tekstur, DEM, polarisasi SAR)",
@@ -9308,6 +9954,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-444",
     "level": "advanced",
     "topic": "Indeks Spektral",
+    "questionType": "concept",
     "question": "Indeks NDGI (Normalized Difference Glint Index) dalam remote sensing perairan dangkal dan terumbu karang digunakan untuk:",
     "options": {
       "A": "Mengoreksi dan mereduksi gangguan pantulan kilau cahaya matahari langsung pada permukaan gelombang air (sun glint) yang menutupi kenampakan habitat bentik bawah air",
@@ -9329,6 +9976,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-445",
     "level": "advanced",
     "topic": "GIS Software & GDAL/OGR",
+    "questionType": "concept",
     "question": "Perintah ogr2ogr manakah yang digunakan untuk memuat ribuan baris file CSV yang memiliki kolom 'longitude' dan 'latitude' langsung ke dalam tabel PostGIS dengan tipe geometri Point EPSG:4326 yang valid?",
     "options": {
       "A": "ogr2ogr -f \"PostgreSQL\" PG:\"dbname=gisdb user=postgres\" input.csv -oo X_POSSIBLE_NAMES=lon*,x* -oo Y_POSSIBLE_NAMES=lat*,y* -a_srs EPSG:4326 -nln target_table",
@@ -9350,6 +9998,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-446",
     "level": "advanced",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Fungsi PostGIS manakah yang digunakan untuk mengembalikan representasi Well-Known Binary (WKB) dengan menyertakan informasi SRID (Extended WKB / EWKB) yang merupakan format penyimpanan biner internal PostGIS?",
     "options": {
       "A": "ST_AsEWKB(geom)",
@@ -9371,6 +10020,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-447",
     "level": "advanced",
     "topic": "Spatial Database & PostGIS",
+    "questionType": "concept",
     "question": "Dalam PostGIS, apa fungsi dari tabel katalog metadata 'spatial_ref_sys'?",
     "options": {
       "A": "Menyimpan definisi resmi sistem referensi koordinat spasial (SRID), nama otoritas (EPSG), parameter proyeksi proj4text, dan representasi WKT SRID yang digunakan oleh fungsi transformasi koordinat ST_Transform",
@@ -9392,6 +10042,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-448",
     "level": "advanced",
     "topic": "Web Mapping",
+    "questionType": "concept",
     "question": "Dalam optimasi aplikasi Web GIS yang menampilkan peta interaktif di perangkat mobile layar sentuh dengan bandwidth terbatas, teknik apa yang paling krusial?",
     "options": {
       "A": "Mengaktifkan kompresi tile (GZIP/Brotli), membatasi over-fetching data melalui view-bounds filtering, menggunakan Vector Tiles berukuran < 100 KB per tile, dan menerapkan debounce pada event pan/zoom",
@@ -9413,6 +10064,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-449",
     "level": "advanced",
     "topic": "Fullstack Web GIS Development",
+    "questionType": "concept",
     "question": "Dalam backend web geospasial berbasis Python (FastAPI / GeoDjango), apa metode terbaik untuk menangani kalkulasi geospasial asinkron yang membutuhkan waktu lama (misal orthorektifikasi foto udara atau klastering jutaan titik)?",
     "options": {
       "A": "Mendelegasikan komputasi ke background task queue terdistribusi (seperti Celery bersama Redis / RabbitMQ), mengembalikan job ID seketika ke frontend, dan memantau status pengerjaan via polling atau WebSocket",
@@ -9434,6 +10086,7 @@ export const GIS_QUESTIONS: Question[] = [
     "id": "GIS-450",
     "level": "advanced",
     "topic": "Cloud GIS & Big Data",
+    "questionType": "concept",
     "question": "Dalam arsitektur modern 'Cloud-Native Geospatial', kombinasi pilar teknologi manakah yang merevolusi cara dunia menyimpan, mengindeks, dan memproses data observasi bumi skala global?",
     "options": {
       "A": "Cloud Optimized GeoTIFF (COG), SpatioTemporal Asset Catalog (STAC), GeoParquet, dan pemrosesan terdistribusi tanpa server (Serverless Dynamic Tiling & Xarray)",
